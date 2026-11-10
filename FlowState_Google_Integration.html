@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>FlowState</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<meta name="theme-color" content="#3d5ba9">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<meta name="theme-color" content="#3d5ba9">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Patrick+Hand&family=Lexend:wght@400;600&family=Caveat:wght@500;700&family=Nunito:wght@400;800&display=swap" rel="stylesheet">
+<style>
+:root{--text:#1d2440;--cal:#3d5ba9;--font:system-ui,sans-serif;--fs:16px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;font-family:var(--font);font-size:var(--fs);color:var(--text);background:#f5e6e1;transition:background .4s}
+#blobs{position:fixed;inset:0;z-index:0;pointer-events:none}
+#app{position:relative;z-index:1;display:flex;height:100%}
+#rail{width:112px;flex:none;display:flex;flex-direction:column;align-items:center;gap:14px;padding:14px 0;background:rgba(70,60,75,.35);border-radius:0 46px 46px 0;overflow:hidden}
+#rail button{width:84px;height:84px;flex:none;border-radius:50%;border:4px solid #3a3440;font-size:34px;background:#fff;cursor:pointer;box-shadow:0 3px 8px rgba(0,0,0,.25);transition:transform .25s;padding:0}
+#rail button.active{transform:scale(1.12);border-color:#000;box-shadow:0 0 0 4px #ffd45c}
+#rail.collapsed{justify-content:flex-start}
+#rail.collapsed button:not(.active){display:none}
+#rail.drop button{animation:drop .35s ease-out}
+@keyframes drop{from{transform:translateY(-40px);opacity:0}to{transform:none;opacity:1}}
+header{display:flex;justify-content:space-between;align-items:center;padding:10px 18px}
+.logo{font-weight:900;font-size:30px;letter-spacing:1px;background:linear-gradient(90deg,#ff7a59,#c44cc9,#ffb347);-webkit-background-clip:text;background-clip:text;color:transparent}
+.tr{display:flex;align-items:center;gap:12px}
+#clock{background:#111;color:#fff;font-family:monospace;font-size:20px;padding:4px 10px;border-radius:6px}
+header button{background:none;border:0;font-size:26px;position:relative;cursor:pointer;padding:4px}
+#badge{position:absolute;top:-4px;right:-6px;background:#e33;color:#fff;border-radius:10px;font-size:12px;padding:0 5px;font-style:normal}
+#badge:empty{display:none}
+#main{flex:1;position:relative;display:flex;flex-direction:column;min-width:0}
+#view{flex:1;overflow:auto;padding:6px 18px 120px}
+h1{margin:6px 0 12px;font-size:1.9em}
+h2{margin:0 0 10px}
+h3{margin:0 0 8px}
+.panel{background:rgba(255,255,255,.85);border:3px solid var(--cal);border-radius:18px;padding:14px;margin-bottom:14px;overflow:auto}
+.panel.tall{min-height:420px}
+.cols{display:grid;grid-template-columns:1.1fr 1fr;gap:16px;align-items:start}
+.stack{display:flex;flex-direction:column;gap:6px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{background:#fff;border-radius:12px;padding:10px 12px;margin-bottom:8px;display:flex;gap:10px;align-items:center;box-shadow:0 2px 5px rgba(0,0,0,.12);cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.card small{display:block;opacity:.7}
+.card.done{opacity:.5;text-decoration:line-through}
+.chk{width:34px;height:34px;flex:none;border-radius:8px;padding:0}
+.grow{flex:1;min-width:0}
+.empty{opacity:.6;font-style:italic}
+.body{white-space:pre-wrap;max-height:260px;overflow:auto;background:#faf7f7;border-radius:10px;padding:8px;margin-top:6px}
+button{font:inherit;border-radius:12px;border:2px solid var(--cal);background:#fff;padding:8px 14px;color:var(--text);cursor:pointer}
+button.primary{background:var(--cal);color:#fff}
+button.danger{color:#c00;border-color:#c00}
+button.big{display:block;width:100%;margin:8px 0;font-size:1.1em;padding:14px;text-align:left}
+button.chip{border-radius:20px;padding:6px 12px}
+button.chip.on{background:var(--cal);color:#fff}
+.sw{width:40px;height:40px;border-radius:50%;padding:0;border:3px solid #fff}
+.sw.on{outline:3px solid #000}
+input,textarea,select{font:inherit;width:100%;padding:10px;border-radius:10px;border:2px solid #bbb;margin:6px 0;background:#fff;color:#222}
+input[type=range],input[type=color],input[type=checkbox]{width:auto}
+input[type=color]{height:40px;padding:2px}
+textarea{min-height:170px}
+label{display:block;margin:6px 0}
+label.chip{display:inline-flex;align-items:center;gap:4px;width:auto;padding:6px 10px;border:2px solid var(--cal);border-radius:20px;margin:4px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+#fab{position:absolute;right:22px;bottom:18px;width:74px;height:74px;border-radius:50%;background:#111;color:#fff;font-size:44px;border:4px solid #2fd46b;padding:0;line-height:1}
+#schoolBtn{position:absolute;right:112px;bottom:26px;width:62px;height:62px;border-radius:50%;background:#f7d28a;padding:0;font-size:30px;display:none}
+#schoolBtn.on{display:block}
+#sheet{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;z-index:20}
+#sheet.on{display:flex}
+.box{background:#fbf7f6;color:var(--text);border-radius:20px;padding:20px;width:min(640px,92vw);max-height:88vh;overflow:auto}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#222;color:#fff;padding:12px 16px;border-radius:14px;display:none;z-index:30;gap:12px;align-items:center}
+#toast.on{display:flex}
+#toast button{background:#fff;color:#222;border:0;padding:6px 12px}
+#bubble{position:fixed;display:none;z-index:15;background:#fff;border:3px solid var(--cal);border-radius:18px;padding:12px 14px;width:260px;box-shadow:0 6px 16px rgba(0,0,0,.25)}
+#bubble p{margin:4px 0}
+#bubble button{margin:4px 4px 0 0;padding:6px 10px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;padding:20px 10px}
+.blob{position:relative;aspect-ratio:1.15;display:flex;flex-direction:column;align-items:center;justify-content:center;border:4px solid rgba(0,0,0,.55);border-radius:58% 42% 55% 45%/46% 56% 44% 54%;transition:transform .4s,opacity .4s;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;cursor:pointer}
+.blob.pushed{transform:translateX(70px);opacity:.55}
+.blob .ico{font-size:46px}
+.blob b{font-size:1.2em}
+.home{display:grid;grid-template-columns:1fr 1.15fr;gap:18px;align-items:start}
+.sticky-col{display:flex;flex-direction:column;gap:14px}
+.sticky{background:#fff6a8;padding:12px;box-shadow:0 4px 8px rgba(0,0,0,.2);border-radius:6px}
+.sticky:nth-child(2){transform:rotate(1deg)}
+.sticky:nth-child(3){transform:rotate(-1deg)}
+.cal{background:rgba(255,255,255,.92);border:4px solid var(--cal);border-radius:24px;padding:14px}
+.calhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.calhead b{font-size:1.4em}
+.calhead button{padding:4px 14px;font-size:1.3em}
+.wk,.days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.wk span{font-weight:700;opacity:.7}
+.day{position:relative;padding:10px 0;border-radius:10px;background:#f4eeee;border:0;font-size:1.05em}
+.day.today{outline:3px solid var(--cal)}
+.day.sel{background:var(--cal);color:#fff}
+.day i{position:absolute;bottom:2px;right:4px;font-size:10px;font-style:normal;background:#e33;color:#fff;border-radius:8px;padding:0 4px}
+.dl{margin:12px 0 4px}
+.dayList{max-height:240px;overflow:auto}
+.wkgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.wkcol{text-align:left;min-height:150px;background:#f4eeee;border:0;padding:6px;font-size:.9em;overflow:hidden}
+.wkcol.sel{outline:3px solid var(--cal)}
+.wkit{font-size:.85em;background:#fff;border-radius:6px;padding:2px 4px;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@keyframes viewIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+#view.enter{animation:viewIn .35s ease-out}
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+.box{animation:pop .22s ease-out}
+.blob .ico{
+  display:flex;justify-content:center;align-items:center;
+  width:76%;height:76%;min-width:0;min-height:0;
+  overflow:hidden;border-radius:50%;font-size:46px;
+}
+.blob .ico img{
+  display:block;width:100%;height:100%;max-width:100%;max-height:100%;
+  aspect-ratio:1;object-fit:cover;object-position:center;
+  border-radius:50%;flex:none;
+}
+#rail img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;border-radius:50%}
+</style>
+</head>
+<body>
+<canvas id="blobs"></canvas>
+<div id="app">
+  <nav id="rail"></nav>
+  <section id="main">
+    <header>
+      <div class="logo">FlowState</div>
+      <div class="tr">
+        <span id="clock"></span>
+        <button onclick="openSearch()" title="Search">🔍</button>
+        <button onclick="go2('notifs')" title="Notifications">🔔<i id="badge"></i></button>
+        <button onclick="go2('settings')" title="Settings">⚙️</button>
+      </div>
+    </header>
+    <div id="view"></div>
+    <button id="schoolBtn" onclick="S.cls=null;render()" title="Back to classes">🎓</button>
+    <button id="fab" onclick="openMenu()" title="Add">+</button>
+  </section>
+</div>
+<div id="sheet" onclick="if(event.target===this)closeSheet()"><div class="box" id="sheetBody"></div></div>
+<div id="toast"><span id="tmsg"></span><button id="tundo" onclick="doUndo()">Undo</button></div>
+<div id="bubble"></div>
+<script>
+const clone=o=>JSON.parse(JSON.stringify(o));
+const KEY='flowstate-v2';
+const PAL=['#ff8fa3','#8fd3a8','#f7c77a','#9db4f0','#c39bf0','#7fd6e8','#f49a6b'];
+const DEF={items:[],classes:[{id:'math',name:'Math',icon:'➕',color:'#ff8fa3'}],notifs:[],dnd:false,fired:{},
+  settings:{speed:1,reduce:false,font:'system-ui, sans-serif',fs:16,text:'#1d2440',cal:'#3d5ba9',
+  bg:{home:'#f5e6e1',school:'#f7dede',work:'#dfe7f5',deyc:'#dcf2e2',personal:'#e5dcf5'}}};
+function load(){
+  try{
+    const x=JSON.parse(localStorage.getItem(KEY));
+    if(x&&x.items){const d=clone(DEF);return Object.assign(d,x,{settings:Object.assign(d.settings,x.settings||{},{bg:Object.assign(d.settings.bg,(x.settings||{}).bg||{})})})}
+  }catch(e){}
+  return clone(DEF);
+}
+let D=load();
+const S={tab:'home',cls:null,collapsed:false,bubble:null,drop:false,sel:'',month:null,view:'month'};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+const uid=()=>Math.random().toString(36).slice(2,10);
+const dk=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const fmt=s=>new Date(s).toLocaleString([],{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+const fmtDur=ms=>{const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
+const byC=(a,b)=>b.created-a.created;
+const val=k=>$('#f-'+k)?.value??'';
+const CATS={home:'Home',school:'School',work:'Work',deyc:'DEYC',personal:'Personal'};
+const BGK=['home','school','work','deyc','personal'];
+const RAIL=[['home','🏠','Home'],['school','🎓','School'],['work','💼','Work'],['deyc','🤝','DEYC'],['personal','🌟','Personal']];
+const LISTS=['Must Watch','Must Read','Must Play','To Do','Websites','Potential Ideas','Games to Play'];
+const LABEL={event:'Event',homework:'Homework',test:'Test',summary:'Summary',project:'Project',note:'Note',bucket:'List item',recording:'Recording'};
+let FORM={},REC=null,RC='school',CCOL=PAL[0],UNDO=null,TT=null,CONF=null;
+S.sel=dk(new Date());
+S.month=new Date(new Date().getFullYear(),new Date().getMonth(),1);
+
+function save(){try{localStorage.setItem(KEY,JSON.stringify(D))}catch(e){toast('Storage is full. Try a smaller image or remove one.')}}
+
+// Google sync uses the user's Apps Script web app. Requests are sent as
+// text/plain so the endpoint can accept them without a browser CORS preflight.
+const GOOGLE_SYNC_URL='https://script.google.com/macros/s/AKfycbxF-v0PypnUbO-h9mPWKc5E8LIjJUe2WosWHY2C-Le2j4lpYwtdY1EBE06u0Dh64vP4Yw/exec';
+const GOOGLE_SYNC_TOKEN='flowstate-2026-private-7Kq9m2';
+function googlePayload(action,item,id){
+  const payload={token:GOOGLE_SYNC_TOKEN,action};
+  if(item){
+    const copy={...item};
+    // Send an unambiguous instant to Apps Script while keeping the local
+    // date-time value untouched in FlowState's own storage.
+    if(copy.due){const d=new Date(copy.due);copy.due=isNaN(d)?null:d.toISOString()}
+    payload.item=copy;
+  }
+  if(id)payload.id=id;
+  return JSON.stringify(payload);
+}
+function sendGoogleSync(action,item,id){
+  if(!D.settings.googleSync)return;
+  const body=googlePayload(action,item,id);
+  if(!navigator.onLine){
+    D.settings.pendingGoogleSync=D.settings.pendingGoogleSync||[];
+    D.settings.pendingGoogleSync.push(body);save();return;
+  }
+  fetch(GOOGLE_SYNC_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=UTF-8'},body,keepalive:true})
+    .catch(()=>{D.settings.pendingGoogleSync=D.settings.pendingGoogleSync||[];D.settings.pendingGoogleSync.push(body);save()});
+}
+function flushGoogleSync(){
+  if(!D.settings.googleSync||!navigator.onLine)return;
+  const q=D.settings.pendingGoogleSync||[];if(!q.length)return;
+  D.settings.pendingGoogleSync=[];save();
+  q.forEach(body=>fetch(GOOGLE_SYNC_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=UTF-8'},body,keepalive:true}).catch(()=>{D.settings.pendingGoogleSync=D.settings.pendingGoogleSync||[];D.settings.pendingGoogleSync.push(body);save()}));
+}
+function connectGoogleSync(){
+  D.settings.googleSync=true;save();
+  const pending=D.items.slice();
+  pending.forEach(item=>sendGoogleSync('upsert',item));
+  render();toast('Google sync requests sent for '+pending.length+' items');
+}
+function disconnectGoogleSync(){
+  D.settings.googleSync=false;save();render();toast('Automatic Google sync paused');
+}
+function testGoogleSync(){
+  if(!D.settings.googleSync){toast('Connect Google sync first');return}
+  const body=JSON.stringify({token:GOOGLE_SYNC_TOKEN,action:'test'});
+  fetch(GOOGLE_SYNC_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=UTF-8'},body,keepalive:true})
+    .then(()=>toast('Test request sent. Check your Gmail inbox for the FlowState test email.'))
+    .catch(()=>toast('Could not send the test request. Check your connection.'));
+}
+window.addEventListener('online',flushGoogleSync);
+function clsName(id){const c=D.classes.find(x=>x.id===id);return c?c.name:''}
+function sheet(h){$('#sheetBody').innerHTML=h;$('#sheet').classList.add('on')}
+function closeSheet(){$('#sheet').classList.remove('on')}
+function toast(msg,undo){
+  $('#tmsg').textContent=msg;UNDO=undo||null;
+  $('#tundo').style.display=undo?'':'none';
+  $('#toast').classList.add('on');clearTimeout(TT);
+  const top=D.settings.toastPos==='top',tt=$('#toast');tt.style.top=top?'80px':'auto';tt.style.bottom=top?'auto':'24px';
+  TT=setTimeout(()=>$('#toast').classList.remove('on'),5000);
+}
+function doUndo(){if(UNDO)UNDO();UNDO=null;$('#toast').classList.remove('on')}
+function clock(){$('#clock').textContent=new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})}
+
+function applyStyle(){
+  const s=D.settings,r=document.documentElement.style;
+  r.setProperty('--text',s.text);r.setProperty('--cal',s.cal);
+  r.setProperty('--font',s.font);r.setProperty('--fs',s.fs+'px');
+  const bk=BGK.includes(S.tab)?S.tab:'home',img=s.bgImg&&s.bgImg[bk];
+  document.body.style.background=s.bg[bk];
+  document.body.style.backgroundImage=img?'url('+img+')':'none';
+  document.body.style.backgroundSize='cover';document.body.style.backgroundPosition='center';
+}
+function rail(){
+  const nav=$('#rail');
+  const c=S.tab==='school'&&S.cls&&D.classes.find(x=>x.id===S.cls);
+  nav.innerHTML=RAIL.map(([id,ic,lab])=>{
+    if(id==='school'&&c)return `<button data-tab="school" class="${S.tab==='school'?'active':''}" style="background:${c.color}" title="${esc(c.name)}">${clsIco(c)}</button>`;
+    return `<button data-tab="${id}" class="${S.tab===id?'active':''}" title="${lab}">${ic}</button>`;
+  }).join('');
+  nav.className=(S.collapsed?'collapsed':'')+(S.drop?' drop':'');
+  S.drop=false;
+}
+function render(){
+  applyStyle();rail();
+  const t=S.tab,v=$('#view');
+  v.className=S.enter?'enter':'';S.enter=false;
+  v.innerHTML=t==='home'?viewHome():t==='school'?(S.cls?viewClass(S.cls):viewClassSelect()):t==='personal'?viewPersonal():t==='notifs'?viewNotifs():t==='settings'?viewSettings():viewCat(t);
+  bind(v);
+  $('#schoolBtn').classList.toggle('on',t==='school'&&!!S.cls);
+  if(t==='school'&&!S.cls&&S.bubble)showBubble();else hideBubble();
+  if(t==='notifs'){D.notifs.forEach(n=>n.read=true);save()}
+  updateBell();
+}
+function updateBell(){const n=D.notifs.filter(x=>!x.read).length;$('#badge').textContent=n||''}
+
+const card=i=>`<div class="card${i.done?' done':''}" data-item="${i.id}">${['homework','test','bucket','project'].includes(i.type)?`<button class="chk" onclick="toggleDone('${i.id}')">${i.done?'✓':''}</button>`:''}<div class="grow"><b>${esc(i.title)}</b><small>${i.due?esc(fmt(i.due))+' · ':''}${esc(LABEL[i.type]||'')}${i.cls?' · '+esc(clsName(i.cls)):''}${i.priority==='high'?' · 🔴 High priority':i.priority==='low'?' · Low priority':''}</small></div></div>`;
+const list=a=>a.length?a.map(card).join(''):'<p class="empty">Nothing here yet. Tap + to add.</p>';
+
+function viewHome(){
+  const now=Date.now(),m=S.month,days=new Date(m.getFullYear(),m.getMonth()+1,0).getDate(),first=new Date(m.getFullYear(),m.getMonth(),1).getDay();
+  const notes=D.items.filter(i=>i.type==='note').sort(byC).slice(0,3);
+  const recs=D.items.filter(i=>i.type==='recording').sort(byC).slice(0,3);
+  const overdue=D.items.filter(i=>!i.done&&i.due&&new Date(i.due).getTime()<now).sort((a,b)=>new Date(a.due)-new Date(b.due));
+  const todayItems=D.items.filter(i=>!i.done&&i.due&&dk(new Date(i.due))===dk(new Date())).sort((a,b)=>new Date(a.due)-new Date(b.due));
+  const soon=D.items.filter(i=>(i.type==='homework'||i.type==='test')&&!i.done&&i.due&&(new Date(i.due)-now)>-864e5&&(new Date(i.due)-now)<6048e5).sort((a,b)=>new Date(a.due)-new Date(b.due));
+  const counts={};D.items.forEach(i=>{if(i.due){const k=dk(new Date(i.due));counts[k]=(counts[k]||0)+1}});
+  const today=dk(new Date());
+  let cells='';for(let i=0;i<first;i++)cells+='<div></div>';
+  for(let d=1;d<=days;d++){const k=dk(new Date(m.getFullYear(),m.getMonth(),d));cells+=`<button class="day${k===today?' today':''}${k===S.sel?' sel':''}" onclick="selDay('${k}')">${d}${counts[k]?`<i>${counts[k]}</i>`:''}</button>`}
+  const dayItems=D.items.filter(i=>i.due&&dk(new Date(i.due))===S.sel).sort((a,b)=>new Date(a.due)-new Date(b.due));
+  return `<div class="home"><div class="sticky-col">
+    <div class="sticky"><h3>Recent Notes</h3>${list(notes)}</div>
+    <div class="sticky"><h3>Recent Recordings</h3>${list(recs)}</div>
+    <div class="sticky"><h3>Due Today</h3>${list(todayItems)}</div>
+    <div class="sticky"><h3>Overdue</h3>${list(overdue)}</div>
+    <div class="sticky"><h3>Due Date Approaching</h3>${list(soon)}</div></div>
+    <div class="cal"><div class="calhead"><button onclick="moveMonth(-1)">‹</button><b>${m.toLocaleString([],{month:'long',year:'numeric'})}</b><button onclick="toggleView()">${S.view==='week'?'Month':'Week'}</button><button onclick="moveMonth(1)">›</button></div>
+    <div class="wk">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<span>${d}</span>`).join('')}</div>
+    ${S.view==='week'?weekGrid():`<div class="days">${cells}</div>`}
+    <h3 class="dl">${new Date(S.sel+'T00:00').toDateString()}</h3><div class="dayList">${list(dayItems)}</div></div></div>`;
+}
+function selDay(k){S.sel=k;render()}
+function moveMonth(n){
+  if(S.view==='week'){const d=new Date(S.sel+'T00:00');d.setDate(d.getDate()+7*n);S.sel=dk(d);S.month=new Date(d.getFullYear(),d.getMonth(),1)}
+  else S.month=new Date(S.month.getFullYear(),S.month.getMonth()+n,1);
+  render();
+}
+function toggleView(){S.view=S.view==='week'?'month':'week';render()}
+function weekGrid(){
+  const sel=new Date(S.sel+'T00:00'),start=new Date(sel);start.setDate(sel.getDate()-sel.getDay());
+  let h='<div class="wkgrid">';
+  for(let i=0;i<7;i++){
+    const d=new Date(start);d.setDate(start.getDate()+i);const k=dk(d);
+    const its=D.items.filter(x=>x.due&&dk(new Date(x.due))===k).sort((a,b)=>new Date(a.due)-new Date(b.due));
+    h+=`<button class="wkcol${k===S.sel?' sel':''}" onclick="selDay('${k}')"><b>${d.getDate()}</b>${its.map(x=>`<div class="wkit">${esc(x.title)}</div>`).join('')}</button>`;
+  }
+  return h+'</div>';
+}
+function setBgImg(file,k){
+  if(!file){if(D.settings.bgImg)delete D.settings.bgImg[k];save();render();return}
+  const fr=new FileReader();
+  fr.onerror=()=>toast('Could not read that file');
+  fr.onload=()=>{const im=new Image();im.onerror=()=>toast('That picture will not open. Try a JPG or PNG.');im.onload=()=>{const sc=Math.min(1,1200/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);c.getContext('2d').drawImage(im,0,0,c.width,c.height);D.settings.bgImg=D.settings.bgImg||{};D.settings.bgImg[k]=c.toDataURL('image/jpeg',.8);save();render()};im.src=fr.result};
+  fr.readAsDataURL(file);
+}
+
+function viewClassSelect(){
+  return `<h1>Classes</h1><p class="empty">Tap a class for quick options. Hold a class to open its tab.</p>
+  <div class="grid">${D.classes.map(c=>`<div class="blob${S.bubble&&S.bubble!==c.id?' pushed':''}" data-cls="${c.id}" style="background:${c.color};width:${Math.round((c.size||1)*100)}%;justify-self:center"><span class="ico">${clsIco(c)}</span><b>${esc(c.name)}</b></div>`).join('')}</div>`;
+}
+function viewClass(id){
+  const c=D.classes.find(x=>x.id===id);if(!c){S.cls=null;return viewClassSelect()}
+  const sums=D.items.filter(i=>i.type==='summary'&&i.cls===id).sort(byC);
+  const hw=D.items.filter(i=>(i.type==='homework'||i.type==='test')&&i.cls===id).sort((a,b)=>new Date(a.due||0)-new Date(b.due||0));
+  return `<h1>${esc(c.icon)} ${esc(c.name)}</h1><div class="cols">
+    <div class="panel tall"><h3>Recent Class Summary</h3>${sums[0]?card(sums[0])+`<div class="body">${esc(sums[0].body)}</div>`:'<p class="empty">No summaries yet.</p>'}</div>
+    <div class="stack"><div class="panel"><h3>Previous Summaries</h3>${list(sums.slice(1))}</div>
+    <div class="panel"><h3>Homework + Studying</h3><div class="row"><button class="primary" onclick="openFocus()">Focus timer</button></div>${list(hw)}</div></div></div>`;
+}
+function viewCat(c){
+  const sums=D.items.filter(i=>i.type==='summary'&&i.cat===c).sort(byC);
+  const proj=D.items.filter(i=>i.type==='project'&&i.cat===c).sort(byC);
+  const n=CATS[c];
+  return `<h1>${n}</h1><div class="cols">
+    <div class="panel tall"><h3>Recent ${n} Summary</h3>${sums[0]?card(sums[0])+`<div class="body">${esc(sums[0].body)}</div>`:'<p class="empty">No summaries yet.</p>'}</div>
+    <div class="stack"><div class="panel"><h3>Previous Summaries</h3>${list(sums.slice(1))}</div>
+    <div class="panel"><h3>${c==='work'?'Current Projects':'Meetings and Events'}</h3>${list(proj)}</div></div></div>`;
+}
+function viewPersonal(){
+  const notes=D.items.filter(i=>i.type==='note'&&i.cat==='personal').sort(byC);
+  return `<h1>Personal</h1><div class="cols">
+    <div class="panel tall"><h3>My Notes</h3>${list(notes)}</div>
+    <div class="grid2">${LISTS.map(l=>`<div class="panel"><h3>${l}</h3>${list(D.items.filter(i=>i.type==='bucket'&&i.list===l))}</div>`).join('')}</div></div>`;
+}
+function viewNotifs(){
+  const items=D.notifs.slice(-40).reverse();
+  return `<h1>Notifications</h1>
+  <div class="panel"><label><input type="checkbox" ${D.dnd?'checked':''} onchange="D.dnd=this.checked;save()"> Do Not Disturb (no pop-ups, still logged)</label>
+  <div class="row"><button onclick="askPerm()">Allow browser alerts</button> <button onclick="exportReminders()">Export reminders to calendar</button></div>
+  <div class="row">Pop-up position <select onchange="D.settings.toastPos=this.value;save()"><option value="bottom" ${D.settings.toastPos==='top'?'':'selected'}>Bottom</option><option value="top" ${D.settings.toastPos==='top'?'selected':''}>Top</option></select></div></div>
+  <div class="panel">${items.length?items.map(n=>`<div class="card"><div class="grow"><b>${esc(n.text)}</b><small>${fmt(n.time)}</small></div></div>`).join(''):'<p class="empty">No notifications yet.</p>'}</div>`;
+}
+function viewSettings(){
+  const s=D.settings;
+  const bgRows=BGK.map(k=>`<label>${CATS[k]} background <input type="color" value="${s.bg[k]}" onchange="setS('bg.${k}',this.value)"></label>`).join('');
+  const fonts=[['system-ui, sans-serif','Clean'],['Georgia, serif','Serif'],['ui-monospace, monospace','Mono'],['Trebuchet MS, sans-serif','Friendly'],['Fredoka, sans-serif','Round'],['Patrick Hand, cursive','Handwritten'],['Lexend, sans-serif','Clear'],['Caveat, cursive','Script'],['Nunito, sans-serif','Soft']];
+  return `<h1>Settings</h1>
+  <div class="panel"><h3>Look</h3>${bgRows}
+    <label>Background image for <select id="bgSel">${BGK.map(k=>`<option value="${k}">${CATS[k]}</option>`).join('')}</select></label>
+    <input type="file" accept="image/*" onchange="setBgImg(this.files[0],$('#bgSel').value)">
+    <div class="row"><button onclick="setBgImg(null,$('#bgSel').value)">Remove image for this tab</button></div>
+    <label>Text color <input type="color" value="${s.text}" onchange="setS('text',this.value)"></label>
+    <label>Calendar color <input type="color" value="${s.cal}" onchange="setS('cal',this.value)"></label>
+    <label>Font <select onchange="setS('font',this.value)">${fonts.map(([v,l])=>`<option value="${v}" ${s.font===v?'selected':''}>${l}</option>`).join('')}</select></label>
+    <label>Text size <input type="range" min="13" max="22" value="${s.fs}" onchange="setS('fs',+this.value)"></label></div>
+  <div class="panel"><h3>Background animation</h3>
+    <label>Style <select onchange="setS('anim',this.value)">${Object.entries(ANIMS).map(([k,l])=>`<option value="${k}" ${(s.anim||'bubbles')===k?'selected':''}>${l}</option>`).join('')}</select></label>
+    <label>Speed <input type="range" min="0" max="3" step="0.1" value="${s.speed}" onchange="setS('speed',+this.value)"></label>
+    <label><input type="checkbox" ${s.reduce?'checked':''} onchange="setS('reduce',this.checked)"> Reduce motion (stops the blobs)</label></div>
+  <div class="panel"><h3>Google integration</h3>
+    <p class="empty">${D.settings.googleSync?'Google sync is enabled on this device.':'Connect FlowState to send your items to Google Calendar and receive scheduled Gmail reminders.'}</p>
+    <div class="row">${D.settings.googleSync?'<button class="primary" onclick="connectGoogleSync()">Sync all items now</button><button onclick="testGoogleSync()">Send test email</button><button onclick="disconnectGoogleSync()">Pause sync</button>':'<button class="primary" onclick="connectGoogleSync()">Connect Google &amp; sync items</button>'}</div>
+    <small>Only items created or changed on this device are sent. Keep this app connected to the internet when making changes. Calendar and email delivery are handled by your Google Apps Script.</small>
+  </div>
+  <div class="panel"><h3>Backup</h3><div class="row"><button onclick="exportData()">Export data</button><button onclick="importData()">Import data</button></div></div>
+  <div class="panel"><h3>Classes</h3>${D.classes.map(c=>`<div class="card"><div class="grow">${esc(c.icon)} ${esc(c.name)}</div><button onclick="editClass('${c.id}')">Edit</button> <button class="danger" onclick="delClass('${c.id}')">Delete</button></div>`).join('')}
+    <button class="primary" onclick="openForm('class')">+ Add class</button></div>`;
+}
+function setS(k,v){const s=D.settings;if(k.startsWith('bg.'))s.bg[k.slice(3)]=v;else s[k]=v;save();render()}
+
+function hold(el,tap,long){
+  let t,fired=false,skip=false;
+  el.addEventListener('pointerdown',e=>{skip=!!e.target.closest('button');fired=false;clearTimeout(t);t=setTimeout(()=>{fired=true;long()},500)});
+  el.addEventListener('pointerup',()=>{clearTimeout(t);if(!fired&&!skip)tap()});
+  el.addEventListener('pointerleave',()=>clearTimeout(t));
+  el.addEventListener('pointercancel',()=>clearTimeout(t));
+  el.addEventListener('contextmenu',e=>e.preventDefault());
+}
+function bind(root){
+  root.querySelectorAll('[data-item]').forEach(el=>hold(el,()=>openDetail(el.dataset.item),()=>openForm(null,el.dataset.item)));
+  root.querySelectorAll('[data-cls]').forEach(el=>hold(el,()=>{S.bubble=S.bubble===el.dataset.cls?null:el.dataset.cls;render()},()=>{S.tab='school';S.cls=el.dataset.cls;S.bubble=null;render()}));
+}
+document.addEventListener('pointerdown',e=>{if(S.bubble&&!e.target.closest('[data-cls],#bubble')){S.bubble=null;render()}});
+
+function showBubble(){
+  const c=D.classes.find(x=>x.id===S.bubble),el=S.bubble&&document.querySelector(`[data-cls="${S.bubble}"]`);
+  if(!c||!el)return hideBubble();
+  const sums=D.items.filter(i=>i.type==='summary'&&i.cls===c.id).sort(byC);
+  const open=D.items.filter(i=>(i.type==='homework'||i.type==='test')&&i.cls===c.id&&!i.done).length;
+  const b=$('#bubble'),r=el.getBoundingClientRect();
+  b.innerHTML=`<b>${esc(c.icon)} ${esc(c.name)}</b><p>${sums[0]?'Latest: '+esc(sums[0].title):'No summaries yet'}</p><p>${open} open homework or tests</p>
+  <div class="row"><button onclick="addFor('homework','${c.id}')">+ Homework</button><button onclick="addFor('test','${c.id}')">+ Test</button><button onclick="addFor('summary','${c.id}')">+ Summary</button></div>
+  <p class="empty">Hold the class to open its tab.</p>`;
+  b.style.display='block';
+  b.style.left=Math.max(10,Math.min(r.right+14,innerWidth-280))+'px';
+  b.style.top=Math.max(70,r.top)+'px';
+}
+function hideBubble(){$('#bubble').style.display='none'}
+function addFor(k,c){S.bubble=null;hideBubble();openForm(k,null,{cls:c,cat:'school'})}
+
+function go(dir){
+  const order=['home','school','work','deyc','personal'];
+  let i=order.indexOf(S.tab);i=Math.max(0,Math.min(order.length-1,(i<0?0:i)+dir));
+  S.tab=order[i];S.cls=null;S.collapsed=false;S.bubble=null;S.enter=true;render();
+}
+function go2(t){S.tab=t;S.bubble=null;S.enter=true;render()}
+
+function openMenu(){
+  let opts;
+  if(S.tab==='home')opts=[['Add event','event'],['Add homework','homework'],['Add test','test'],['Quick recording','rec']];
+  else if(S.tab==='school')opts=S.cls?[['Add summary','summary'],['Add homework','homework'],['Add test','test']]:[['Add class','class']];
+  else if(S.tab==='work')opts=[['Add summary','summary'],['Add project','project'],['Add event','event']];
+  else if(S.tab==='deyc')opts=[['Add meeting summary','summary'],['Add meeting','project'],['Add event','event']];
+  else if(S.tab==='personal')opts=[['Add note','note'],['Add to a list','bucket']];
+  else opts=[['Add note','note']];
+  opts.unshift(['Quick paste summary','quick']);sheet('<h2>Add</h2>'+opts.map(([l,k])=>`<button class="big" onclick="pick('${k}')">${l}</button>`).join(''));
+}
+function pick(k){
+  if(k==='rec')return openRec();
+  if(k==='quick')return openQuick();
+  openForm(k,null,S.tab==='school'&&S.cls?{cls:S.cls,cat:'school'}:{});
+}
+
+function openForm(type,id,pre={}){
+  if(type==='class')return classForm();
+  const ex=id?D.items.find(i=>i.id===id):null;
+  const v=ex||pre;type=ex?ex.type:type;
+  FORM={type,id:ex?ex.id:null};
+  const isDue=['event','homework','test','project'].includes(type);
+  const isText=['note','summary','project','bucket','event'].includes(type);
+  const cat=v.cat||(['school','work','deyc','personal'].includes(S.tab)?S.tab:'school');
+  const dueVal=v.due||(isDue?S.sel+'T09:00':'');
+  const rem=v.reminders||[];
+  sheet(`<h2>${ex?'Edit':'New'} ${LABEL[type]}</h2>
+  <input id="f-title" placeholder="Title" value="${esc(v.title)}">
+  <label>Category <select id="f-cat">${['school','work','deyc','personal'].map(c=>`<option value="${c}" ${c===cat?'selected':''}>${CATS[c]}</option>`).join('')}</select></label>
+  <label>Class (School only) <select id="f-cls"><option value="">None</option>${D.classes.map(c=>`<option value="${c.id}" ${c.id===v.cls?'selected':''}>${esc(c.name)}</option>`).join('')}</select></label>
+  ${type==='bucket'?`<label>List <select id="f-list">${LISTS.map(l=>`<option ${l===v.list?'selected':''}>${l}</option>`).join('')}</select></label>`:''}
+  ${isDue?`<label>Due <input id="f-due" type="datetime-local" value="${dueVal}"></label>
+  <label>Priority <select id="f-priority">
+    <option value="normal" ${(v.priority||'normal')==='normal'?'selected':''}>Normal</option>
+    <option value="high" ${v.priority==='high'?'selected':''}>High</option>
+    <option value="low" ${v.priority==='low'?'selected':''}>Low</option>
+  </select></label>
+  <div><b>Remind me before:</b><br>${[5,10,15,20,30,60].map(m=>`<label class="chip"><input type="checkbox" class="rem" value="${m}" ${rem.includes(m)?'checked':''}> ${m} min</label>`).join('')}</div>
+  <input id="f-custom" placeholder="Custom minutes, e.g. 45, 90">`:''}
+  ${isText?`<textarea id="f-body" placeholder="${type==='summary'?'Paste the meeting summary here':'Write here'}">${esc(v.body)}</textarea>`:''}
+  <div class="row"><button class="primary" onclick="saveForm()">Save</button><button onclick="closeSheet()">Cancel</button>${ex?`<button class="danger" onclick="delItem('${ex.id}')">Delete</button>`:''}</div>`);
+}
+function saveForm(){
+  if(FORM.type==='class')return saveClass();
+  const ex=FORM.id&&D.items.find(i=>i.id===FORM.id),T=FORM.type;
+  const rem=[...document.querySelectorAll('.rem:checked')].map(x=>+x.value).concat(val('custom').split(',').map(s=>parseInt(s,10))).filter(n=>n>0);
+  const cat=val('cat');
+  const it={id:ex?ex.id:uid(),type:T,cat,cls:(cat==='school'&&val('cls'))||null,title:val('title').trim()||LABEL[T],body:val('body'),due:val('due')||null,list:T==='bucket'?val('list'):null,priority:['low','normal','high'].includes(val('priority'))?val('priority'):'normal',reminders:[...new Set(rem)],done:ex?ex.done:false,created:ex?ex.created:Date.now()};
+  if(ex)Object.assign(ex,it);else D.items.push(it);
+  save();sendGoogleSync('upsert',it);closeSheet();render();
+}
+function classForm(){
+  FORM={type:'class'};CCOL=PAL[0];
+  sheet(`<h2>New class</h2><input id="f-name" placeholder="Class name">
+  <label>Icon (emoji) <input id="f-icon" value="📘" maxlength="4"></label>
+  <label>Picture instead of emoji <input type="file" accept="image/*" onchange="pickClassImg(this.files[0])"></label>
+  <div class="row"><span id="f-prev"></span><button onclick="FORM.img=null;$('#f-prev').innerHTML=''">Remove picture</button></div>
+  <label>Size <input id="f-size" type="range" min="0.6" max="1.3" step="0.1" value="1"></label>
+  <div class="row">${PAL.map(c=>`<button class="sw${c===CCOL?' on':''}" data-c="${c}" style="background:${c}" onclick="pickCol(this)"></button>`).join('')}</div>
+  <div class="row"><button class="primary" onclick="saveClass()">Save</button><button onclick="closeSheet()">Cancel</button></div>`);
+}
+function pickCol(b){CCOL=b.dataset.c;document.querySelectorAll('.sw').forEach(x=>x.classList.toggle('on',x===b))}
+function saveClass(){
+  const name=val('name').trim();if(!name)return toast('Give the class a name');
+  const ec=FORM.id&&D.classes.find(x=>x.id===FORM.id);const o={name,icon:val('icon').trim()||'📘',color:CCOL,size:(+val('size'))||1,img:FORM.img||null};if(ec)Object.assign(ec,o);else D.classes.push(Object.assign({id:uid()},o));
+  save();closeSheet();render();
+}
+function delClass(id){
+  const c=D.classes.find(x=>x.id===id);if(!c)return;
+  confirmSheet(`Delete ${c.name} and all of its summaries and homework?`,()=>{
+    D.classes=D.classes.filter(x=>x.id!==id);D.items.filter(i=>i.cls===id).forEach(i=>sendGoogleSync('delete',null,i.id));D.items=D.items.filter(i=>i.cls!==id);
+    if(S.cls===id)S.cls=null;save();render();
+  });
+}
+function confirmSheet(msg,fn){CONF=fn;sheet(`<p>${esc(msg)}</p><div class="row"><button class="danger" onclick="CONF();closeSheet()">Yes, delete</button><button onclick="closeSheet()">Cancel</button></div>`)}
+
+function openDetail(id){
+  const i=D.items.find(x=>x.id===id);if(!i)return;
+  sheet(`<small>${esc(LABEL[i.type]||'')}${i.cat?' · '+CATS[i.cat]:''}${i.cls?' · '+esc(clsName(i.cls)):''}</small>
+  <h2>${esc(i.title)}</h2>
+  ${i.due?`<p>Due ${esc(fmt(i.due))}</p>`:''}
+  ${i.reminders&&i.reminders.length?`<p>Reminders: ${i.reminders.join(', ')} min before</p>`:''}
+  ${i.duration?`<p>Length: ${fmtDur(i.duration*1000)}</p>`:''}
+  <div class="body">${esc(i.body)}</div>
+  <div class="row">${i.type==='recording'?'':`<button onclick="openForm(null,'${id}')">Edit</button>`}${i.due?`<button onclick="icsFor('${id}')">Calendar file</button>`:''}<button class="danger" onclick="delItem('${id}')">Delete</button><button onclick="closeSheet()">Close</button></div>`);
+}
+function delItem(id){
+  const i=D.items.findIndex(x=>x.id===id);if(i<0)return;
+  const [it]=D.items.splice(i,1);
+  save();sendGoogleSync('delete',null,it.id);closeSheet();render();
+  toast('Deleted "'+it.title+'"',()=>{D.items.splice(i,0,it);save();sendGoogleSync('upsert',it);render()});
+}
+function toggleDone(id){const i=D.items.find(x=>x.id===id);if(i){i.done=!i.done;save();sendGoogleSync('upsert',i);render()}}
+
+function openRec(){
+  if(REC)return showRec();
+  sheet(`<h2>Quick recording</h2><p>Where should this go?</p>
+  <div class="row">${['school','work','deyc','personal'].map(c=>`<button class="chip${c===RC?' on':''}" data-c="${c}" onclick="pickRec(this)">${CATS[c]}</button>`).join('')}</div>
+  <input id="rnote" placeholder="Short note (optional)">
+  <div class="row"><button class="primary" onclick="startRec()">Start</button><button onclick="closeSheet()">Cancel</button></div>`);
+}
+function pickRec(b){RC=b.dataset.c;document.querySelectorAll('[data-c]').forEach(x=>x.classList.toggle('on',x===b))}
+function startRec(){REC={cat:RC,note:val('rnote'),start:Date.now()};REC.iv=setInterval(updRec,1000);showRec()}
+function showRec(){
+  sheet(`<h2>Recording to ${CATS[REC.cat]}</h2><p class="big" id="rtime">${fmtDur(Date.now()-REC.start)}</p>
+  <p class="empty">This saves the length and your note. Audio capture and AI summaries are not connected yet.</p>
+  <div class="row"><button class="danger" onclick="stopRec()">Stop and save</button></div>`);
+}
+function updRec(){const el=$('#rtime');if(el&&REC)el.textContent=fmtDur(Date.now()-REC.start)}
+function stopRec(){
+  clearInterval(REC.iv);
+  const secs=Math.round((Date.now()-REC.start)/1000);
+  D.items.push({id:uid(),type:'recording',cat:REC.cat,cls:null,title:'Recording '+new Date().toLocaleString([],{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}),body:REC.note,due:null,reminders:[],done:false,duration:secs,created:Date.now()});
+  REC=null;save();closeSheet();render();
+}
+
+function openSearch(){sheet(`<h2>Search</h2><input id="q" placeholder="Search titles and notes" oninput="runSearch(this.value)"><div id="qr"></div><div class="row"><button onclick="closeSheet()">Close</button></div>`);setTimeout(()=>$('#q').focus(),50)}
+function runSearch(q){
+  const r=$('#qr');q=q.trim().toLowerCase();if(!q){r.innerHTML='';return}
+  const hits=D.items.filter(i=>((i.title||'')+' '+(i.body||'')).toLowerCase().includes(q)).slice(0,30);
+  r.innerHTML=hits.length?hits.map(i=>`<div class="card" onclick="openDetail('${i.id}')"><div class="grow"><b>${esc(i.title)}</b><small>${esc(LABEL[i.type]||'')}${i.due?' · '+esc(fmt(i.due)):''}</small></div></div>`).join(''):'<p class="empty">No matches.</p>';
+}
+function exportData(){sheet(`<h2>Backup</h2><p class="empty">Copy this text and keep it somewhere safe. Use Import data to restore it.</p><textarea id="bk" style="min-height:260px">${esc(JSON.stringify(D))}</textarea><div class="row"><button class="primary" onclick="copyBk()">Copy</button><button onclick="closeSheet()">Close</button></div>`)}
+function copyBk(){
+  const t=$('#bk');const no=()=>{t.select();toast('Press and hold the text to copy it')};
+  try{navigator.clipboard.writeText(t.value).then(()=>toast('Copied'),no)}catch(e){no()}
+}
+function importData(){sheet(`<h2>Restore backup</h2><p class="empty">Paste a backup here. This replaces everything in the app.</p><textarea id="bk" placeholder="Paste backup text"></textarea><div class="row"><button class="danger" onclick="restoreData()">Restore</button><button onclick="closeSheet()">Cancel</button></div>`)}
+function restoreData(){
+  let x;try{x=JSON.parse($('#bk').value)}catch(e){return toast('That is not a valid backup')}
+  if(!x||!Array.isArray(x.items)||!Array.isArray(x.classes))return toast('That is not a FlowState backup');
+  D=Object.assign(clone(DEF),x);D.settings=Object.assign(clone(DEF.settings),x.settings||{});
+  save();closeSheet();render();toast('Backup restored');
+}
+function icsFor(id){
+  const i=D.items.find(x=>x.id===id);if(!i||!i.due)return;
+  const s=new Date(i.due),e=new Date(s.getTime()+36e5),p=n=>String(n).padStart(2,'0');
+  const f=d=>d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'T'+p(d.getHours())+p(d.getMinutes())+'00';
+  const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//FlowState//EN','BEGIN:VEVENT','UID:'+i.id+'@flowstate','DTSTART:'+f(s),'DTEND:'+f(e),'SUMMARY:'+i.title,'DESCRIPTION:'+(i.body||'').replace(/\s+/g,' '),'END:VEVENT','END:VCALENDAR'].join('\r\n');
+  sheet(`<h2>Calendar file</h2><p class="empty">Download the file and open it to add this to your calendar app. If the download does nothing in this preview, copy the text into a file named event.ics.</p><textarea id="bk" style="min-height:200px">${esc(ics)}</textarea><div class="row"><button class="primary" onclick="dlIcs()">Download .ics</button><button onclick="copyBk()">Copy</button><button onclick="openDetail('${id}')">Back</button></div>`);
+}
+function dlIcs(n){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([$('#bk').value],{type:'text/calendar'}));a.download=n||'event.ics';document.body.appendChild(a);a.click();a.remove()}
+function editClass(id){
+  const c=D.classes.find(x=>x.id===id);if(!c)return;
+  classForm();FORM.id=id;
+  $('#f-name').value=c.name;$('#f-icon').value=c.icon;CCOL=c.color;FORM.img=c.img||null;$('#f-size').value=c.size||1;if(c.img)$('#f-prev').innerHTML='<span style="display:inline-flex;width:64px;height:64px;overflow:hidden;border-radius:50%"><img src="'+c.img+'" style="display:block;width:100%;height:100%;object-fit:cover;object-position:center"></span>';
+  document.querySelectorAll('.sw').forEach(x=>x.classList.toggle('on',x.dataset.c===c.color));
+}
+let FOC=null;
+function openFocus(){if(!FOC)FOC={work:true,left:25*60,iv:null};showFocus()}
+function showFocus(){sheet(`<h2>${FOC.work?'Focus':'Break'}</h2><p class="big" id="ftime">${fmtDur(FOC.left*1000)}</p><div class="row"><button class="primary" onclick="focusToggle()">${FOC.iv?'Pause':'Start'}</button><button onclick="focusSwap()">Skip to ${FOC.work?'break':'focus'}</button><button onclick="focusReset()">Reset</button><button onclick="closeSheet()">Hide</button></div><p class="empty">Runs while this page is open.</p>`)}
+function focusTick(){
+  if(!FOC)return;
+  FOC.left--;
+  if(FOC.left<=0){FOC.work=!FOC.work;FOC.left=(FOC.work?25:5)*60;toast(FOC.work?'Break over, back to focus':'Focus done. Take a 5 minute break');if($('#ftime'))showFocus();return}
+  const el=$('#ftime');if(el)el.textContent=fmtDur(FOC.left*1000);
+}
+function focusToggle(){if(FOC.iv){clearInterval(FOC.iv);FOC.iv=null}else FOC.iv=setInterval(focusTick,1000);showFocus()}
+function focusSwap(){FOC.work=!FOC.work;FOC.left=(FOC.work?25:5)*60;showFocus()}
+function focusReset(){if(FOC&&FOC.iv)clearInterval(FOC.iv);FOC=null;closeSheet()}
+function openQuick(){
+  const cat=['school','work','deyc','personal'].includes(S.tab)?S.tab:'school';
+  FORM={type:'summary',id:null};
+  sheet(`<h2>Quick paste summary</h2><label>Category <select id="f-cat" onchange="quickCls()">${['school','work','deyc','personal'].map(c=>`<option value="${c}" ${c===cat?'selected':''}>${CATS[c]}</option>`).join('')}</select></label><div id="qcls">${quickClsHtml(cat)}</div><textarea id="f-body" placeholder="Paste the summary and key points here" style="min-height:260px"></textarea><div class="row"><button onclick="pasteClip()">Paste from clipboard</button></div><div class="row"><button class="primary" onclick="saveQuick()">Save</button><button onclick="closeSheet()">Cancel</button></div>`);
+}
+function quickClsHtml(cat){return cat==='school'?`<label>Class <select id="f-cls"><option value="">None</option>${D.classes.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select></label>`:''}
+function quickCls(){$('#qcls').innerHTML=quickClsHtml(val('cat'))}
+function pasteClip(){try{navigator.clipboard.readText().then(t=>{$('#f-body').value=t},()=>toast('Use press and hold to paste'))}catch(e){toast('Use press and hold to paste')}}
+function saveQuick(){
+  const body=val('body').trim();if(!body)return toast('Paste something first');
+  const first=(body.split('\n').find(l=>l.trim())||'Summary').replace(/^[\s#*•-]+/,'').trim().slice(0,60)||'Summary';
+  const cat=val('cat');
+  const item={id:uid(),type:'summary',cat,cls:(cat==='school'&&val('cls'))||null,title:first,body,due:null,reminders:[],done:false,created:Date.now()};
+  D.items.push(item);save();sendGoogleSync('upsert',item);closeSheet();render();toast('Summary saved');
+}
+function exportReminders(){
+  const p=n=>String(n).padStart(2,'0');
+  const f=d=>d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'T'+p(d.getHours())+p(d.getMinutes())+'00';
+  const L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//FlowState//EN'];
+  D.items.filter(i=>i.due&&!i.done&&!isNaN(new Date(i.due))).forEach(i=>{
+    const s=new Date(i.due),e=new Date(s.getTime()+36e5);
+    L.push('BEGIN:VEVENT','UID:'+i.id+'@flowstate','DTSTART:'+f(s),'DTEND:'+f(e),'SUMMARY:'+i.title);
+    (i.reminders||[]).forEach(m=>L.push('BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+i.title,'TRIGGER:-PT'+m+'M','END:VALARM'));
+    L.push('END:VEVENT');
+  });
+  L.push('END:VCALENDAR');
+  sheet(`<h2>Reminders file</h2><p class="empty">Open this file to add your upcoming items and their reminders to your calendar app. Those reminders fire even when FlowState is closed. Export again after you add new items.</p><textarea id="bk" style="min-height:200px">${esc(L.join('\r\n'))}</textarea><div class="row"><button class="primary" onclick="dlIcs('flowstate-reminders.ics')">Download .ics</button><button onclick="copyBk()">Copy</button><button onclick="closeSheet()">Close</button></div>`);
+}
+function clsIco(c){return c.img?`<img src="${c.img}" alt="">`:esc(c.icon)}
+function pickClassImg(file){
+  if(!file)return toast('No picture chosen');
+  const fr=new FileReader();
+  fr.onerror=()=>toast('Could not read that file');
+  fr.onload=()=>{const im=new Image();im.onerror=()=>toast('That picture will not open. Try a JPG or PNG.');im.onload=()=>{const sc=Math.min(1,256/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);c.getContext('2d').drawImage(im,0,0,c.width,c.height);FORM.img=c.toDataURL('image/png');const pv=$('#f-prev');if(pv)pv.innerHTML='<img src="'+FORM.img+'" style="width:64px;height:64px;object-fit:cover;border-radius:50%">'};im.src=fr.result};
+  fr.readAsDataURL(file);
+}
+function addNotif(text){
+  D.notifs.push({id:uid(),text,time:Date.now(),read:false});
+  D.notifs=D.notifs.slice(-100);save();updateBell();
+  if(!D.dnd){
+    toast(text);
+    try{if('Notification' in window&&Notification.permission==='granted')new Notification('FlowState',{body:text})}catch(e){}
+  }
+}
+function askPerm(){
+  try{Notification.requestPermission().then(p=>toast('Browser alerts: '+p))}catch(e){toast('Browser alerts are not supported here')}
+}
+function tick(){
+  const now=Date.now();let ch=false;
+  D.items.forEach(i=>{
+    if(!i.due||!i.reminders||!i.reminders.length)return;
+    const due=new Date(i.due).getTime();if(isNaN(due))return;
+    i.reminders.forEach(m=>{
+      const k=i.id+':'+m,at=due-m*6e4;
+      if(D.fired[k]||now<at)return;
+      D.fired[k]=1;ch=true;
+      if(now-at<6e5)addNotif(i.title+' starts in '+m+' min');
+    });
+  });
+  if(ch)save();
+}
+
+function rail_init(){
+  $('#rail').onclick=e=>{
+    const b=e.target.closest('[data-tab]');if(!b)return;
+    const t=b.dataset.tab;
+    if(t===S.tab){S.collapsed=!S.collapsed;S.drop=!S.collapsed}
+    else{S.tab=t;S.cls=null;S.collapsed=false;S.bubble=null;S.enter=true}
+    render();
+  };
+  let ty=null;const nav=$('#rail');
+  nav.addEventListener('touchstart',e=>ty=e.touches[0].clientY,{passive:true});
+  nav.addEventListener('touchend',e=>{if(ty===null)return;const dy=e.changedTouches[0].clientY-ty;ty=null;if(Math.abs(dy)>60)go(dy<0?1:-1)});
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSheet();return}
+  if(['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName))return;
+  if(e.key==='ArrowDown')go(1);
+  if(e.key==='ArrowUp')go(-1);
+});
+
+const cv=$('#blobs'),cx=cv.getContext('2d');
+const BL=[[0,0,230,'#ff8fa3'],[1,0,200,'#9db4f0'],[0,1,240,'#8fd3a8'],[1,1,260,'#c39bf0'],[.5,1,160,'#f7c77a'],[.5,0,150,'#7fd6e8']];
+let W=0,H=0,T=0;
+let PARTS=[];
+const ANIMS={bubbles:'Lava bubbles',waves:'Soft waves',stars:'Floating dots',off:'Off'};
+function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;seedParts()}
+function seedParts(){PARTS=Array.from({length:40},()=>({x:Math.random(),y:Math.random(),r:2+Math.random()*4,v:.2+Math.random()*.8,c:PAL[Math.floor(Math.random()*PAL.length)]}))}
+function drawBubbles(){
+  BL.forEach(([fx,fy,r,c],k)=>{
+    const x=fx*W+Math.sin(T*.004+k*2)*70,y=fy*H+Math.cos(T*.005+k)*55;
+    const g=cx.createRadialGradient(x,y,0,x,y,r);
+    g.addColorStop(0,c+'aa');g.addColorStop(1,c+'00');
+    cx.fillStyle=g;cx.beginPath();cx.arc(x,y,r,0,Math.PI*2);cx.fill();
+  });
+}
+function drawWaves(){
+  for(let k=0;k<3;k++){
+    cx.beginPath();cx.moveTo(0,H);
+    for(let x=0;x<=W;x+=20){cx.lineTo(x,H*(.78+k*.07)+Math.sin(x*.008+T*.02+k*1.5)*35)}
+    cx.lineTo(W,H);cx.closePath();
+    cx.fillStyle=PAL[(k+2)%PAL.length]+'66';cx.fill();
+  }
+}
+function drawDots(sp){
+  PARTS.forEach(p=>{
+    p.y-=p.v*.0015*sp;if(p.y<0){p.y=1;p.x=Math.random()}
+    cx.fillStyle=p.c+'cc';cx.beginPath();cx.arc(p.x*W,p.y*H,p.r,0,Math.PI*2);cx.fill();
+  });
+}
+function frame(){
+  const sp=D.settings.reduce?0:D.settings.speed;T+=sp;
+  cx.clearRect(0,0,W,H);
+  const a=D.settings.anim||'bubbles';
+  if(a==='bubbles')drawBubbles();
+  else if(a==='waves')drawWaves();
+  else if(a==='stars')drawDots(sp);
+  requestAnimationFrame(frame);
+}
+
+window.addEventListener('resize',resize);
+resize();rail_init();clock();render();tick();flushGoogleSync();
+setInterval(tick,15000);setInterval(clock,1000);
+requestAnimationFrame(frame);
+</script>
+<script>
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+</script>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}</script>
+</body>
+</html>
