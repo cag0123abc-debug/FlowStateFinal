@@ -121,7 +121,11 @@ test('decide reports add, update, skip and conflict', () => {
   assert.strictEqual(S.decide(items, { uid: 'g9', title: 'New', due: '2026-03-08T14:00' }).kind, 'add');
   assert.strictEqual(S.decide(items, { uid: 'g1', title: 'Same', due: '2026-03-06T14:00' }).kind, 'skip');
   assert.strictEqual(S.decide(items, { uid: 'g2', title: 'Changed', due: '2026-03-07T14:00', updated: '2026-03-09T00:00:00Z' }).kind, 'update');
-  assert.strictEqual(S.decide(items, { uid: 'g2', title: 'Changed', due: '2026-03-07T14:00', updated: '2026-01-01T00:00:00Z' }).kind, 'conflict');
+  /* conflict = the local copy carries a genuinely newer edit than the remote.
+     A local timestamp older than the remote is an ordinary update, so the
+     conflicting item needs its own newer local edit here. */
+  const newerLocal = [{ id: 'c', googleId: 'g3', title: 'Mine', due: '2026-03-09T14:00', updated: Date.parse('2026-03-10T00:00:00Z') }];
+  assert.strictEqual(S.decide(newerLocal, { uid: 'g3', title: 'Theirs', due: '2026-03-09T14:00', updated: '2026-01-01T00:00:00Z' }).kind, 'conflict');
 });
 
 test('fingerprint normalises case and whitespace', () => {

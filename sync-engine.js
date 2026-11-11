@@ -27,8 +27,9 @@
      has no stable id yet (for example a hand-typed event that also exists in
      Google Calendar). */
   function fingerprint(item) {
-    var due = text(item && (item.due || item.start)).slice(0, 16);
-    return text(item && item.title).trim().toLowerCase() + '|' + due;
+    var due = text(item && (item.due || item.start)).trim().slice(0, 16);
+    var title = text(item && item.title).replace(/\s+/g, ' ').trim().toLowerCase();
+    return title + '|' + due;
   }
 
   function remoteId(r) { return text(r && (r.uid || r.googleId || r.icsUid)); }
