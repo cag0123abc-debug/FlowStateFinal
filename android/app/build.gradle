@@ -74,8 +74,13 @@ dependencies {
 // without -PfsWriteLocks nothing below is configured and assembleDebug behaves as before.
 // CI passes -PfsWriteLocks to record android/app/gradle.lockfile for vulnerability scanning.
 if (project.hasProperty('fsWriteLocks')) {
-    dependencyLocking {
-        lockAllConfigurations()
+    // The dependencyLocking extension is not guaranteed on an Android project, so look it up
+    // defensively: --write-locks still records every configuration this task resolves.
+    def lockHandler = project.extensions.findByName('dependencyLocking')
+    if (lockHandler != null) {
+        lockHandler.lockAllConfigurations()
+    } else {
+        logger.lifecycle('FlowState: dependencyLocking extension unavailable; --write-locks records resolved configurations.')
     }
 
     tasks.register('resolveAndLockAll') {

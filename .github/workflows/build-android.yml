@@ -51,7 +51,8 @@ jobs:
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
             git commit -m "chore(android): record dependency lockfile [skip ci]"
-            git push
+            # checkout leaves a push build in detached HEAD, so name the branch explicitly.
+            git push origin HEAD:refs/heads/feature/flowstate-final-update
           fi
 
       - name: Fail if lockfile generation failed
