@@ -2,3 +2,5 @@ android/.gradle/
 android/app/build/
 android/local.properties
 android/lock-generation.log
+android/plugin-lock/.gradle/
+android/plugin-lock/build/
