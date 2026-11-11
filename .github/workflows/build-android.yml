@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - feature/flowstate-final-update
     paths:
       - 'android/**'
       - '.github/workflows/build-android.yml'

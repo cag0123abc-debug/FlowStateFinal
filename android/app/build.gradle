@@ -4,6 +4,11 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+// The web app is bundled into the APK so the tablet always runs the current UI,
+// independent of which branch GitHub Pages publishes from.
+def webAssetDir = file("$buildDir/generated/webassets")
+def webAssetFiles = ['index.html', 'recurrence.js', 'sw.js', 'manifest.json']
+
 android {
     namespace 'com.flowstate.app'
     compileSdk 35
@@ -12,8 +17,8 @@ android {
         applicationId 'com.flowstate.app'
         minSdk 23
         targetSdk 35
-        versionCode 1
-        versionName '1.0'
+        versionCode 2
+        versionName '2.0'
     }
 
     buildTypes {
@@ -34,8 +39,33 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
+
+    sourceSets {
+        main {
+            assets.srcDirs += webAssetDir
+        }
+    }
 }
+
+tasks.register('copyWebAssets') {
+    outputs.dir(webAssetDir)
+    doLast {
+        webAssetDir.mkdirs()
+        webAssetFiles.each { name ->
+            def src = file("${rootProject.projectDir}/../$name")
+            if (src.exists()) {
+                new File(webAssetDir, name).bytes = src.bytes
+            } else {
+                logger.warn("FlowState: missing web asset ${src}")
+            }
+        }
+    }
+}
+
+tasks.named('preBuild').configure { dependsOn('copyWebAssets') }
 
 dependencies {
     implementation 'androidx.activity:activity-ktx:1.9.3'
+    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation 'androidx.webkit:webkit:1.12.1'
 }
