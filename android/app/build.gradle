@@ -76,6 +76,29 @@ dependencies {
     implementation 'androidx.webkit:webkit:1.12.1'
 }
 
+// Security: AGP 8.7.3 pulls vulnerable versions of netty, guava, protobuf-java and commons-io
+// onto its internal test-platform classpaths. Those jars never ship inside the APK, but they
+// are still resolved during the build, so pin them to their patched releases. Every bump stays
+// inside the same compatibility line (netty 4.1.x -> 4.1.x, guava 32 -> 33, protobuf 3.22 ->
+// 3.25, commons-io 2.13 -> 2.14) and applies to the build itself, not just to the lockfile.
+configurations.configureEach { cfg ->
+    cfg.resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == 'io.netty') {
+            // netty-handler 4.1.93 is flagged CRITICAL 9.1 (GHSA-c4c3-7fpv-j4q5); the whole
+            // group is released in lockstep, so all modules move together to avoid version skew.
+            details.useVersion '4.1.137.Final'
+        }
+    }
+    cfg.resolutionStrategy.force(
+        // GHSA-xxph-c9ww-hj94 (deserialization memory exhaustion)
+        'com.google.guava:guava:33.7.2',
+        // GHSA-735f-pc8j-v9w8 / CVE-2024-7254 (parsing DoS)
+        'com.google.protobuf:protobuf-java:3.25.5',
+        // GHSA-78wr-2p64-hpwj / CVE-2024-47554 (XmlStreamReader DoS)
+        'commons-io:commons-io:2.14.0'
+    )
+}
+
 // Dependency locking is opt-in so the normal APK build is completely unaffected:
 // without -PfsWriteLocks nothing below is configured and assembleDebug behaves as before.
 // CI passes -PfsWriteLocks to record android/app/gradle.lockfile for vulnerability scanning.
