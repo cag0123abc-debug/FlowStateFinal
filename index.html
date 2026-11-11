@@ -208,6 +208,59 @@ body.focus main{padding-bottom:24px}
 .lib .li img{width:100%;height:100%;object-fit:cover;display:block}
 .lib .li button{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:999px;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:12px;line-height:1;cursor:pointer}
 .row.wrap{flex-wrap:wrap}
+/* ==== FlowState 2.0 layout additions ==== */
+#fs-tools{position:fixed;top:10px;right:12px;display:flex;gap:6px;align-items:center;z-index:60}
+#fs-tools button{border:0;background:rgba(255,255,255,.85);border-radius:12px;padding:8px 10px;font-size:16px;box-shadow:0 2px 10px rgba(0,0,0,.12);cursor:pointer}
+#fs-tools .dot{color:#3d5ba9;font-size:18px}
+body.focus .rail,body.focus #badge,body.focus #fab{display:none!important}
+body.focus #view{max-width:900px;margin:0 auto}
+.fadeIn{animation:fsIn .22s ease}
+@keyframes fsIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.dash{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.dash-sec{position:relative;grid-column:span 1}
+.dash-sec.l{grid-column:1/-1}
+.dash-sec.s{max-width:340px}
+.dash-tools{display:flex;gap:4px;justify-content:flex-end;opacity:.35;transition:opacity .2s}
+.dash-sec:hover .dash-tools{opacity:1}
+.dash-tools button{border:0;background:rgba(255,255,255,.7);border-radius:8px;padding:2px 7px;font-size:12px;cursor:pointer}
+.widget{position:relative;border-radius:20px;min-height:170px;display:flex;align-items:flex-end;padding:18px;color:#fff;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.14);background-size:cover;background-position:center}
+.widget.big{min-height:260px}
+.widget .wq{font-family:'Caveat',cursive;font-size:26px;line-height:1.15;text-shadow:0 2px 8px rgba(0,0,0,.45)}
+.widget .wsub{font-size:13px;opacity:.9;margin-top:4px}
+.books{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px}
+.book{position:relative;border-radius:8px 16px 16px 8px;min-height:190px;padding:16px 14px 14px 24px;color:#fff;overflow:hidden;box-shadow:0 10px 22px rgba(20,25,60,.22);cursor:pointer;background-size:cover;background-position:center;display:flex;flex-direction:column;justify-content:flex-end;transition:transform .18s ease}
+.book:hover{transform:translateY(-3px) rotate(-.4deg)}
+.book-spine{position:absolute;left:0;top:0;bottom:0;width:12px;background:linear-gradient(90deg,rgba(0,0,0,.28),rgba(255,255,255,.12));border-radius:8px 0 0 8px}
+.book-sticker{position:absolute;top:10px;right:10px;font-size:26px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.35))}
+.book-title{font-size:19px;font-weight:700;line-height:1.15;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+.book-sub{font-size:12px;opacity:.9;margin-top:2px}
+.book-meta{font-size:11px;opacity:.8;margin-top:8px}
+.book .del{position:absolute;top:6px;left:16px;border:0;background:rgba(0,0,0,.35);color:#fff;border-radius:8px;padding:2px 6px;cursor:pointer}
+.rep-more{margin-top:8px;padding:10px;border-radius:12px;background:rgba(0,0,0,.03)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.chip{border:1px solid rgba(0,0,0,.15);background:transparent;border-radius:999px;padding:5px 11px;font-size:13px;cursor:pointer}
+.chip.on{background:#3d5ba9;color:#fff;border-color:#3d5ba9}
+label.rad{display:block;font-size:14px;margin:2px 0}
+.calhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.calgrid small{text-align:center;opacity:.6;font-size:11px}
+.calcell{position:relative;border:0;background:rgba(255,255,255,.6);border-radius:10px;min-height:42px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.calcell.out{opacity:.35}
+.calcell.today{outline:2px solid #3d5ba9}
+.calcell.sel{background:#3d5ba9;color:#fff}
+.calcell i{position:absolute;bottom:3px;right:5px;font-size:10px;font-style:normal;opacity:.85}
+.browser-bar{display:flex;gap:8px}
+.browser-bar input{flex:1;padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.15);font-size:15px}
+.bm-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.bm{display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.75);border-radius:14px;padding:10px 12px}
+.bm .grow{flex:1;min-width:0;overflow:hidden}
+.bm small{display:block;opacity:.65;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{display:inline-block;background:rgba(61,91,169,.12);color:#3d5ba9;border-radius:999px;padding:2px 9px;font-size:11px}
+.badge.src{background:rgba(61,91,169,.9);color:#fff}
+.badge.skip{background:rgba(0,0,0,.1);color:#555}
+.card.occ{box-shadow:inset 3px 0 0 #3d5ba9}
+.sum{margin-top:8px;padding:10px;border-radius:12px;background:rgba(61,91,169,.07)}
+@media(max-width:720px){.dash{grid-template-columns:1fr}.dash-sec.s{max-width:none}}
 </style>
 </head>
 <body>
@@ -291,6 +344,721 @@ const LISTS=['Must Watch','Must Read','Must Play','To Do','Websites','Potential 
 const LABEL={event:'Event',homework:'Homework',test:'Test',summary:'Summary',project:'Project',note:'Note',bucket:'List item',recording:'Recording'};
 let FORM={},REC=null,RC='school',CCOL=PAL[0],UNDO=null,TT=null,CONF=null;
 let SYNC_BUSY=false,IMPORT_Q=[],WIDGET_CACHE={},CLIP=null;
+
+/* ===================== FlowState 2.0 subsystems ===================== */
+const DAYN=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const DAYL=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const QUOTES=['Small steps still move you forward.','You do not have to finish today, only begin.','Focus is choosing one thing on purpose.','Progress hides in ordinary afternoons.','Done is better than perfect.','Rest is part of the work.','One page, one problem, one step.','Your future self is watching. Make them proud.'];
+const SCENES=['linear-gradient(135deg,#8fd3a8,#7fd6e8)','linear-gradient(135deg,#f7c77a,#f49a6b)','linear-gradient(135deg,#9db4f0,#c39bf0)','linear-gradient(135deg,#ff8fa3,#f7c77a)','linear-gradient(135deg,#3d5ba9,#7fd6e8)','linear-gradient(135deg,#c39bf0,#ff8fa3)'];
+function fsUid(){return Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4)}
+function sourceLabel(i){if(!i)return 'FlowState';if(i.source==='google')return 'Google · '+(i.calendar||'Calendar');if(i.source==='ics')return 'Imported · .ics';if(i.source==='share')return 'Shared in';return 'FlowState'}
+function quoteOfDay(){const n=Math.floor((Date.now()-new Date(new Date().getFullYear(),0,0))/864e5);return QUOTES[n%QUOTES.length]}
+function sceneOfDay(){const n=Math.floor((Date.now()-new Date(new Date().getFullYear(),0,0))/864e5);return SCENES[n%SCENES.length]}
+
+/* ---------- expandable text ---------- */
+function expandable(text,limit){
+  const t=String(text==null?'':text);
+  if(!t)return '';
+  const id='x'+fsUid();
+  if(t.length<=(limit||260))return `<div class="body">${esc(t)}</div>`;
+  return `<div class="body clamp" id="${id}">${esc(t)}</div><button class="expbtn" data-exp="${id}" onclick="toggleExp(this)">Show more ▾</button>`;
+}
+function toggleExp(btn){
+  const el=document.getElementById(btn.dataset.exp);if(!el)return;
+  const open=el.classList.toggle('open');
+  btn.textContent=open?'Show less ▴':'Show more ▾';
+}
+
+/* ---------- offline blob store (images + audio survive storage limits) ---------- */
+const BLOBS={
+  db:null,
+  open(){return new Promise((res,rej)=>{
+    if(this.db)return res(this.db);
+    try{
+      const r=indexedDB.open('flowstate-blobs',1);
+      r.onupgradeneeded=()=>{const db=r.result;if(!db.objectStoreNames.contains('files'))db.createObjectStore('files')};
+      r.onsuccess=()=>{this.db=r.result;res(this.db)};
+      r.onerror=()=>rej(r.error);
+    }catch(e){rej(e)}
+  })},
+  async put(key,blob){const db=await this.open();return new Promise((res,rej)=>{const tx=db.transaction('files','readwrite');tx.objectStore('files').put(blob,key);tx.oncomplete=()=>res(key);tx.onerror=()=>rej(tx.error)})},
+  async get(key){const db=await this.open();return new Promise((res,rej)=>{const tx=db.transaction('files','readonly');const rq=tx.objectStore('files').get(key);rq.onsuccess=()=>res(rq.result||null);rq.onerror=()=>rej(rq.error)})},
+  async del(key){const db=await this.open();return new Promise(res=>{const tx=db.transaction('files','readwrite');tx.objectStore('files').delete(key);tx.oncomplete=()=>res(true)})},
+  async url(key){const b=await this.get(key);return b?URL.createObjectURL(b):''}
+};
+
+/* ---------- native bridge (Android) ---------- */
+function native(){return window.FlowStateNative||null}
+function isNative(){return !!native()}
+async function readSharedAudio(fileId){
+  const b=native();if(!b||!b.readSharedChunk)return null;
+  const parts=[];let off=0;const size=Number(b.sharedSize(fileId)||0);
+  while(off<size){const chunk=b.readSharedChunk(fileId,off,524288);if(!chunk)break;parts.push(chunk);off+=524288}
+  const bin=atob(parts.join(''));const arr=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
+  return new Blob([arr],{type:'audio/*'});
+}
+
+/* ---------- recurrence helpers ---------- */
+function itemOccurrences(i,from,to){
+  if(!i.repeat||!i.repeat.freq)return i.due?[{key:FSRec.dk(new Date(i.due)),date:new Date(i.due),item:i}]:[];
+  try{return FSRec.occurrences(i,from||null,to||null)}catch(e){return []}
+}
+function itemsOnDay(k){
+  const day=new Date(k+'T00:00:00'),end=new Date(k+'T23:59:59');
+  const out=[];
+  D.items.forEach(i=>{
+    if(!i.due)return;
+    if(i.repeat&&i.repeat.freq){itemOccurrences(i,day,end).forEach(o=>out.push({item:i,occ:o.key,date:o.date}))}
+    else{const d=new Date(i.due);if(FSRec.dk(d)===k)out.push({item:i,occ:null,date:d})}
+  });
+  return out.sort((a,b)=>a.date-b.date);
+}
+function upcomingItems(days){
+  const from=new Date();const to=new Date(Date.now()+(days||14)*864e5);const out=[];
+  D.items.forEach(i=>{
+    if(!i.due||i.done)return;
+    if(i.repeat&&i.repeat.freq){itemOccurrences(i,from,to).forEach(o=>out.push({item:i,occ:o.key,date:o.date}))}
+    else{const d=new Date(i.due);if(d>=from&&d<=to)out.push({item:i,occ:null,date:d})}
+  });
+  return out.sort((a,b)=>a.date-b.date);
+}
+const WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const ORD=['first','second','third','fourth','last'];
+function repeatEditor(r){
+  r=r||{freq:'none'};
+  const freq=r.freq||'none';
+  const wds=Array.isArray(r.byWeekday)?r.byWeekday:[];
+  const mode=r.monthMode||(r.bySetPos?'nth':'day');
+  return `<div class="rep">
+  <label>Repeat <select id="f-rep" onchange="repUI()">
+    <option value="none" ${freq==='none'?'selected':''}>Does not repeat</option>
+    <option value="weekly" ${freq==='weekly'?'selected':''}>Every week on chosen days</option>
+    <option value="monthly" ${freq==='monthly'?'selected':''}>Every month</option>
+    <option value="daily" ${freq==='daily'?'selected':''}>Every day</option>
+    <option value="yearly" ${freq==='yearly'?'selected':''}>Every year</option>
+  </select></label>
+  <div id="rep-more" class="rep-more">
+    <label>Every <input id="f-int" type="number" min="1" max="52" value="${r.interval||1}" style="width:70px"> ${freq==='weekly'?'week(s)':freq==='monthly'?'month(s)':freq==='yearly'?'year(s)':'day(s)'}</label>
+    <div id="rep-wd"><small>On these days</small><div class="chips">${WD.map((d,i)=>`<button type="button" class="chip ${wds.includes(i)?'on':''}" data-wd="${i}" onclick="this.classList.toggle('on')">${d}</button>`).join('')}</div></div>
+    <div id="rep-mo"><small>Monthly pattern</small>
+      <label class="rad"><input type="radio" name="mmode" value="day" ${mode==='day'?'checked':''} onchange="repUI()"> Same day number</label>
+      <label class="rad"><input type="radio" name="mmode" value="nth" ${mode==='nth'?'checked':''} onchange="repUI()"> Nth weekday</label>
+      <div id="rep-nth" class="row"><select id="f-nth">${ORD.map((o,i)=>`<option value="${i+1}" ${String(r.bySetPos)===String(i+1)?'selected':''}>${o}</option>`).join('')}<option value="-1" ${String(r.bySetPos)==='-1'?'selected':''}>last</option></select><select id="f-nthd">${DAYL.map((d,i)=>`<option value="${i}" ${String(r.byWeekday&&r.byWeekday[0])===String(i)?'selected':''}>${d}</option>`).join('')}</select></div>
+    </div>
+    <label>Ends <select id="f-endmode" onchange="repUI()"><option value="never" ${!r.until&&!r.count?'selected':''}>Never</option><option value="until" ${r.until?'selected':''}>On date</option><option value="count" ${r.count?'selected':''}>After N times</option></select></label>
+    <div class="row"><input id="f-until" type="date" value="${r.until||''}" style="display:${r.until?'block':'none'}"><input id="f-count" type="number" min="1" value="${r.count||''}" placeholder="Times" style="width:90px;display:${r.count?'block':'none'}"></div>
+  </div></div>`;
+}
+function repUI(){
+  const f=$('#f-rep');if(!f)return;const v=f.value;
+  const more=$('#rep-more');if(more)more.style.display=v==='none'?'none':'block';
+  const wd=$('#rep-wd');if(wd)wd.style.display=v==='weekly'?'block':'none';
+  const mo=$('#rep-mo');if(mo)mo.style.display=v==='monthly'?'block':'none';
+  const nth=$('#rep-nth');if(nth){const m=document.querySelector('input[name="mmode"]:checked');nth.style.display=(v==='monthly'&&m&&m.value==='nth')?'flex':'none'}
+  const em=$('#f-endmode');if(em){const u=$('#f-until'),c=$('#f-count');if(u)u.style.display=em.value==='until'?'block':'none';if(c)c.style.display=em.value==='count'?'block':'none'}
+}
+function readRepeat(){
+  const f=$('#f-rep');if(!f||f.value==='none')return null;
+  const rep={freq:f.value,interval:Math.max(1,Number(($('#f-int')||{}).value||1))};
+  if(f.value==='weekly')rep.byWeekday=[...document.querySelectorAll('#rep-wd .chip.on')].map(b=>Number(b.dataset.wd));
+  if(f.value==='monthly'){
+    const m=document.querySelector('input[name="mmode"]:checked');
+    rep.monthMode=m?m.value:'day';
+    if(rep.monthMode==='nth'){rep.bySetPos=Number($('#f-nth').value);rep.byWeekday=[Number($('#f-nthd').value)]}
+  }
+  const em=$('#f-endmode');
+  if(em&&em.value==='until'&&$('#f-until').value)rep.until=$('#f-until').value;
+  if(em&&em.value==='count'&&$('#f-count').value)rep.count=Math.max(1,Number($('#f-count').value));
+  return FSRec.normalise(rep);
+}
+
+/* ---------- templates ---------- */
+const TPL_DEF=[
+  {id:'tpl-work',name:'Work shift',icon:'💼',cat:'work',title:'Work',start:'09:00',end:'17:00',repeat:{freq:'weekly',interval:1,byWeekday:[1,2,3,4,5]}},
+  {id:'tpl-school',name:'School day',icon:'🎓',cat:'school',title:'School',start:'08:00',end:'15:00',repeat:{freq:'weekly',interval:1,byWeekday:[1,2,3,4,5]}},
+  {id:'tpl-study',name:'Study block',icon:'📚',cat:'school',title:'Study session',start:'19:00',end:'20:00',repeat:{freq:'weekly',interval:1,byWeekday:[3,4,6]}}
+];
+function templates(){return (D.templates&&D.templates.length)?D.templates:TPL_DEF}
+function applyTemplate(id){
+  const t=templates().find(x=>x.id===id);if(!t)return;
+  const date=S.quickDate||S.sel||FSRec.dk(new Date());
+  const item=normalizeItem({id:fsUid(),type:'event',cat:t.cat||'home',title:t.title,due:date+'T'+(t.start||'09:00'),created:Date.now(),repeat:t.repeat?FSRec.normalise(t.repeat):null,endTime:t.end||''});
+  D.items.push(item);save();sendGoogleSync('upsert',item);closeSheet();toast('Added from template: '+t.name);render();
+}
+function saveTemplateFromForm(){
+  const t={id:'tpl-'+fsUid(),name:($('#f-tplname')||{}).value||'My routine',icon:'🔁',cat:($('#f-cat')||{}).value||'home',title:($('#f-title')||{}).value||'Routine',start:(($('#f-due')||{}).value||'').slice(11,16)||'09:00',end:'',repeat:readRepeat()};
+  D.templates=(D.templates||TPL_DEF.slice());D.templates.push(t);save();closeSheet();toast('Template saved');render();
+}
+
+/* ---------- universal quick add ---------- */
+function openMenu(){
+  const k=S.quickDate||S.sel||FSRec.dk(new Date());
+  sheet(`<h2>Quick add</h2><p class="empty">Adding to ${esc(fmt(k+'T12:00'))}</p>
+  <div class="grid2">
+    <button onclick="openForm('event',null,{cat:'${S.tab==='school'?'school':'home'}',date:'${k}'})">🗓️ Event</button>
+    <button onclick="openForm('homework',null,{cat:'${S.tab==='school'?'school':'home'}',date:'${k}'})">📝 Task / homework</button>
+    <button onclick="openForm('note',null,{date:'${k}'})">📄 Note</button>
+    <button onclick="openForm('event',null,{cat:'personal',date:'${k}',reminder:true})">🔔 Reminder</button>
+    <button onclick="openForm('summary',null,{date:'${k}'})">📚 Summary</button>
+    <button onclick="openForm('bucket',null,{})">📋 List item</button>
+  </div>
+  <h3>Schedule templates</h3><div class="row wrap">${templates().map(t=>`<button onclick="applyTemplate('${t.id}')">${t.icon} ${esc(t.name)}</button>`).join('')}</div>
+  <div class="row"><button onclick="openSearch()">🔍 Search everything</button><button onclick="closeSheet()">Close</button></div>`);
+}
+function quickAdd(type){openForm(type||'event',null,{date:S.quickDate||S.sel})}
+
+/* ---------- day panel (calendar date quick-add) ---------- */
+function openDay(k){
+  const rows=itemsOnDay(k);
+  const list=rows.length?rows.map(r=>`<div class="card${r.item.done?' done':''}" onclick="openDetail('${r.item.id}','${r.occ||''}')"><div class="grow"><b>${esc(r.item.title)}</b><small>${r.date.toTimeString().slice(0,5)} · ${esc(LABEL[r.item.type]||'')}${r.occ?' · occurrence':''}</small></div></div>`).join(''):'<p class="empty">Nothing scheduled. Add something below.</p>';
+  sheet(`<h2>${esc(fmt(k+'T12:00').replace(/,.*?at.*/,''))}</h2>
+  ${list}
+  <div class="grid2" style="margin-top:10px">
+    <button class="primary" onclick="closeSheet();openForm('event',null,{date:'${k}'})">+ Event</button>
+    <button onclick="closeSheet();openForm('homework',null,{date:'${k}'})">+ Task</button>
+    <button onclick="closeSheet();openForm('event',null,{date:'${k}',reminder:true})">+ Reminder</button>
+    <button onclick="closeSheet();openForm('note',null,{date:'${k}'})">+ Note</button>
+  </div>
+  <div class="row wrap" style="margin-top:8px">${templates().map(t=>`<button onclick="applyTemplate('${t.id}')">${t.icon} ${esc(t.name)}</button>`).join('')}</div>
+  <div class="row"><button onclick="closeSheet()">Close</button></div>`);
+}
+
+/* ---------- forms ---------- */
+function openForm(type,id,pre){
+  pre=pre||{};
+  if(type==='class')return classForm();
+  const ex=id?D.items.find(x=>x.id===id):null;
+  FORM=ex?Object.assign({},ex):{type:type||'event',cat:pre.cat||(S.tab==='school'&&S.cls?'school':'home'),cls:pre.cls||S.cls||'',due:pre.date?pre.date+'T09:00':''};
+  if(ex)FORM.id=ex.id;
+  const types=Object.keys(LABEL);
+  const dateVal=FORM.due?String(FORM.due).slice(0,16):'';
+  sheet(`<h2>${ex?'Edit':'New'} ${esc(LABEL[FORM.type]||'item')}</h2>
+  <label>Type <select id="f-type" onchange="FORM.type=this.value">${types.map(t=>`<option value="${t}" ${FORM.type===t?'selected':''}>${LABEL[t]}</option>`).join('')}</select></label>
+  <label>Title <input id="f-title" value="${esc(FORM.title||'')}" placeholder="What is it?"></label>
+  <label>When <input id="f-due" type="datetime-local" value="${dateVal}"></label>
+  <label>Category <select id="f-cat">${Object.keys(CATS).map(c=>`<option value="${c}" ${FORM.cat===c?'selected':''}>${CATS[c]}</option>`).join('')}</select></label>
+  <label>Class <select id="f-cls"><option value="">None</option>${D.classes.map(c=>`<option value="${c.id}" ${FORM.cls===c.id?'selected':''}>${esc(c.name)}</option>`).join('')}</select></label>
+  <label>Priority <select id="f-pri"><option value="" ${!FORM.priority?'selected':''}>Normal</option><option value="high" ${FORM.priority==='high'?'selected':''}>High</option><option value="low" ${FORM.priority==='low'?'selected':''}>Low</option></select></label>
+  <label>Notes <textarea id="f-body" placeholder="Details, links, anything">${esc(FORM.body||'')}</textarea></label>
+  ${repeatEditor(FORM.repeat)}
+  ${ex?'':`<label>Save as schedule template <input id="f-tplname" placeholder="Optional template name"></label>`}
+  <div class="row"><button class="primary" onclick="saveForm()">Save</button><button onclick="closeSheet()">Cancel</button>${ex?`<button class="danger" onclick="delItem('${ex.id}')">Delete</button>`:''}</div>
+  ${ex?'<div class="row wrap"><button onclick="saveTemplateFromForm()">Save as template</button></div>':''}`);
+  repUI();
+}
+function saveForm(){
+  const title=($('#f-title')||{}).value||'';
+  if(!title.trim()){toast('Give it a title first.');return}
+  const due=($('#f-due')||{}).value||'';
+  const rep=readRepeat();
+  const patch={type:($('#f-type')||{}).value||'event',title:title.trim(),cat:($('#f-cat')||{}).value||'home',cls:($('#f-cls')||{}).value||'',priority:($('#f-pri')||{}).value||'',body:($('#f-body')||{}).value||'',due,repeat:rep};
+  const tplName=($('#f-tplname')||{}).value;
+  let item=FORM.id?D.items.find(x=>x.id===FORM.id):null;
+  if(item){
+    Object.assign(item,patch);item.updated=Date.now();
+    if(rep&&!item.seriesStart)item.seriesStart=due.slice(0,10);
+    save();sendGoogleSync('upsert',item);
+  }else{
+    item=normalizeItem(Object.assign({id:fsUid(),created:Date.now()},patch));
+    if(rep)item.seriesStart=due.slice(0,10);
+    D.items.push(item);save();sendGoogleSync('upsert',item);
+  }
+  if(tplName&&tplName.trim()){
+    D.templates=(D.templates||TPL_DEF.slice());
+    D.templates.push({id:'tpl-'+fsUid(),name:tplName.trim(),icon:'🔁',cat:patch.cat,title:patch.title,start:due.slice(11,16)||'09:00',end:'',repeat:rep});save();
+  }
+  closeSheet();render();toast('Saved');
+}
+
+/* ---------- series scope actions ---------- */
+function askSeriesScope(itemId,occ,action){
+  S.seriesCtx={itemId,occ,action};
+  sheet(`<h2>This is a repeating event</h2><p class="empty">What should change?</p>
+  <div class="row wrap">
+    <button class="primary" onclick="seriesDo('one')">Only ${esc(occ||'this occurrence')}</button>
+    <button onclick="seriesDo('future')">This and following</button>
+    <button class="danger" onclick="seriesDo('all')">Entire series</button>
+    <button onclick="closeSheet()">Cancel</button>
+  </div>`);
+}
+function seriesDo(scope){
+  const c=S.seriesCtx;if(!c)return closeSheet();
+  const item=D.items.find(x=>x.id===c.itemId);if(!item)return closeSheet();
+  if(c.action==='skip'){
+    if(scope==='one'){FSRec.skipOccurrence(item,c.occ);toast('Occurrence skipped. The series continues.')}
+    else if(scope==='future'){item.repeat=Object.assign({},item.repeat,{until:FSRec.dk(new Date(new Date(c.occ+'T12:00').getTime()-864e5))});toast('Series ends before this date.')}
+    else{const idx=D.items.indexOf(item);if(idx>=0)D.items.splice(idx,1);toast('Series deleted.')}
+    save();sendGoogleSync('upsert',item);closeSheet();render();return;
+  }
+  if(c.action==='delete'){
+    if(scope==='one'){FSRec.skipOccurrence(item,c.occ);toast('Occurrence removed.')}
+    else if(scope==='future'){item.repeat=Object.assign({},item.repeat,{until:FSRec.dk(new Date(new Date(c.occ+'T12:00').getTime()-864e5))});toast('Remaining occurrences removed.')}
+    else{D.items=D.items.filter(x=>x.id!==item.id);toast('Entire series deleted.')}
+    save();sendGoogleSync(scope==='all'?'delete':'upsert',item,item.id);closeSheet();render();return;
+  }
+  closeSheet();
+}
+function skipOccurrenceFlow(id,occ){
+  const item=D.items.find(x=>x.id===id);if(!item)return;
+  if(!item.repeat){toast('This event does not repeat.');return}
+  askSeriesScope(id,occ,'skip');
+}
+function moveOccurrenceFlow(id,occ){
+  const item=D.items.find(x=>x.id===id);if(!item||!occ)return;
+  sheet(`<h2>Move this occurrence</h2><label>New date and time <input id="occ-due" type="datetime-local" value="${esc(String(item.due||'').slice(0,16))}"></label>
+  <div class="row"><button class="primary" onclick="doMoveOccurrence('${id}','${occ}')">Move</button><button onclick="closeSheet()">Cancel</button></div>`);
+}
+function doMoveOccurrence(id,occ){
+  const item=D.items.find(x=>x.id===id);const v=($('#occ-due')||{}).value;
+  if(!item||!v)return;
+  FSRec.overrideOccurrence(item,occ,{due:v});save();sendGoogleSync('upsert',item);closeSheet();render();toast('Occurrence moved. Other dates are unchanged.');
+}
+
+/* ---------- detail ---------- */
+function openDetail(id,occ){
+  const i=D.items.find(x=>x.id===id);if(!i)return;
+  const when=occ?new Date(occ+'T'+(String(i.due||'').slice(11,16)||'09:00')):null;
+  sheet(`<small>${esc(LABEL[i.type]||'')}${i.cat?' · '+CATS[i.cat]:''}${i.cls?' · '+esc(clsName(i.cls)):''}</small>
+  <h2>${esc(i.title)}</h2>
+  ${occ?`<p><b>This occurrence:</b> ${esc(fmt(FSRec.dk(when)+'T'+String(i.due||'').slice(11,16)))}</p>`:''}
+  ${i.due?`<p>${i.repeat?'Repeats':'Due'} ${esc(fmt(i.due))}</p>`:''}
+  ${i.repeat?`<p><span class="badge">🔁 ${esc(FSRec.describeRepeat(i.repeat))}</span></p>`:''}
+  ${i.repeat&&i.exdates&&i.exdates.length?`<p class="empty">${i.exdates.length} skipped occurrence(s): ${i.exdates.map(esc).join(', ')}</p>`:''}
+  <p class="empty">Source: ${esc(sourceLabel(i))}</p>
+  ${i.body?expandable(i.body,240):''}
+  ${i.transcript?`<h3>Transcript</h3>${expandable(i.transcript,300)}`:''}
+  ${i.summary?`<h3>Summary</h3>${expandable(i.summary,300)}`:''}
+  ${i.audioKey?`<h3>Audio</h3><audio controls id="aud-${i.id}" style="width:100%"></audio>`:''}
+  <div class="row wrap">
+    ${i.type==='recording'?'':`<button onclick="closeSheet();openForm(null,'${id}')">Edit</button>`}
+    ${occ?`<button onclick="closeSheet();moveOccurrenceFlow('${id}','${occ}')">Move this occurrence</button>`:''}
+    ${occ?`<button onclick="closeSheet();skipOccurrenceFlow('${id}','${occ}')">Skip this occurrence</button>`:''}
+    ${i.due?`<button onclick="icsFor('${id}')">Calendar file</button>`:''}
+    ${i.type==='recording'?`<button onclick="closeSheet();summarizeRecording('${id}')">AI summary</button>`:''}
+    <button class="danger" onclick="${i.repeat?`closeSheet();askSeriesScope('${id}','${occ||''}','delete')`:`delItem('${id}')`}">Delete</button>
+    <button onclick="closeSheet()">Close</button>
+  </div>`);
+  if(i.audioKey)BLOBS.url(i.audioKey).then(u=>{const a=$('#aud-'+i.id);if(a&&u)a.src=u});
+}
+
+/* ---------- home dashboard ---------- */
+function dashCfg(){
+  if(!Array.isArray(D.settings.dash))D.settings.dash=DASH_DEF.map(x=>Object.assign({},x));
+  return D.settings.dash;
+}
+function dashSection(id){
+  const c=dashCfg().find(x=>x.id===id);
+  return c&&c.on?c:null;
+}
+function moveDash(id,dir){
+  const arr=dashCfg();const i=arr.findIndex(x=>x.id===id);if(i<0)return;
+  const j=i+dir;if(j<0||j>=arr.length)return;
+  const t=arr[i];arr[i]=arr[j];arr[j]=t;save();render();
+}
+function toggleDash(id){const c=dashCfg().find(x=>x.id===id);if(c){c.on=!c.on;save();render()}}
+function setDashSize(id,size){const c=dashCfg().find(x=>x.id===id);if(c){c.size=size;save();render()}}
+function widgetBlock(size){
+  const mode=D.settings.widgetMode||'daily';
+  const img=widgetPick(mode);
+  const big=size==='l';
+  if(img&&img.kind==='image')return `<div class="widget ${big?'big':''}" style="background-image:url('${img.src}')"><div class="wq">${esc(quoteOfDay())}</div></div>`;
+  return `<div class="widget ${big?'big':''}" style="background:${sceneOfDay()}"><div class="wq">${esc(quoteOfDay())}</div><div class="wsub">${esc(D.settings.widgetNote||'One step at a time')}</div></div>`;
+}
+function widgetPick(mode){
+  const lib=(D.images||[]).filter(im=>(im.collections||[]).some(c=>(D.settings.widgetCollections||[]).includes(c)));
+  if(!lib.length)return null;
+  if(mode==='random'||mode==='open')return lib[Math.floor(Math.random()*lib.length)];
+  const n=Math.floor((Date.now()-new Date(new Date().getFullYear(),0,0))/864e5);
+  return lib[n%lib.length];
+}
+function refreshWidget(){S.widgetIdx=(S.widgetIdx||0)+1;render();toast('New inspiration')}
+function viewHome(){
+  const cfg=dashCfg();
+  const sections={
+    widget:()=>widgetBlock('m'),
+    today:()=>`<div class="panel"><h3>Today</h3>${itemsOnDay(FSRec.dk(new Date())).length?itemsOnDay(FSRec.dk(new Date())).map(r=>card(r.item,r.occ)).join(''):'<p class="empty">Nothing scheduled today. Enjoy the space.</p>'}</div>`,
+    calendar:()=>`<div class="panel">${calMini()}</div>`,
+    books:()=>`<div class="panel"><h3>Class books</h3><div class="books">${D.classes.map(bookCard).join('')||'<p class="empty">Add a class to start a book.</p>'}</div></div>`,
+    upcoming:()=>`<div class="panel"><h3>Next 14 days</h3>${upcomingItems(14).slice(0,8).map(r=>card(r.item,r.occ)).join('')||'<p class="empty">Nothing coming up.</p>'}</div>`,
+    notes:()=>`<div class="panel"><h3>Notes</h3>${list(D.items.filter(i=>i.type==='note').slice(-4).reverse())}</div>`,
+    recordings:()=>`<div class="panel"><h3>Recordings</h3>${list(D.items.filter(i=>i.type==='recording').slice(-4).reverse())}</div>`
+  };
+  return `<div class="dash">${cfg.filter(c=>c.on).map(c=>`<div class="dash-sec ${c.size||'m'}">
+    <div class="dash-tools"><button title="Move up" onclick="moveDash('${c.id}',-1)">↑</button><button title="Move down" onclick="moveDash('${c.id}',1)">↓</button><button title="Change size" onclick="setDashSize('${c.id}','${c.size==='l'?'m':c.size==='m'?'s':'l'}')">${c.size||'m'}</button><button title="Hide this section" onclick="toggleDash('${c.id}')">✕</button></div>
+    ${(sections[c.id]||(()=>''))()}</div>`).join('')}
+  <div class="row wrap"><button onclick="openDashSettings()">Customize dashboard</button><button onclick="refreshWidget()">New inspiration</button></div></div>`;
+}
+function openDashSettings(){
+  sheet(`<h2>Dashboard</h2><p class="empty">Show, hide and reorder sections.</p>
+  ${dashCfg().map(c=>`<div class="row" style="justify-content:space-between"><label><input type="checkbox" ${c.on?'checked':''} onchange="toggleDash('${c.id}')"> ${c.id}</label><span class="row"><button onclick="moveDash('${c.id}',-1)">↑</button><button onclick="moveDash('${c.id}',1)">↓</button></span></div>`).join('')}
+  <div class="row"><button onclick="closeSheet()">Done</button></div>`);
+}
+function calMini(){
+  const base=S.month||new Date(new Date().getFullYear(),new Date().getMonth(),1);
+  const y=base.getFullYear(),m=base.getMonth();
+  const first=new Date(y,m,1),start=new Date(y,m,1-first.getDay());
+  const cells=[];
+  for(let i=0;i<42;i++){
+    const d=new Date(start.getFullYear(),start.getMonth(),start.getDate()+i);
+    const k=FSRec.dk(d);
+    const n=itemsOnDay(k).length;
+    const cls=[d.getMonth()===m?'':'out',k===S.sel?'sel':'',k===FSRec.dk(new Date())?'today':''].join(' ');
+    cells.push(`<button class="calcell ${cls}" onclick="selDay('${k}')"><span>${d.getDate()}</span>${n?`<i>${n}</i>`:''}</button>`);
+  }
+  return `<div class="calhead"><button onclick="shiftMonth(-1)" title="Previous month">‹</button><b>${first.toLocaleString(undefined,{month:'long',year:'numeric'})}</b><button onclick="shiftMonth(1)" title="Next month">›</button></div>
+  <div class="calgrid">${WD.map(d=>`<small>${d}</small>`).join('')}${cells.join('')}</div>
+  <div class="row wrap"><button class="primary" onclick="openDay('${S.sel||FSRec.dk(new Date())}')">Open ${esc(S.sel||'today')}</button><button onclick="openForm('event',null,{date:'${S.sel||FSRec.dk(new Date())}'})">+ Event</button></div>`;
+}
+function shiftMonth(n){const b=S.month||new Date();S.month=new Date(b.getFullYear(),b.getMonth()+n,1);render()}
+
+/* ---------- class books ---------- */
+function bookCard(c){
+  const cover=c.cover||c.img;
+  const style=cover?`background-image:url('${cover}')`:`background:linear-gradient(160deg,${c.color||'#9db4f0'},${shade(c.color||'#9db4f0')})`;
+  return `<div class="book" data-book="${c.id}" style="${style}">
+    <div class="book-sticker">${esc(c.sticker||c.icon||'📘')}</div>
+    <div class="book-spine"></div>
+    <div class="book-title" style="font-family:${c.font||'inherit'}">${esc(c.title||c.name)}</div>
+    ${c.subtitle?`<div class="book-sub">${esc(c.subtitle)}</div>`:''}
+    <div class="book-meta">${D.items.filter(i=>i.cls===c.id).length} items</div>
+  </div>`;
+}
+function shade(hex){
+  const h=String(hex).replace('#','');const n=parseInt(h.length===3?h.split('').map(x=>x+x).join(''):h,16);
+  const r=Math.max(0,((n>>16)&255)-38),g=Math.max(0,((n>>8)&255)-38),b=Math.max(0,(n&255)-38);
+  return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
+}
+function viewClassSelect(){
+  return `<h1>Class books</h1>
+  <p class="empty">Tap a book to open it. Long press or use Edit to change the cover.</p>
+  <div class="books">${D.classes.map(bookCard).join('')||'<p class="empty">No classes yet.</p>'}</div>
+  <div class="row wrap"><button class="primary" onclick="classForm()">+ New book</button><button onclick="reorderBooks()">Reorder</button></div>`;
+}
+function reorderBooks(){
+  sheet(`<h2>Reorder books</h2>${D.classes.map((c,i)=>`<div class="row" style="justify-content:space-between"><span>${esc(c.sticker||c.icon||'📘')} ${esc(c.title||c.name)}</span><span class="row"><button onclick="moveBook('${c.id}',-1)">↑</button><button onclick="moveBook('${c.id}',1)">↓</button></span></div>`).join('')}<div class="row"><button onclick="closeSheet()">Done</button></div>`);
+}
+function moveBook(id,dir){
+  const i=D.classes.findIndex(c=>c.id===id);const j=i+dir;
+  if(i<0||j<0||j>=D.classes.length)return;
+  const t=D.classes[i];D.classes[i]=D.classes[j];D.classes[j]=t;
+  D.classes.forEach((c,k)=>c.order=k);save();reorderBooks();render();
+}
+function classForm(){
+  const id=FORM.id;const c=id?D.classes.find(x=>x.id===id):null;
+  const cur=c||{color:PAL[0],icon:'📘'};
+  sheet(`<h2>${c?'Edit book':'New book'}</h2>
+  <label>Title <input id="c-title" value="${esc(cur.title||cur.name||'')}" placeholder="Math"></label>
+  <label>Subtitle <input id="c-sub" value="${esc(cur.subtitle||'')}" placeholder="Period 3 · Room 12"></label>
+  <label>Sticker or emoji <input id="c-sticker" value="${esc(cur.sticker||cur.icon||'📘')}" maxlength="4"></label>
+  <label>Title font <select id="c-font"><option value="">Default</option><option value="Fredoka" ${cur.font==='Fredoka'?'selected':''}>Fredoka</option><option value="'Patrick Hand'" ${cur.font==="'Patrick Hand'"?'selected':''}>Handwritten</option><option value="Caveat" ${cur.font==='Caveat'?'selected':''}>Script</option><option value="Lexend" ${cur.font==='Lexend'?'selected':''}>Lexend</option></select></label>
+  <label>Cover colour <input id="c-color" type="color" value="${cur.color||'#9db4f0'}"></label>
+  <label>Cover image <input type="file" accept="image/*" onchange="setBookCover(this.files[0])"></label>
+  ${cur.cover||cur.img?'<div class="row"><button onclick="clearBookCover()">Remove cover image</button></div>':''}
+  <div class="row"><button class="primary" onclick="saveBook()">Save</button><button onclick="closeSheet()">Cancel</button>${c?`<button class="danger" onclick="delClass('${c.id}')">Delete</button>`:''}</div>`);
+  CCOL=cur.color||PAL[0];
+}
+function setBookCover(file){
+  if(!file)return;
+  const fr=new FileReader();
+  fr.onload=()=>{const im=new Image();im.onerror=()=>toast('That image will not open. Try a JPG or PNG.');im.onload=()=>{
+    const sc=Math.min(1,420/Math.max(im.width,im.height));
+    const cv=document.createElement('canvas');cv.width=Math.round(im.width*sc);cv.height=Math.round(im.height*sc);
+    cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);
+    FORM.cover=cv.toDataURL('image/jpeg',0.82);toast('Cover ready. Tap Save.');
+  };im.src=fr.result};
+  fr.readAsDataURL(file);
+}
+function clearBookCover(){FORM.cover='';toast('Cover image will be removed on save.');classForm()}
+function saveBook(){
+  const title=($('#c-title')||{}).value||'';
+  if(!title.trim()){toast('Give the book a title.');return}
+  const patch={name:title.trim(),title:title.trim(),subtitle:($('#c-sub')||{}).value||'',sticker:($('#c-sticker')||{}).value||'📘',icon:($('#c-sticker')||{}).value||'📘',font:($('#c-font')||{}).value||'',color:($('#c-color')||{}).value||PAL[0]};
+  if(FORM.cover!==undefined)patch.cover=FORM.cover;
+  if(FORM.id){const c=D.classes.find(x=>x.id===FORM.id);if(c)Object.assign(c,patch)}
+  else{D.classes.push(Object.assign({id:fsUid(),size:'m',order:D.classes.length},patch))}
+  FORM={};save();closeSheet();render();toast('Book saved');
+}
+function saveClass(){saveBook()}
+
+/* ---------- recordings ---------- */
+function viewMedia(){
+  const recs=D.items.filter(i=>i.type==='recording').slice().reverse();
+  return `<h1>Recordings</h1>
+  <p class="empty">Share a recording or transcript from Samsung Voice Recorder and choose FlowState. Audio is copied into FlowState's own storage, so it keeps working even if the original is deleted.</p>
+  <div class="row wrap"><button class="primary" onclick="importFromShare()">Import shared files</button><button onclick="addTranscript()">Paste a transcript</button><button onclick="openRec()">Quick timer</button></div>
+  ${recs.length?recs.map(r=>`<div class="panel"><div class="row" style="justify-content:space-between"><b>${esc(r.title)}</b><span class="badge">${esc(r.cat?CATS[r.cat]:'')}</span></div>
+    <small>${r.created?esc(new Date(r.created).toLocaleString()):''}${r.duration?' · '+Math.round(r.duration/1000)+'s':''}</small>
+    ${r.transcript?expandable(r.transcript,200):'<p class="empty">No transcript yet.</p>'}
+    ${r.summary?`<div class="sum"><b>Summary</b>${expandable(r.summary,220)}</div>`:''}
+    <div class="row wrap"><button onclick="openDetail('${r.id}')">Open</button><button onclick="summarizeRecording('${r.id}')">Summarise + tasks</button><button class="danger" onclick="delItem('${r.id}')">Delete</button></div></div>`).join(''):'<p class="empty">Nothing imported yet.</p>'}`;
+}
+async function importFromShare(){
+  if(!isNative()){toast('Use the Android app to receive shared recordings.');return}
+  let shares=[];
+  try{shares=JSON.parse(native().pendingShares()||'[]')}catch(e){shares=[]}
+  if(!shares.length){toast('Nothing waiting. Share a file to FlowState first.');return}
+  let added=0;
+  for(const sh of shares){
+    const id=fsUid();
+    const rec=normalizeItem({id,type:'recording',cat:'school',title:sh.name||'Shared recording',created:Date.now(),source:'share',transcript:sh.transcriptText||''});
+    if(sh.hasAudio){
+      try{const blob=await readSharedAudio(sh.id);if(blob){const key='audio-'+id;await BLOBS.put(key,blob);rec.audioKey=key;rec.mime=sh.mime||'';rec.size=sh.size||0}}catch(e){}
+    }
+    D.items.push(rec);added++;
+    try{native().clearShare(sh.id)}catch(e){}
+  }
+  save();render();toast('Imported '+added+' item(s). Organise them below.');
+}
+function addTranscript(){
+  sheet(`<h2>Add a transcript</h2><label>Title <input id="t-title" placeholder="Lecture 4"></label><label>Category <select id="t-cat">${Object.keys(CATS).map(c=>`<option value="${c}">${CATS[c]}</option>`).join('')}</select></label><label>Transcript <textarea id="t-body" placeholder="Paste the text from Transcript Assist" style="min-height:200px"></textarea></label><div class="row"><button class="primary" onclick="saveTranscript()">Save</button><button onclick="closeSheet()">Cancel</button></div>`);
+}
+function saveTranscript(){
+  const t=($('#t-title')||{}).value||'Transcript';const b=($('#t-body')||{}).value||'';
+  if(!b.trim()){toast('Paste some text first.');return}
+  const rec=normalizeItem({id:fsUid(),type:'recording',cat:($('#t-cat')||{}).value||'school',title:t,created:Date.now(),source:'share',transcript:b});
+  D.items.push(rec);save();closeSheet();render();toast('Transcript saved');
+}
+function extractTasks(text){
+  const out=[];
+  const lines=String(text||'').split(/\n|(?<=[.!?])\s+/).map(s=>s.trim()).filter(Boolean);
+  const dueRx=/(due|deadline|submit|hand in|by|before)\b[^.]{0,40}?\b(\d{1,2}\/\d{1,2}(?:\/\d{2,4})?|(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{1,2}|\d{4}-\d{2}-\d{2})/i;
+  const taskRx=/(homework|assignment|essay|quiz|test|exam|project|read|reading|chapter|worksheet|lab|study|prepare|review|finish|complete|submit|bring|write)/i;
+  lines.forEach(l=>{
+    if(!taskRx.test(l))return;
+    let due='';const m=l.match(dueRx);
+    if(m&&m[2]){
+      const raw=m[2];
+      const d=new Date(raw);
+      if(!isNaN(d))due=FSRec.dk(d)+'T17:00';
+    }
+    out.push({title:l.slice(0,120),due});
+  });
+  return out.slice(0,12);
+}
+function summarizeRecording(id){
+  const r=D.items.find(x=>x.id===id);if(!r||!r.transcript){toast('Add a transcript first.');return}
+  const tasks=extractTasks(r.transcript);
+  const sentences=r.transcript.replace(/\s+/g,' ').split(/(?<=[.!?])\s/).filter(Boolean);
+  const summary=(r.aiSummary||sentences.slice(0,4).join(' ')).slice(0,900);
+  r.summary=summary;r.tasksFound=tasks;save();
+  sheet(`<h2>Summary</h2>${expandable(summary,400)}
+  <h3>Possible tasks and due dates</h3>
+  ${tasks.length?tasks.map((t,i)=>`<label class="row" style="align-items:flex-start"><input type="checkbox" class="tk" data-i="${i}" checked><span>${esc(t.title)}${t.due?'<br><small>due '+esc(t.due.replace('T',' '))+'</small>':''}</span></label>`).join(''):'<p class="empty">No tasks found. You can add them manually.</p>'}
+  <p class="empty">Created on this device with the built-in offline reader.${secGet(SEC_AI)?' Your own AI key is stored and used when you tap “Use AI”.':''}</p>
+  <div class="row wrap"><button class="primary" onclick="acceptTasks('${id}')">Add selected as tasks</button>${secGet(SEC_AI)?`<button onclick="aiSummarize('${id}')">Use AI</button>`:''}<button onclick="closeSheet()">Close</button></div>`);
+}
+function acceptTasks(id){
+  const r=D.items.find(x=>x.id===id);if(!r||!r.tasksFound)return;
+  const chosen=[...document.querySelectorAll('.tk:checked')].map(x=>Number(x.dataset.i));
+  let n=0;
+  chosen.forEach(i=>{
+    const t=r.tasksFound[i];if(!t)return;
+    const it=normalizeItem({id:fsUid(),type:'homework',cat:r.cat||'school',title:t.title,due:t.due||'',created:Date.now(),body:'From recording: '+r.title});
+    D.items.push(it);n++;
+  });
+  save();closeSheet();render();toast(n+' task(s) added');
+}
+async function aiSummarize(id){
+  const r=D.items.find(x=>x.id===id);const key=secGet(SEC_AI);const url=secGet('flowstate.aiUrl');
+  if(!key||!url){toast('Add your AI endpoint and key in Settings → AI.');return}
+  try{
+    const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({task:'summarize',text:r.transcript})});
+    const out=await res.json();
+    r.aiSummary=out.summary||out.text||'';save();summarizeRecording(id);
+  }catch(e){toast('AI request failed: '+e.message)}
+}
+
+/* ---------- browser ---------- */
+function viewBrowser(){
+  const bms=D.bookmarks||[];
+  return `<h1>Web</h1>
+  <div class="browser-bar"><input id="url" placeholder="Search or type a website" value="${esc(S.browserUrl||'')}"><button class="primary" onclick="browserOpen()">Open</button></div>
+  <p class="empty">Sites open in FlowState's own browser. If a site blocks embedded browsing or needs an unsupported sign-in, use “Open externally”.</p>
+  <div class="row wrap"><button onclick="addBookmark()">+ Add bookmark</button>${isNative()?'<button onclick="openExternally()">Open externally</button>':''}</div>
+  ${bms.length?`<div class="bm-list">${bms.map((b,i)=>`<div class="bm"><div class="grow"><b>${esc(b.title)}</b><small>${esc(b.url)}</small></div><button onclick="browserOpen('${esc(b.url)}')">Open</button><button onclick="delBookmark(${i})" title="Remove">✕</button></div>`).join('')}</div>`:'<p class="empty">No saved websites yet.</p>'}
+  <div id="frame-wrap"></div>`;
+}
+function browserOpen(u){
+  const input=$('#url');
+  let url=u||(input?input.value:'');
+  if(!url)return;
+  if(!/^https?:\/\//i.test(url))url='https://'+url.replace(/^\/+/, '');
+  S.browserUrl=url;
+  if(isNative()&&native().openBrowser){native().openBrowser(url);toast('Opened in FlowState browser');return}
+  const w=$('#frame-wrap');
+  if(w)w.innerHTML=`<div class="panel"><b>${esc(url)}</b><iframe src="${esc(url)}" sandbox="allow-scripts allow-same-origin allow-forms" referrerpolicy="no-referrer" style="width:100%;height:60vh;border:0;border-radius:12px"></iframe><div class="row"><button onclick="openExternally('${esc(url)}')">Open externally</button></div></div>`;
+  toast('If the page stays blank, the site blocks embedding. Use Open externally.');
+}
+function openExternally(u){
+  const url=u||S.browserUrl||(($('#url')||{}).value||'');
+  if(!url)return;
+  if(isNative()&&native().openExternal){native().openExternal(url);return}
+  window.open(url,'_blank','noopener');
+}
+function addBookmark(){
+  sheet(`<h2>Add bookmark</h2><label>Title <input id="bm-t" placeholder="Class portal"></label><label>Address <input id="bm-u" placeholder="https://..." value="${esc(S.browserUrl||'')}"></label><div class="row"><button class="primary" onclick="saveBookmark()">Save</button><button onclick="closeSheet()">Cancel</button></div>`);
+}
+function saveBookmark(){
+  const t=($('#bm-t')||{}).value||'';let u=($('#bm-u')||{}).value||'';
+  if(!u.trim()){toast('Add an address.');return}
+  if(!/^https?:\/\//i.test(u))u='https://'+u;
+  D.bookmarks=D.bookmarks||[];D.bookmarks.push({title:t.trim()||u,url:u,added:Date.now()});
+  save();closeSheet();render();toast('Bookmark saved');
+}
+function delBookmark(i){D.bookmarks.splice(i,1);save();render()}
+
+/* ---------- image library ---------- */
+function viewLibrary(){
+  const imgs=D.images||[];
+  const cols=D.collections||['Scenic','Illustration','Quotes','Mine'];
+  return `<h2>Image library</h2>
+  <p class="empty">Images stay on this device and work offline.</p>
+  <label>Add image <input type="file" accept="image/*" onchange="addLibImage(this.files[0])"></label>
+  <label>Collection <select id="lib-col">${cols.map(c=>`<option>${c}</option>`).join('')}</select></label>
+  <div class="books">${imgs.map((im,i)=>`<div class="book" style="background-image:url('${im.src}')"><button class="del" onclick="delLibImage(${i})" title="Remove">✕</button><div class="book-title">${esc(im.name||'Image')}</div><div class="book-sub">${esc((im.collections||[]).join(', '))}</div></div>`).join('')||'<p class="empty">No images yet.</p>'}</div>`;
+}
+function addLibImage(file){
+  if(!file)return;
+  const fr=new FileReader();
+  fr.onload=()=>{const im=new Image();im.onerror=()=>toast('That image will not open.');im.onload=()=>{
+    const sc=Math.min(1,900/Math.max(im.width,im.height));
+    const cv=document.createElement('canvas');cv.width=Math.round(im.width*sc);cv.height=Math.round(im.height*sc);
+    cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);
+    const col=(($('#lib-col')||{}).value)||'Mine';
+    D.images=D.images||[];D.images.push({name:file.name||'Image',src:cv.toDataURL('image/jpeg',0.8),collections:[col],added:Date.now()});
+    save();render();toast('Added to '+col);
+  };im.src=fr.result};
+  fr.readAsDataURL(file);
+}
+function delLibImage(i){D.images.splice(i,1);save();render()}
+
+/* ---------- global search ---------- */
+function openSearch(){
+  sheet(`<h2>Search</h2><label>Search everything <input id="q" placeholder="notes, recordings, events, bookmarks" oninput="searchInto(this.value)"></label><div id="qres"><p class="empty">Type to search notes, recordings, assignments, events and bookmarks.</p></div><div class="row"><button onclick="closeSheet()">Close</button></div>`);
+  setTimeout(()=>{const q=$('#q');if(q)q.focus()},50);
+}
+function searchInto(q){const el=$('#qres');if(el)el.innerHTML=runSearch(q)}
+function runSearch(q){
+  q=String(q||'').trim().toLowerCase();
+  if(!q)return '<p class="empty">Type to search.</p>';
+  const hits=D.items.filter(i=>[i.title,i.body,i.transcript,i.summary,i.list].some(v=>String(v||'').toLowerCase().includes(q)));
+  const bms=(D.bookmarks||[]).filter(b=>String(b.title+' '+b.url).toLowerCase().includes(q));
+  const cls=D.classes.filter(c=>String(c.name+' '+(c.title||'')+' '+(c.subtitle||'')).toLowerCase().includes(q));
+  const rows=[];
+  cls.forEach(c=>rows.push(`<div class="card" onclick="closeSheet();S.tab='school';S.cls='${c.id}';render()"><div class="grow"><b>📘 ${esc(c.title||c.name)}</b><small>Class book</small></div></div>`));
+  hits.slice(0,30).forEach(i=>rows.push(`<div class="card" onclick="closeSheet();openDetail('${i.id}')"><div class="grow"><b>${esc(i.title)}</b><small>${esc(LABEL[i.type]||'')}${i.due?' · '+esc(fmt(i.due)):''}${i.source?' · '+esc(sourceLabel(i)):''}</small></div></div>`));
+  bms.forEach(b=>rows.push(`<div class="card" onclick="closeSheet();browserOpen('${esc(b.url)}')"><div class="grow"><b>🌐 ${esc(b.title)}</b><small>${esc(b.url)}</small></div></div>`));
+  return rows.length?rows.join(''):'<p class="empty">No matches.</p>';
+}
+
+/* ---------- settings ---------- */
+function viewSettings(){
+  const s=D.settings;
+  const fonts=[['system-ui, sans-serif','System'],['Lexend, sans-serif','Lexend'],['Fredoka, sans-serif','Fredoka'],["'Patrick Hand', cursive",'Handwritten'],['Caveat, cursive','Script'],['Nunito, sans-serif','Nunito']];
+  return `<h1>Settings</h1>
+  <div class="panel"><h3>Appearance</h3>
+    <label>Font <select onchange="setS('font',this.value)">${fonts.map(([v,l])=>`<option value="${v.replace(/"/g,'&quot;')}" ${s.font===v?'selected':''}>${l}</option>`).join('')}</select></label>
+    <label>Text size <input type="range" min="13" max="22" value="${s.fs||16}" oninput="setS('fs',Number(this.value))"></label>
+    <label>Text colour <input type="color" value="${s.text||'#1d2440'}" onchange="setS('text',this.value)"></label>
+    <label>Calendar colour <input type="color" value="${s.cal||'#3d5ba9'}" onchange="setS('cal',this.value)"></label>
+    <label>Motion <select onchange="setS('reduce',this.value==='1')"><option value="0" ${!s.reduce?'selected':''}>Smooth</option><option value="1" ${s.reduce?'selected':''}>Reduced</option></select></label>
+    <div class="row"><button onclick="toggleFocus()">${S.focus?'Leave focus mode':'Enter focus mode'}</button></div>
+  </div>
+  <div class="panel"><h3>Backgrounds</h3><label>Tab <select id="bgSel">${Object.keys(CATS).map(c=>`<option value="${c}">${CATS[c]}</option>`).join('')}</select></label><input type="file" accept="image/*" onchange="setBgImg(this.files[0],$('#bgSel').value)"><div class="row"><button onclick="setBgImg(null,$('#bgSel').value)">Remove image for this tab</button></div></div>
+  <div class="panel"><h3>Google Calendar sync</h3>
+    <p class="empty">Two-way sync with duplicate prevention. FlowState never stores Google credentials in the app code: your own sync endpoint and token are kept in this device's secure storage.</p>
+    <div class="row wrap"><button onclick="openSyncSetup()">${syncConfigured()?'Change sync endpoint':'Set up sync'}</button>${syncConfigured()?`<button class="primary" onclick="${D.settings.googleSync?'disconnectGoogleSync()':'connectGoogleSync()'}">${D.settings.googleSync?'Pause sync':'Start sync'}</button><button onclick="syncPull()">Pull from Google</button><button onclick="syncPushAll()">Push to Google</button><button onclick="testGoogleSync()">Test</button>`:''}</div>
+    <p class="empty">Status: ${D.settings.googleSync?(syncConfigured()?'connected':'connected but endpoint missing'):'not connected'}${D.settings.syncLast?' · last sync '+new Date(D.settings.syncLast).toLocaleString():''}</p>
+    <div class="row wrap"><button onclick="importICSFile()">Import .ics file</button><button onclick="exportAllICS()">Export all to .ics</button></div>
+    <label>Calendar label for new events <input value="${esc(s.syncCalendar||'FlowState')}" onchange="setS('syncCalendar',this.value)"></label>
+  </div>
+  <div class="panel"><h3>AI reading</h3>
+    <p class="empty">Transcript summaries and task extraction work offline by default. Add your own AI endpoint and key if you want richer summaries — they are stored on this device only.</p>
+    <div class="row wrap"><button onclick="openAISetup()">${secGet(SEC_AI)?'Change AI settings':'Add AI settings'}</button>${secGet(SEC_AI)?'<button onclick="secSet(SEC_AI,\'\');secSet(\'flowstate.aiUrl\',\'\');toast(\'AI key removed\');render()">Remove key</button>':''}</div>
+  </div>
+  <div class="panel"><h3>Widgets and images</h3>
+    <label>Change images <select onchange="setS('widgetMode',this.value)"><option value="daily" ${s.widgetMode!=='open'&&s.widgetMode!=='random'?'selected':''}>Daily</option><option value="open" ${s.widgetMode==='open'?'selected':''}>Every time I open a tab</option><option value="random" ${s.widgetMode==='random'?'selected':''}>Random</option></select></label>
+    <div class="row wrap">${(D.collections||['Scenic','Illustration','Quotes','Mine']).map(c=>`<button class="chip ${(s.widgetCollections||[]).includes(c)?'on':''}" onclick="toggleCollection('${c}')">${c}</button>`).join('')}</div>
+    <div class="row wrap"><button onclick="openLib()">Manage image library</button><button onclick="refreshWidget()">Refresh widget</button></div>
+  </div>
+  <div class="panel"><h3>Data</h3><div class="row wrap"><button onclick="exportData()">Backup</button><button onclick="importData()">Restore</button><button onclick="exportReminders()">Export reminders</button></div><p class="empty">Your data is stored on this device. Nothing is uploaded unless you turn on Google sync.</p></div>
+  <div class="panel"><h3>Notifications</h3><div class="row wrap"><button onclick="askPerm()">Allow browser alerts</button><button onclick="D.dnd=!D.dnd;save();render()">${D.dnd?'Do not disturb: on':'Do not disturb: off'}</button></div></div>`;
+}
+function toggleCollection(c){
+  const s=D.settings;s.widgetCollections=s.widgetCollections||[];
+  const i=s.widgetCollections.indexOf(c);
+  if(i>=0)s.widgetCollections.splice(i,1);else s.widgetCollections.push(c);
+  save();render();
+}
+function openLib(){sheet(viewLibrary()+`<div class="row"><button onclick="closeSheet()">Close</button></div>`)}
+function openSyncSetup(){
+  sheet(`<h2>Google Calendar sync setup</h2>
+  <p class="empty">FlowState talks to your own relay (for example a Google Apps Script web app) so no secret is ever shipped inside the app. Paste the deployment URL and a token you control; they are saved in this device's secure storage only.</p>
+  <label>Endpoint URL <input id="s-url" value="${esc(secGet(SEC_URL))}" placeholder="https://script.google.com/macros/s/.../exec"></label>
+  <label>Access token <input id="s-token" type="password" value="${esc(secGet(SEC_TOKEN))}" placeholder="Your private token"></label>
+  <p class="empty">The relay needs to answer actions: test, push, pull. It should return JSON like {\"items\":[...]} for pull, each with title, start, uid and optionally repeat.</p>
+  <div class="row"><button class="primary" onclick="saveSyncSetup()">Save</button><button onclick="closeSheet()">Cancel</button></div>`);
+}
+function saveSyncSetup(){
+  const u=($('#s-url')||{}).value||'';const t=($('#s-token')||{}).value||'';
+  if(!u.trim()||!t.trim()){toast('Both fields are needed.');return}
+  secSet(SEC_URL,u.trim());secSet(SEC_TOKEN,t.trim());
+  D.settings.googleSync=true;save();closeSheet();render();toast('Sync saved on this device');
+  syncPushAll(true);
+}
+function openAISetup(){
+  sheet(`<h2>AI settings</h2><p class="empty">Optional. Stored on this device only, never in the app code.</p><label>AI endpoint <input id="ai-url" value="${esc(secGet('flowstate.aiUrl'))}" placeholder="https://..."></label><label>API key <input id="ai-key" type="password" value="${esc(secGet(SEC_AI))}"></label><div class="row"><button class="primary" onclick="saveAISetup()">Save</button><button onclick="closeSheet()">Cancel</button></div>`);
+}
+function saveAISetup(){secSet('flowstate.aiUrl',($('#ai-url')||{}).value||'');secSet(SEC_AI,($('#ai-key')||{}).value||'');closeSheet();render();toast('AI settings saved')}
+function toggleFocus(){S.focus=!S.focus;render();toast(S.focus?'Focus mode on':'Focus mode off')}
+
+/* ---------- calendar files ---------- */
+function icsFor(id){
+  const i=D.items.find(x=>x.id===id);if(!i)return;
+  const ics=FSRec.icsEvent(i,{calendar:D.settings.syncCalendar||'FlowState'});
+  sheet(`<h2>Calendar file</h2><p class="empty">Download this file and open it to add the event to any calendar app, including recurring events.</p><textarea id="bk" style="min-height:200px">${esc(ics)}</textarea><div class="row"><button class="primary" onclick="dlIcs()">Download .ics</button><button onclick="copyBk()">Copy</button><button onclick="openDetail('${id}')">Back</button></div>`);
+}
+function exportAllICS(){
+  const evs=D.items.filter(i=>i.due).map(i=>FSRec.icsEvent(i,{calendar:D.settings.syncCalendar||'FlowState'}));
+  const body='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//FlowState//EN\r\n'+evs.join('')+'END:VCALENDAR\r\n';
+  sheet(`<h2>Export all</h2><p class="empty">${evs.length} item(s). Import this file into Google Calendar.</p><textarea id="bk" style="min-height:240px">${esc(body)}</textarea><div class="row"><button class="primary" onclick="dlIcs('flowstate.ics')">Download</button><button onclick="copyBk()">Copy</button><button onclick="closeSheet()">Close</button></div>`);
+}
+function exportReminders(){
+  const items=D.items.filter(i=>i.reminders&&i.reminders.length);
+  if(!items.length){toast('No reminders to export yet.');return}
+  const evs=[];
+  items.forEach(i=>i.reminders.forEach(r=>{evs.push(FSRec.icsEvent(Object.assign({},i,{due:r,duration:0}),{calendar:'FlowState reminders'}))}));
+  const body='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//FlowState//EN\r\n'+evs.join('')+'END:VCALENDAR\r\n';
+  sheet(`<h2>Reminders</h2><textarea id="bk" style="min-height:240px">${esc(body)}</textarea><div class="row"><button class="primary" onclick="dlIcs('flowstate-reminders.ics')">Download</button><button onclick="copyBk()">Copy</button><button onclick="closeSheet()">Close</button></div>`);
+}
+function importICSFile(){
+  sheet(`<h2>Import calendar file</h2><p class="empty">Choose an .ics file exported from Google Calendar. Duplicates are skipped automatically.</p><input type="file" accept=".ics,text/calendar" onchange="readICS(this.files[0])"><div class="row"><button onclick="closeSheet()">Close</button></div>`);
+}
+function readICS(file){
+  if(!file)return;
+  const fr=new FileReader();
+  fr.onload=()=>{
+    let evs=[];
+    try{evs=FSRec.parseICS(fr.result)}catch(e){evs=[]}
+    const r=mergeRemote(evs.map(e=>Object.assign({},e,{type:'event'})),'ics');
+    save();closeSheet();render();
+    toast('Imported '+r.added+' event(s), skipped '+r.skipped+' duplicate(s)');
+  };
+  fr.readAsText(file);
+}
+
+/* ---------- chrome ---------- */
+function injectChrome(){
+  if(document.getElementById('fs-tools'))return;
+  const bar=document.createElement('div');
+  bar.id='fs-tools';
+  bar.innerHTML=`<button title="Search everything" onclick="openSearch()">🔍</button><button title="Focus mode" onclick="toggleFocus()">${S.focus?'🌿':'🎯'}</button><span id="syncDot" class="dot"></span>`;
+  document.body.appendChild(bar);
+  updateSyncBadge();
+}
+window.addEventListener('load',injectChrome);
+setTimeout(injectChrome,300);
 S.sel=dk(new Date());
 S.month=new Date(new Date().getFullYear(),new Date().getMonth(),1);
 
@@ -364,7 +1132,7 @@ function mergeRemote(list,source){
       if(r.calendar)existing.calendar=r.calendar;
       return;
     }
-    D.items.push(normalizeItem({id:uid(),type:r.type||'event',cat:r.cat||'home',title:r.title,body:r.body||'',due,created:Date.now(),googleId:ext,uid:ext,source,calendar:r.calendar||'',repeat:r.repeat?FSRec.normalise(r.repeat):null}));
+    D.items.push(normalizeItem({id:fsUid(),type:r.type||'event',cat:r.cat||'home',title:r.title,body:r.body||'',due,created:Date.now(),googleId:ext,uid:ext,source,calendar:r.calendar||'',repeat:r.repeat?FSRec.normalise(r.repeat):null}));
     added++;
   });
   if(added||updated)save();
