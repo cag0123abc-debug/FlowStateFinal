@@ -1498,12 +1498,8 @@ function stopRec(){
   REC=null;save();closeSheet();render();
 }
 
-function openSearch(){sheet(`<h2>Search</h2><input id="q" placeholder="Search titles and notes" oninput="runSearch(this.value)"><div id="qr"></div><div class="row"><button onclick="closeSheet()">Close</button></div>`);setTimeout(()=>$('#q').focus(),50)}
-function runSearchLegacy(q){
-  const r=$('#qr');q=q.trim().toLowerCase();if(!q){r.innerHTML='';return}
-  const hits=D.items.filter(i=>((i.title||'')+' '+(i.body||'')).toLowerCase().includes(q)).slice(0,30);
-  r.innerHTML=hits.length?hits.map(i=>`<div class="card" onclick="openDetail('${i.id}')"><div class="grow"><b>${esc(i.title)}</b><small>${esc(LABEL[i.type]||'')}${i.due?' · '+esc(fmt(i.due)):''}</small></div></div>`).join(''):'<p class="empty">No matches.</p>';
-}
+/* Global search lives in one place only (see openSearch/searchInto/runSearch above).
+   A duplicate definition here used to shadow it, which left the search sheet with no results area. */
 function exportData(){sheet(`<h2>Backup</h2><p class="empty">Copy this text and keep it somewhere safe. Use Import data to restore it.</p><textarea id="bk" style="min-height:260px">${esc(JSON.stringify(D))}</textarea><div class="row"><button class="primary" onclick="copyBk()">Copy</button><button onclick="closeSheet()">Close</button></div>`)}
 function copyBk(){
   const t=$('#bk');const no=()=>{t.select();toast('Press and hold the text to copy it')};
