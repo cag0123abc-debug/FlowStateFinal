@@ -40,11 +40,13 @@ jobs:
         continue-on-error: true
         run: |
           set -o pipefail
-          gradle -p android -PfsWriteLocks :app:resolveAndLockAll --write-locks 2>&1 | tee android/lock-generation.log
+          gradle -p android -PfsWriteLocks :app:resolveAndLockAll 2>&1 | tee android/lock-generation.log
 
       - name: Commit lockfile to branch
         run: |
-          git add -A -- 'android/gradle.lockfile' 'android/app/gradle.lockfile' 'android/lock-generation.log' || true
+          # Stage the whole android directory: `git add` aborts without staging anything when
+          # even one pathspec does not exist yet, which previously silently skipped the commit.
+          git add -A -- android/ || true
           if git diff --cached --quiet; then
             echo "No lockfile changes to commit."
           else

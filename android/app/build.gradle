@@ -74,28 +74,37 @@ dependencies {
 // without -PfsWriteLocks nothing below is configured and assembleDebug behaves as before.
 // CI passes -PfsWriteLocks to record android/app/gradle.lockfile for vulnerability scanning.
 if (project.hasProperty('fsWriteLocks')) {
-    // The dependencyLocking extension is not guaranteed on an Android project, so look it up
-    // defensively: --write-locks still records every configuration this task resolves.
-    def lockHandler = project.extensions.findByName('dependencyLocking')
-    if (lockHandler != null) {
-        lockHandler.lockAllConfigurations()
-    } else {
-        logger.lifecycle('FlowState: dependencyLocking extension unavailable; --write-locks records resolved configurations.')
-    }
-
+    // AGP does not register Gradle's dependencyLocking extension, so --write-locks on its own
+    // records nothing. Resolve the graph here and record the exact selected versions instead.
     tasks.register('resolveAndLockAll') {
-        description = 'Resolves all resolvable configurations so --write-locks can record them.'
+        description = 'Resolves every resolvable configuration and records exact versions in gradle.lockfile.'
         group = 'dependency locking'
         doLast {
-            if (!gradle.startParameter.writeDependencyLocks) {
-                throw new GradleException('Run with --write-locks to record dependency locks.')
-            }
+            def locked = [:]
             configurations.findAll { it.canBeResolved }.each { cfg ->
                 try {
-                    cfg.resolve()
+                    cfg.incoming.resolutionResult.allComponents.each { component ->
+                        def id = component.id
+                        if (id instanceof org.gradle.api.artifacts.component.ModuleComponentIdentifier) {
+                            def key = "${id.group}:${id.module}:${id.version}"
+                            if (!locked.containsKey(key)) {
+                                locked[key] = new TreeSet<String>()
+                            }
+                            locked[key].add(cfg.name)
+                        }
+                    }
                 } catch (Exception e) {
-                    logger.warn("FlowState: skipping configuration '${cfg.name}': ${e.message}")
+                    logger.warn("FlowState: could not resolve configuration '${cfg.name}': ${e.message}")
                 }
+            }
+            def lines = locked.keySet().sort().collect { key ->
+                "${key}=${locked[key].join(',')}"
+            }
+            def target = file("$projectDir/gradle.lockfile")
+            target.text = lines.join('\n') + (lines.isEmpty() ? '' : '\n')
+            logger.lifecycle("FlowState: recorded ${lines.size()} dependency modules in ${target}")
+            if (lines.isEmpty()) {
+                throw new GradleException('No dependencies were resolved; refusing to write an empty lockfile.')
             }
         }
     }
