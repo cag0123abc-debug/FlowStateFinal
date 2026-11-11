@@ -15,6 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Patrick+Hand&family=Lexend:wght@400;600&family=Caveat:wght@500;700&family=Nunito:wght@400;800&display=swap" rel="stylesheet">
 <script src="recurrence.js"></script>
+<script src="sync-engine.js"></script>
 <style>
 :root{--text:#1d2440;--cal:#3d5ba9;--font:system-ui,sans-serif;--fs:16px}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -969,8 +970,8 @@ function viewSettings(){
   <div class="panel"><h3>Backgrounds</h3><label>Tab <select id="bgSel">${Object.keys(CATS).map(c=>`<option value="${c}">${CATS[c]}</option>`).join('')}</select></label><input type="file" accept="image/*" onchange="setBgImg(this.files[0],$('#bgSel').value)"><div class="row"><button onclick="setBgImg(null,$('#bgSel').value)">Remove image for this tab</button></div></div>
   <div class="panel"><h3>Google Calendar sync</h3>
     <p class="empty">Two-way sync with duplicate prevention. FlowState never stores Google credentials in the app code: your own sync endpoint and token are kept in this device's secure storage.</p>
-    <div class="row wrap"><button onclick="openSyncSetup()">${syncConfigured()?'Change sync endpoint':'Set up sync'}</button>${syncConfigured()?`<button class="primary" onclick="${D.settings.googleSync?'disconnectGoogleSync()':'connectGoogleSync()'}">${D.settings.googleSync?'Pause sync':'Start sync'}</button><button onclick="syncPull()">Pull from Google</button><button onclick="syncPushAll()">Push to Google</button><button onclick="testGoogleSync()">Test</button>`:''}</div>
-    <p class="empty">Status: ${D.settings.googleSync?(syncConfigured()?'connected':'connected but endpoint missing'):'not connected'}${D.settings.syncLast?' · last sync '+new Date(D.settings.syncLast).toLocaleString():''}</p>
+    <div class="row wrap"><button onclick="openSyncSetup()">${syncConfigured()?'Change sync endpoint':'Set up sync'}</button><button onclick="openSyncGuide()">How to connect</button>${syncConfigured()?`<button class="primary" onclick="${D.settings.googleSync?'disconnectGoogleSync()':'connectGoogleSync()'}">${D.settings.googleSync?'Pause sync':'Start sync'}</button><button onclick="syncPull()">Pull from Google</button><button onclick="syncPushAll()">Push to Google</button><button onclick="testGoogleSync()">Test</button>`:''}</div>
+    <p class="empty">Status: ${D.settings.googleSync?(syncConfigured()?'connected':'connected but endpoint missing'):'not connected'}${D.settings.syncLast?' · last sync '+new Date(D.settings.syncLast).toLocaleString():''} · auto every ${Math.round(FSSync.AUTO_MS/60000)} min</p>
     <div class="row wrap"><button onclick="importICSFile()">Import .ics file</button><button onclick="exportAllICS()">Export all to .ics</button></div>
     <label>Calendar label for new events <input value="${esc(s.syncCalendar||'FlowState')}" onchange="setS('syncCalendar',this.value)"></label>
   </div>
@@ -1014,6 +1015,19 @@ function openAISetup(){
 function saveAISetup(){secSet('flowstate.aiUrl',($('#ai-url')||{}).value||'');secSet(SEC_AI,($('#ai-key')||{}).value||'');closeSheet();render();toast('AI settings saved')}
 function toggleFocus(){S.focus=!S.focus;render();toast(S.focus?'Focus mode on':'Focus mode off')}
 
+function openSyncGuide(){
+  sheet(`<h2>Connect Google Calendar</h2>
+  <p class="empty">FlowState syncs through a small relay you deploy in your own Google account, so no Google secret is ever shipped inside the app. The relay runs with your authorization and only answers requests that carry the token you choose.</p>
+  <ol style="margin:0 0 10px 18px;line-height:1.65">
+    <li>Open <b>script.google.com</b> and create a new project.</li>
+    <li>Paste the contents of <b>sync-relay.gs</b> (documented in <b>docs/GOOGLE-SYNC-SETUP.md</b>).</li>
+    <li>Project Settings → Script properties → add <b>FLOWSTATE_TOKEN</b> with a long random value.</li>
+    <li>Deploy → New deployment → Web app. Execute as <b>me</b>, access <b>Anyone</b>.</li>
+    <li>Paste the <b>/exec</b> URL and the same token into <b>Set up sync</b>.</li>
+  </ol>
+  <p class="empty">Incoming events are pulled automatically every ${Math.round(FSSync.AUTO_MS/60000)} minutes while the app is open and online. Duplicates are matched by Google event id first, then by title and date, and a newer edit on either side is kept instead of being overwritten.</p>
+  <div class="row"><button class="primary" onclick="openSyncSetup()">Set up sync</button><button onclick="closeSheet()">Close</button></div>`);
+}
 /* ---------- calendar files ---------- */
 function icsFor(id){
   const i=D.items.find(x=>x.id===id);if(!i)return;
@@ -1122,30 +1136,19 @@ function findDuplicate(r){
   const fp=itemFingerprint({title:r.title,due:r.due||r.start||''});
   return D.items.find(x=>!x.googleId&&itemFingerprint(x)===fp)||null;
 }
+/* Remote events are merged through the shared engine (sync-engine.js) so the
+   app and the test suite use identical dedupe and conflict rules. */
 function mergeRemote(list,source){
-  let added=0,updated=0,skipped=0;
-  (Array.isArray(list)?list:[]).forEach(r=>{
-    if(!r||!r.title)return;
-    const ext=r.uid||r.googleId||r.icsUid||'';
-    const due=r.due||r.start||'';
-    const existing=findDuplicate(r);
-    if(existing){
-      const changed=existing.title!==r.title||String(existing.due||'')!==String(due);
-      if(changed){
-        existing.title=r.title;existing.due=due||existing.due;
-        if(r.body!=null&&r.body!=='')existing.body=r.body;
-        if(r.repeat)existing.repeat=FSRec.normalise(r.repeat);
-        existing.updated=Date.now();updated++;
-      }else skipped++;
-      existing.googleId=existing.googleId||ext;existing.source=existing.source||source;
-      if(r.calendar)existing.calendar=r.calendar;
-      return;
-    }
-    D.items.push(normalizeItem({id:fsUid(),type:r.type||'event',cat:r.cat||'home',title:r.title,body:r.body||'',due,created:Date.now(),googleId:ext,uid:ext,source,calendar:r.calendar||'',repeat:r.repeat?FSRec.normalise(r.repeat):null}));
-    added++;
+  const r=FSSync.mergeInto(D.items,list,source,{
+    make:(rem,src,now)=>normalizeItem({
+      id:fsUid(),type:rem.type||'event',cat:rem.cat||'home',title:rem.title,body:rem.body||'',
+      due:rem.due||'',created:now,updated:rem.updated||now,googleId:rem.uid||'',uid:rem.uid||'',
+      source:src,calendar:rem.calendar||'',
+      repeat:rem.repeat?(typeof rem.repeat==='string'?FSRec.fromRRule(rem.repeat):FSRec.normalise(rem.repeat)):null
+    })
   });
-  if(added||updated)save();
-  return {added,updated,skipped};
+  if(r.changed)save();
+  return r;
 }
 async function syncPull(silent){
   if(!syncConfigured()){if(!silent)toast('Add your sync endpoint and token in Settings first.');return null}
@@ -1178,6 +1181,25 @@ function testGoogleSync(){
 }
 function updateSyncBadge(){const el=$('#syncDot');if(el)el.textContent=D.settings.googleSync?(syncConfigured()?'●':'○'):''}
 window.addEventListener('online',()=>{flushGoogleSync();if(D.settings.googleSync)syncPull(true)});
+/* Automatic inbound sync: pull on open, when the tab regains focus, and every
+   few minutes, so events created in Google Calendar appear without a button. */
+let AUTO_IV=null,AUTO_BUSY=false;
+async function autoPullTick(){
+  if(AUTO_BUSY||!navigator.onLine||!syncConfigured())return;
+  if(!FSSync.shouldAutoPull(D.settings,Date.now(),{online:navigator.onLine,configured:syncConfigured(),busy:SYNC_BUSY||AUTO_BUSY}))return;
+  AUTO_BUSY=true;
+  try{
+    const r=await syncPull(true);
+    if(r&&(r.added||r.updated)){render();toast('Google → FlowState: '+r.added+' new, '+r.updated+' updated')}
+    updateSyncBadge();
+  }catch(e){}finally{AUTO_BUSY=false}
+}
+function startAutoSync(){
+  if(AUTO_IV)return;
+  AUTO_IV=setInterval(()=>{autoPullTick()},FSSync.AUTO_MS);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)autoPullTick()});
+  setTimeout(()=>{autoPullTick()},1500);
+}
 function clsName(id){const c=D.classes.find(x=>x.id===id);return c?c.name:''}
 function sheet(h){$('#sheetBody').innerHTML=h;$('#sheet').classList.add('on')}
 function closeSheet(){$('#sheet').classList.remove('on')}
@@ -1659,7 +1681,7 @@ function frame(){
 
 window.addEventListener('resize',resize);
 resize();rail_init();clock();render();tick();flushGoogleSync();
-setInterval(tick,15000);setInterval(clock,1000);
+setInterval(tick,15000);setInterval(clock,1000);startAutoSync();
 requestAnimationFrame(frame);
 </script>
 <script>

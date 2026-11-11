@@ -1,8 +1,10 @@
-const CACHE_NAME = 'flowstate-v3';
+const CACHE_NAME = 'flowstate-v4';
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.json',
+  './recurrence.js',
+  './sync-engine.js',
   './icon-192.png',
   './icon-512.png'
 ];
