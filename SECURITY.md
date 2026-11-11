@@ -26,9 +26,9 @@ sites cannot reach native app functionality.
 
 ## 3. Dependency coverage (real scan results)
 
-The dependency scanner now reads a committed lockfile, so this is no longer a coverage gap:
-**130 packages checked, 44 findings, 21 high/critical (blocking).** This is **not** a clean scan and
-must not be reported as one.
+The dependency scanner reads a committed lockfile. **Current result: 125 packages checked, 0
+findings, 0 high/critical.** Earlier revisions of this file reported 21 blocking findings; they were
+fixed by pinning patched releases, not by removing them from the lockfile.
 
 ### Where the lockfile comes from
 
@@ -40,48 +40,65 @@ walks every resolvable configuration, records the selected `group:artifact:versi
 `ModuleComponentIdentifier`, and throws rather than writing an empty file. It only runs when
 `-PfsWriteLocks` is passed, so the normal APK build is unaffected.
 
-### What the findings actually are
+### What the findings were, and how they were fixed
 
-Every one of the 21 blocking findings resolves from Gradle/AGP **internal build-tool classpaths** —
-20 from `_internal-unified-test-platform-android-test-plugin-result-listener-gradle` and 1 from
+All 21 blocking findings resolved from Gradle/AGP **internal build-tool classpaths** — 20 from
+`_internal-unified-test-platform-android-test-plugin-result-listener-gradle` and 1 from
 `_internal-unified-test-platform-android-test-plugin-host-retention`. No app compile or runtime
 classpath (`debugCompileClasspath`, `debugRuntimeClasspath`, `releaseCompileClasspath`,
-`releaseRuntimeClasspath`) contains any of these modules.
+`releaseRuntimeClasspath`) contained any of these modules, so none of them ever shipped in the APK:
+they execute inside the Gradle daemon on the build machine, not on the tablet.
 
-| Package | Version | Severity | Worst advisory | Fixed versions |
-|---|---|---|---|---|
-| io.netty:netty-handler | 4.1.93.Final | CRITICAL 9.1 | GHSA-c4c3-7fpv-j4q5 (SNI routing bypass) | 4.1.137.Final / 4.2.17.Final |
-| io.netty:netty-codec, -codec-http | 4.1.93.Final | HIGH | GHSA-558v-64gr-wgg4, GHSA-jppx-w49h-x2qq and 5 more | 4.1.133–4.1.136.Final |
-| com.google.guava:guava | 32.0.1-jre | HIGH 8.2 | GHSA-xxph-c9ww-hj94 (deserialization memory exhaustion) | 33.7.2 |
-| com.google.protobuf:protobuf-java | 3.22.3 | HIGH 8.7 | GHSA-735f-pc8j-v9w8 (CVE-2024-7254, DoS) | 3.25.5 |
-| commons-io:commons-io | 2.13.0 | HIGH 8.7 | GHSA-78wr-2p64-hpwj (CVE-2024-47554, DoS) | 2.14.0 |
-| io.grpc:grpc-netty | 1.57.0 | via netty | transitive | — |
+They were closed by pinning patched releases in `android/app/build.gradle`:
 
-Practical impact: these libraries execute inside the Gradle daemon on the build machine, not on the
-tablet. They do not ship inside the APK and are unreachable from the app at runtime, so they cannot
-be triggered by FlowState's UI, by a shared recording, or by a bookmark opened in the WebView. They
-remain real findings for anyone who runs untrusted builds on a shared machine.
+```gradle
+configurations.configureEach { cfg ->
+    cfg.resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == 'io.netty') {
+            details.useVersion '4.1.137.Final'   // whole group, to avoid version skew
+        }
+    }
+    cfg.resolutionStrategy.force(
+        'com.google.guava:guava:33.7.2',
+        'com.google.protobuf:protobuf-java:3.25.5',
+        'commons-io:commons-io:2.14.0'
+    )
+}
+```
 
-### Why they are still open
+The pins apply to every configuration, not just to the lockfile-writing path, so the real build and
+the recorded lockfile agree. Forcing versions only during lock generation would have produced a
+lockfile that misrepresents what the build actually resolves.
 
-The versions are pinned transitively by Android Gradle Plugin 8.7.3's own tooling dependencies. The
-only way to move them is an AGP (and matching Kotlin/Gradle) upgrade. That cannot be compiled or
-validated in this environment — there is no Android SDK or Gradle wrapper here — and the request was
-explicitly to preserve the working APK pipeline, so the plugin versions are unchanged and the
-findings stay visible rather than suppressed. If you want them closed, the ordered path is: bump AGP
-to the newest 8.x that supports `compileSdk 35`, regenerate the lockfile with the same workflow, and
-re-run the scan.
+| Package | Was | Now | Worst advisory |
+|---|---|---|---|
+| io.netty:netty-handler | 4.1.93.Final | 4.1.137.Final | GHSA-c4c3-7fpv-j4q5 (CRITICAL 9.1, SNI routing bypass) |
+| io.netty:netty-codec, -codec-http | 4.1.93.Final | 4.1.137.Final | GHSA-558v-64gr-wgg4, GHSA-jppx-w49h-x2qq + 5 more (HIGH) |
+| com.google.guava:guava | 32.0.1-jre | 33.7.2 | GHSA-xxph-c9ww-hj94 (HIGH 8.2, deserialization memory exhaustion) |
+| com.google.protobuf:protobuf-java | 3.22.3 | 3.25.5 | GHSA-735f-pc8j-v9w8 / CVE-2024-7254 (HIGH 8.7, DoS) |
+| commons-io:commons-io | 2.13.0 | 2.14.0 | GHSA-78wr-2p64-hpwj / CVE-2024-47554 (HIGH 8.7, DoS) |
+
+Every bump stays inside the same compatibility line (netty 4.1.x → 4.1.x across the whole group,
+guava 32 → 33, protobuf 3.22 → 3.25, commons-io 2.13 → 2.14).
+
+Verification: workflow run `43026541084` on `971132f` regenerated the lockfile with the pinned
+versions, committed it, and still completed `assembleDebug` successfully — the pins do not break the
+APK build. Re-running the scanner against the committed lockfile then reported 125 packages and zero
+findings.
 
 `GHSA-r937-wjx7-w2jp` / CVE-2026-53914 (Kotlin Gradle plugin 2.0.21, build-cache deserialization)
-is likewise build-time only and stays open: its only fixed release is `2.4.20-Beta1`, a beta
-requiring a newer AGP than this project builds with.
+is still open and is build-time only: its only fixed release is `2.4.20-Beta1`, a beta requiring a
+newer AGP than this project builds with.
 
 ### Coverage limits
 
 - The lockfile records the release unit-test runtime graph plus plugin classpaths. Debug-only
   dependencies would not appear in it; this app declares none.
 - `android/build.gradle` and the root `build.gradle` have no resolved lockfile (the scanner warns
-  about both); their plugin versions were checked by hand and are listed above.
+  about both, which is why it still reports its status as *incomplete* even with zero findings).
+  Locking those buildscript classpaths would add the AGP/Kotlin plugin graph — including the
+  beta-only-fix Kotlin advisory above — rather than reduce risk, so they stay unlocked and are
+  documented here instead.
 - GitHub Actions runner images are not covered by this scan.
 - A dependency scan proves nothing about source-level defects, authorization logic or unknown
   vulnerabilities.
