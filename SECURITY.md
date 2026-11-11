@@ -113,8 +113,19 @@ part is checked even though it cannot be locked:
 
 So the remaining gap is coverage, not a hidden finding: of the two components the scanner could not
 resolve, one is clean and the other is the build-time Kotlin advisory already described above.
-Locking that classpath would reveal nothing new and would drag the whole plugin graph into the
-lockfile, so it stays unlocked and is verified this way instead.
+
+The missing capability is on Gradle's side, not an omission in this repository. The `plugins {}` DSL
+resolves plugins through a settings-level classloader created from `pluginManagement` in
+`settings.gradle`; that resolution is not a lockable `Configuration`, so no Gradle task — including
+the `resolveAndLockAll` task in `android/app/build.gradle` — can emit a lockfile covering
+`com.android.tools.build:gradle` or `org.jetbrains.kotlin:kotlin-gradle-plugin` as they are declared
+here. There is therefore nothing for a lockfile-based scanner to read, by construction.
+
+The only way to make those two lockable would be to move them from the `plugins {}` DSL into a legacy
+`buildscript { dependencies { classpath … } }` block. That changes how plugins are applied in a
+working APK pipeline, and it would surface the unfixable Kotlin advisory as a blocking finding rather
+than resolving it — so it was deliberately not done. The direct OSV queries above are the
+compensating control for the uncovered pair.
 
 ### Coverage limits
 
