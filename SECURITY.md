@@ -124,3 +124,30 @@ Android SDK in the environment where it was written — so check the first run's
 versions if GitHub reports a stale tag. `gradle-version` 8.9 is the floor for AGP 8.7.3; bump it
 only alongside AGP. Download the uploaded `gradle-lockfile` artifact and commit it, so the scanner
 has the lockfile even when this workflow is not running.
+
+## Client-side dependency surface (verified by inspection)
+
+A lockfile scanner can never see this app's runtime third-party dependencies, because the web layer
+has no build step and no package manifest — `index.html` ships exactly as written. Checked directly
+with `rg` across the shipped assets:
+
+| Surface | Finding |
+|---|---|
+| npm/JS dependencies | **None.** No `package.json`, `package-lock.json`, `yarn.lock` or `pnpm-lock.yaml`, and no `node_modules` committed. `recurrence.js` is first-party and local. |
+| Third-party runtime origins | **One:** `fonts.googleapis.com` (`preconnect` + stylesheet, `index.html:15-16`). That stylesheet also pulls font binaries from `fonts.gstatic.com`. Both are contacted on first load, disclosing the device IP and Referer to Google. |
+| `script.google.com` | **Not a dependency.** It appears only as an input *placeholder* in the sync-setup sheet (`index.html:999`). There is no default endpoint and no token; nothing is contacted unless you save your own URL. |
+| `https://...` literals | Placeholders only, in the bookmark form (`index.html:901`) and AI settings form (`index.html:1012`). |
+| Secrets in shipped source | **None found.** Searching `index.html`, `recurrence.js` and every Kotlin source for `AIza…`, `client_id`, `client_secret`, `api_key` and `BEGIN … PRIVATE KEY` returns nothing. Calendar and AI credentials are entered by you and held in `FlowStateNative` Keystore — never in source. |
+
+Two residual points worth your decision rather than mine:
+
+- **Google Fonts is a real third-party runtime dependency with a privacy cost.** Removing it means
+  bundling the woff2 files locally (also better offline) or falling back to system fonts. That is a
+  visible design change, so it was left as your choice instead of being made silently.
+- **The embedded preview uses `sandbox="allow-scripts allow-same-origin"`** (`index.html:891`). That
+  combination is right for cross-origin pages, but a page on the app's own origin could escape the
+  sandbox. Authenticated or sensitive sites should use the native WebView (`BrowserActivity`) or
+  "Open externally", which is what the UI already advises.
+
+This section is verified inspection, not a vulnerability scan: it establishes *which* external
+origins the shipped app can reach, not that those origins are free of defects.
