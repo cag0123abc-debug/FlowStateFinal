@@ -1,0 +1,42 @@
+// FlowState: opt-in dependency locking used ONLY when this file is passed with -I.
+//
+// Why an init script instead of android/app/build.gradle?
+// Enabling dependency locking in the build itself would make every build (including
+// the existing assembleDebug APK job) fail until a lockfile is committed. Keeping the
+// configuration here means the APK workflow is unchanged for normal builds, and the
+// lockfile is produced only by the explicit "Generate dependency lockfile" step:
+//
+//   gradle -p android -I android/dependency-lock.init.gradle :app:resolveAndLockAll --write-locks
+//
+// The resulting android/app/gradle.lockfile pins the full AndroidX/Kotlin transitive
+// graph so dependency vulnerability scanners can see resolved versions.
+
+gradle.projectsEvaluated {
+    def app = gradle.rootProject.findProject(':app')
+    if (app == null) {
+        return
+    }
+
+    app.dependencyLocking {
+        lockAllConfigurations()
+    }
+
+    app.tasks.register('resolveAndLockAll') {
+        description = 'Resolves all resolvable configurations so --write-locks can record them.'
+        group = 'dependency locking'
+        doLast {
+            if (!gradle.startParameter.writeDependencyLocks) {
+                throw new GradleException('Run with --write-locks to record dependency locks.')
+            }
+            app.configurations.findAll { it.canBeResolved }.each { cfg ->
+                try {
+                    cfg.resolve()
+                } catch (Exception e) {
+                    // A configuration that cannot resolve in this environment must not
+                    // block recording the rest of the graph.
+                    logger.warn("FlowState: skipping configuration '${cfg.name}': ${e.message}")
+                }
+            }
+        }
+    }
+}
