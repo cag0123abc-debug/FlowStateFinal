@@ -49,5 +49,31 @@ that requires a newer Android Gradle Plugin than the 8.7.3 this project builds w
 build cannot be compiled in this environment to prove such an upgrade. The plugin is therefore kept
 at 2.0.21 and this advisory is tracked openly rather than silenced.
 
-Still uncovered: transitive Maven dependencies, which cannot be resolved without a Gradle build, and
-the GitHub Actions runner images.
+### Why the gap exists, with evidence
+
+- The scanner (OSV-Scanner 2.7.0) reads **lockfiles**. This repository has none: no `package.json`,
+  no `package-lock.json`, and Gradle dependency locking is not enabled, so there is no
+  `gradle.lockfile`. That is why it reports `packages_checked: 0`. A zero-package result is a
+  coverage gap, **not** a clean bill of health.
+- Generating the missing input needs Gradle with the Android plugin. This build environment has no
+  Gradle wrapper (`android/gradle/wrapper` is absent) and no Android SDK (`ANDROID_HOME` unset), so
+  `./gradlew` cannot run here.
+- Maven cannot stand in for it: AndroidX publishes `.aar` artifacts, and plain Maven 3.9.9 has no
+  Android tooling, so `mvn dependency:list` fails with
+  `Could not find artifact androidx.activity:activity-ktx:jar:1.9.3`.
+
+**Still uncovered:** the entire transitive dependency graph (one hop and deeper) of the three
+AndroidX libraries, plus the GitHub Actions runner images. Nothing here proves those are free of
+advisories — they are simply unverified.
+
+### How to close it (runs in CI, where the Android toolchain exists)
+
+1. Add a Gradle wrapper to `android/` (`gradle wrapper --gradle-version 8.9`).
+2. Enable locking in `android/app/build.gradle`:
+   `dependencyLocking { lockAllConfigurations() }`
+3. Write the lockfile: `./gradlew :app:dependencies --write-locks` → produces `android/gradle.lockfile`.
+4. Commit that lockfile; the dependency scanner then resolves the full graph and this section can be
+   replaced with real results.
+
+Until step 4 is done and its output reviewed, treat dependency vulnerability status as **unverified
+beyond the five coordinates in the table above**.
