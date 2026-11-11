@@ -1,3 +1,4 @@
 android/.gradle/
 android/app/build/
 android/local.properties
+android/lock-generation.log

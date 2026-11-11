@@ -1,8 +1,0 @@
-Starting a Gradle Daemon (subsequent builds will be faster)
-
-> Task :app:resolveAndLockAll
-FlowState: recorded 130 dependency modules in /home/runner/work/FlowStateFinal/FlowStateFinal/android/app/gradle.lockfile
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/locks-1794402066535.json
-
-BUILD SUCCESSFUL in 15s
-1 actionable task: 1 executed
