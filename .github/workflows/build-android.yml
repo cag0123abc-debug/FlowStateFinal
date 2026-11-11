@@ -63,10 +63,37 @@ jobs:
           echo "Dependency lockfile generation failed; diagnostics committed to android/lock-generation.log"
           exit 1
 
+      # The APK step keeps its original command; output is captured only so a failure can be
+      # read without API access to the job log. The job still fails on a failed build below.
       - name: Build debug APK
-        run: gradle -p android assembleDebug
+        id: apk
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          gradle -p android assembleDebug 2>&1 | tee /tmp/apk-build.log
+
+      - name: Record APK build diagnostics
+        if: steps.apk.outcome == 'failure'
+        run: |
+          tail -n 500 /tmp/apk-build.log > android/apk-build.log || true
+          git add -A -- android/apk-build.log || true
+          if git diff --cached --quiet; then
+            echo "No build log captured."
+          else
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m "chore(android): capture APK build failure log [skip ci]"
+            git push origin HEAD:refs/heads/feature/flowstate-final-update
+          fi
+
+      - name: Fail the job when the APK build failed
+        if: steps.apk.outcome == 'failure'
+        run: |
+          echo "assembleDebug failed; see android/apk-build.log"
+          exit 1
 
       - name: Upload APK
+        if: steps.apk.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: FlowState-debug-APK
