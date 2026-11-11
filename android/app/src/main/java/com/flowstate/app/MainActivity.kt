@@ -1,27 +1,34 @@
-
 package com.flowstate.app
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.webkit.CookieManager
 import android.webkit.DownloadListener
+import android.webkit.PermissionRequest
 import android.webkit.URLUtil
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.webkit.WebViewAssetLoader
+import androidx.webkit.WebViewClientCompat
 
 class MainActivity : ComponentActivity() {
     private lateinit var webView: WebView
     private var fileCallback: ValueCallback<Array<Uri>>? = null
+    private var pendingPermission: PermissionRequest? = null
 
     private val filePicker = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -29,7 +36,6 @@ class MainActivity : ComponentActivity() {
         val callback = fileCallback
         fileCallback = null
         if (callback == null) return@registerForActivityResult
-
         val data = result.data
         val uris = if (result.resultCode == RESULT_OK && data != null) {
             val clip = data.clipData
@@ -42,43 +48,67 @@ class MainActivity : ComponentActivity() {
         callback.onReceiveValue(uris)
     }
 
+    private val micPermission = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        val request = pendingPermission
+        pendingPermission = null
+        if (request == null) return@registerForActivityResult
+        if (granted) request.grant(arrayOf(PermissionRequest.RESOURCE_AUDIO_CAPTURE))
+        else request.deny()
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         webView = WebView(this)
         setContentView(webView)
 
-        webView.settings.javaScriptEnabled = true
-        webView.settings.domStorageEnabled = true
-        webView.settings.databaseEnabled = true
-        webView.settings.allowFileAccess = false
-        webView.settings.allowContentAccess = true
-        webView.settings.javaScriptCanOpenWindowsAutomatically = false
-        webView.settings.setSupportMultipleWindows(false)
-        webView.settings.loadsImagesAutomatically = true
-        webView.settings.useWideViewPort = true
-        webView.settings.loadWithOverviewMode = true
-        webView.settings.mediaPlaybackRequiresUserGesture = true
+        val assetLoader = WebViewAssetLoader.Builder()
+            .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(this))
+            .build()
+
+        with(webView.settings) {
+            javaScriptEnabled = true
+            domStorageEnabled = true
+            databaseEnabled = true
+            allowFileAccess = false
+            allowContentAccess = true
+            javaScriptCanOpenWindowsAutomatically = false
+            setSupportMultipleWindows(false)
+            loadsImagesAutomatically = true
+            useWideViewPort = true
+            loadWithOverviewMode = true
+            mediaPlaybackRequiresUserGesture = false
+            mixedContentMode = android.webkit.WebSettings.MIXED_CONTENT_NEVER_ALLOW
+            cacheMode = android.webkit.WebSettings.LOAD_DEFAULT
+        }
 
         CookieManager.getInstance().setAcceptCookie(true)
-        CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true)
+        CookieManager.getInstance().setAcceptThirdPartyCookies(webView, false)
 
-        webView.webViewClient = object : WebViewClient() {
+        webView.addJavascriptInterface(NativeBridge(this), "FlowStateNative")
+
+        webView.webViewClient = object : WebViewClientCompat() {
+            override fun shouldInterceptRequest(
+                view: WebView,
+                request: WebResourceRequest
+            ): WebResourceResponse? = assetLoader.shouldInterceptRequest(request.url)
+
             override fun shouldOverrideUrlLoading(
                 view: WebView,
                 request: WebResourceRequest
             ): Boolean {
                 val uri = request.url
-                val host = uri.host?.lowercase() ?: return true
-                val trustedHosts = setOf(
-                    "cag0123abc-debug.github.io",
-                    "script.google.com",
-                    "script.googleusercontent.com"
-                )
-                if (uri.scheme == "https" && host in trustedHosts) return false
-
+                val host = uri.host?.lowercase().orEmpty()
+                if (uri.scheme == "https" && host == APP_HOST) return false
                 if (uri.scheme == "https" || uri.scheme == "http") {
-                    openExternal(uri)
+                    // Never load a foreign site next to the native bridge: use the sandboxed browser.
+                    startActivity(
+                        Intent(this@MainActivity, BrowserActivity::class.java)
+                            .putExtra(BrowserActivity.EXTRA_URL, uri.toString())
+                    )
                 }
                 return true
             }
@@ -107,6 +137,30 @@ class MainActivity : ComponentActivity() {
                     false
                 }
             }
+
+            override fun onPermissionRequest(request: PermissionRequest?) {
+                if (request == null) return
+                val wantsAudio = request.resources.contains(PermissionRequest.RESOURCE_AUDIO_CAPTURE)
+                if (!wantsAudio) {
+                    request.deny()
+                    return
+                }
+                val granted = ContextCompat.checkSelfPermission(
+                    this@MainActivity, Manifest.permission.RECORD_AUDIO
+                ) == PackageManager.PERMISSION_GRANTED
+                if (granted) request.grant(arrayOf(PermissionRequest.RESOURCE_AUDIO_CAPTURE))
+                else {
+                    pendingPermission = request
+                    micPermission.launch(Manifest.permission.RECORD_AUDIO)
+                }
+            }
+
+            override fun onGeolocationPermissionsShowPrompt(
+                origin: String?,
+                callback: android.webkit.GeolocationPermissions.Callback?
+            ) {
+                callback?.invoke(origin, false, false)
+            }
         }
 
         webView.setDownloadListener(DownloadListener { url, userAgent, contentDisposition, mimeType, _ ->
@@ -122,8 +176,7 @@ class MainActivity : ComponentActivity() {
                 request.setDescription("Downloading from FlowState")
                 request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
                 request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
-                val manager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-                manager.enqueue(request)
+                (getSystemService(DOWNLOAD_SERVICE) as DownloadManager).enqueue(request)
                 Toast.makeText(this, "Download started", Toast.LENGTH_SHORT).show()
             } catch (_: Exception) {
                 Toast.makeText(this, "Download could not be started", Toast.LENGTH_LONG).show()
@@ -131,7 +184,7 @@ class MainActivity : ComponentActivity() {
         })
 
         if (savedInstanceState == null) {
-            webView.loadUrl(FLOWSTATE_URL)
+            webView.loadUrl(APP_URL)
         } else {
             webView.restoreState(savedInstanceState)
         }
@@ -152,11 +205,8 @@ class MainActivity : ComponentActivity() {
 
     @Deprecated("Deprecated in Android API")
     override fun onBackPressed() {
-        if (::webView.isInitialized && webView.canGoBack()) {
-            webView.goBack()
-        } else {
-            super.onBackPressed()
-        }
+        if (::webView.isInitialized && webView.canGoBack()) webView.goBack()
+        else super.onBackPressed()
     }
 
     override fun onDestroy() {
@@ -168,7 +218,7 @@ class MainActivity : ComponentActivity() {
     }
 
     companion object {
-        private const val FLOWSTATE_URL =
-            "https://cag0123abc-debug.github.io/FlowStateFinal/"
+        private const val APP_HOST = "appassets.androidplatform.net"
+        private const val APP_URL = "https://$APP_HOST/assets/index.html"
     }
 }
