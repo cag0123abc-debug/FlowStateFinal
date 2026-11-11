@@ -40,6 +40,12 @@ android {
         jvmTarget = '17'
     }
 
+    buildFeatures {
+        // AGP 8 stopped generating BuildConfig by default. NativeBridge exposes
+        // BuildConfig.VERSION_NAME to the web layer, so it has to be generated.
+        buildConfig true
+    }
+
     sourceSets {
         main {
             assets.srcDirs += webAssetDir
