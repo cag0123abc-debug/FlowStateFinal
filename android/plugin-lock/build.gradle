@@ -1,0 +1,40 @@
+// Lock-only build: resolves the exact Gradle plugin artifacts applied by the real build so that
+// `--write-locks` can record them in gradle.lockfile for dependency scanners.
+//
+// Why this exists: build.gradle and android/build.gradle apply
+//   id 'com.android.application' version '8.7.3'
+//   id 'org.jetbrains.kotlin.android' version '2.0.21'
+// via the plugins{} DSL. Those are resolved through the settings-level pluginManagement
+// classloader, which is not a lockable Configuration, so :app:resolveAndLockAll can never emit
+// them (measured: 125 locked coordinates, zero plugin entries). Declaring the same coordinates as
+// ordinary dependencies here resolves the identical artifacts from the identical repositories and
+// makes them lockable. Nothing here is applied to the app build; keep the versions in sync with
+// build.gradle and android/build.gradle.
+plugins {
+    id 'base'
+}
+
+configurations {
+    buildPlugins {
+        canBeConsumed = false
+        canBeResolved = true
+    }
+}
+
+dependencies {
+    buildPlugins 'com.android.tools.build:gradle:8.7.3'
+    buildPlugins 'org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.21'
+}
+
+dependencyLocking {
+    lockAllConfigurations()
+}
+
+tasks.register('resolvePluginLocks') {
+    description = 'Resolves the build-plugin graph so --write-locks can record it.'
+    group = 'help'
+    doLast {
+        def components = configurations.buildPlugins.incoming.resolutionResult.allComponents
+        println "Resolved ${components.size()} plugin components."
+    }
+}

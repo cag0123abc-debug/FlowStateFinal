@@ -42,6 +42,17 @@ jobs:
           set -o pipefail
           gradle -p android -PfsWriteLocks :app:resolveAndLockAll 2>&1 | tee android/lock-generation.log
 
+      # Gradle cannot lock the plugins{} classpath, so the two build plugins are resolved as
+      # ordinary dependencies in a separate lock-only build. This emits
+      # android/plugin-lock/gradle.lockfile, which dependency scanners can read.
+      # continue-on-error: a failure here must never affect the APK build below.
+      - name: Generate plugin classpath lockfile
+        id: pluginlocks
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          gradle -p android/plugin-lock resolvePluginLocks --write-locks 2>&1 | tee /tmp/plugin-lock.log
+
       - name: Commit lockfile to branch
         run: |
           # Stage the whole android directory: `git add` aborts without staging anything when

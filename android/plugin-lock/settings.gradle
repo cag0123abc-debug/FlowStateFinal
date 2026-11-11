@@ -1,0 +1,17 @@
+// Standalone build — see build.gradle.
+//
+// Its only job is to resolve the Gradle *plugin* artifacts applied by build.gradle and
+// android/build.gradle so they can be dependency-locked and read by dependency scanners.
+// Gradle resolves plugins{} through the settings-level pluginManagement classloader, which is
+// not a lockable Configuration, so this separate project declares them as ordinary dependencies.
+//
+// android/settings.gradle includes only ":app", so this directory never joins the APK build.
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+rootProject.name = "flowstate-plugin-lock"
