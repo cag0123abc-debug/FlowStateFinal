@@ -24,106 +24,67 @@ Kept in the repo so the security state of this project is reviewable, not just d
 authentications in the external browser, and exposes no `addJavascriptInterface` bridge, so saved
 sites cannot reach native app functionality.
 
-## 3. Dependency coverage (honest status)
+## 3. Dependency coverage (real scan results)
 
-The automated dependency scan reports **incomplete, 0 packages checked**. This repository has no
-lockfile (`package.json`/lockfile absent, Gradle without dependency locking), which is the input the
-scanner needs, so its result must **not** be read as a clean scan.
+The dependency scanner now reads a committed lockfile, so this is no longer a coverage gap:
+**130 packages checked, 44 findings, 21 high/critical (blocking).** This is **not** a clean scan and
+must not be reported as one.
 
-Manual OSV advisory lookup of the coordinates declared in `android/app/build.gradle` plus the build
-plugin versions (2026-11-11):
+### Where the lockfile comes from
 
-| Coordinate | Version | Result |
-|---|---|---|
-| androidx.activity:activity-ktx | 1.9.3 | no advisories |
-| androidx.core:core-ktx | 1.13.1 | no advisories |
-| androidx.webkit:webkit | 1.12.1 | no advisories |
-| com.android.tools.build:gradle | 8.7.3 | no advisories |
-| org.jetbrains.kotlin:kotlin-gradle-plugin | 2.0.21 | **GHSA-r937-wjx7-w2jp** / CVE-2026-53914 |
+`android/app/gradle.lockfile` is generated and committed by the existing
+`.github/workflows/build-android.yml` workflow, step *Generate dependency lockfile*, on
+`feature/flowstate-final-update`. AGP does not register Gradle's `dependencyLocking` extension, so
+`--write-locks` alone writes nothing; the opt-in `resolveAndLockAll` task in `android/app/build.gradle`
+walks every resolvable configuration, records the selected `group:artifact:version` for each
+`ModuleComponentIdentifier`, and throws rather than writing an empty file. It only runs when
+`-PfsWriteLocks` is passed, so the normal APK build is unaffected.
 
-**GHSA-r937-wjx7-w2jp** — "Unsafe Deserialization in Kotlin Build Cache Enables Code Execution".
-Severity MODERATE (CVSS 3.1 AV:L/AC:H/PR:H). It is a **build-time** issue: an attacker with local,
-high-privilege access could execute code through the Gradle build cache. It does not ship inside the
-APK and is not reachable from the app at runtime. The only fixed release is `2.4.20-Beta1`, a beta
-that requires a newer Android Gradle Plugin than the 8.7.3 this project builds with, and the APK
-build cannot be compiled in this environment to prove such an upgrade. The plugin is therefore kept
-at 2.0.21 and this advisory is tracked openly rather than silenced.
+### What the findings actually are
 
-### Why the gap exists, with evidence
+Every one of the 21 blocking findings resolves from Gradle/AGP **internal build-tool classpaths** —
+20 from `_internal-unified-test-platform-android-test-plugin-result-listener-gradle` and 1 from
+`_internal-unified-test-platform-android-test-plugin-host-retention`. No app compile or runtime
+classpath (`debugCompileClasspath`, `debugRuntimeClasspath`, `releaseCompileClasspath`,
+`releaseRuntimeClasspath`) contains any of these modules.
 
-- The scanner (OSV-Scanner 2.7.0) reads **lockfiles**. This repository has none: no `package.json`,
-  no `package-lock.json`, and Gradle dependency locking is not enabled, so there is no
-  `gradle.lockfile`. That is why it reports `packages_checked: 0`. A zero-package result is a
-  coverage gap, **not** a clean bill of health.
-- Generating the missing input needs Gradle with the Android plugin. This build environment has no
-  Gradle wrapper (`android/gradle/wrapper` is absent) and no Android SDK (`ANDROID_HOME` unset), so
-  `./gradlew` cannot run here.
-- Maven cannot stand in for it: AndroidX publishes `.aar` artifacts, and plain Maven 3.9.9 has no
-  Android tooling, so `mvn dependency:list` fails with
-  `Could not find artifact androidx.activity:activity-ktx:jar:1.9.3`.
+| Package | Version | Severity | Worst advisory | Fixed versions |
+|---|---|---|---|---|
+| io.netty:netty-handler | 4.1.93.Final | CRITICAL 9.1 | GHSA-c4c3-7fpv-j4q5 (SNI routing bypass) | 4.1.137.Final / 4.2.17.Final |
+| io.netty:netty-codec, -codec-http | 4.1.93.Final | HIGH | GHSA-558v-64gr-wgg4, GHSA-jppx-w49h-x2qq and 5 more | 4.1.133–4.1.136.Final |
+| com.google.guava:guava | 32.0.1-jre | HIGH 8.2 | GHSA-xxph-c9ww-hj94 (deserialization memory exhaustion) | 33.7.2 |
+| com.google.protobuf:protobuf-java | 3.22.3 | HIGH 8.7 | GHSA-735f-pc8j-v9w8 (CVE-2024-7254, DoS) | 3.25.5 |
+| commons-io:commons-io | 2.13.0 | HIGH 8.7 | GHSA-78wr-2p64-hpwj (CVE-2024-47554, DoS) | 2.14.0 |
+| io.grpc:grpc-netty | 1.57.0 | via netty | transitive | — |
 
-**Still uncovered:** the entire transitive dependency graph (one hop and deeper) of the three
-AndroidX libraries, plus the GitHub Actions runner images. Nothing here proves those are free of
-advisories — they are simply unverified.
+Practical impact: these libraries execute inside the Gradle daemon on the build machine, not on the
+tablet. They do not ship inside the APK and are unreachable from the app at runtime, so they cannot
+be triggered by FlowState's UI, by a shared recording, or by a bookmark opened in the WebView. They
+remain real findings for anyone who runs untrusted builds on a shared machine.
 
-### How to close it (runs in CI, where the Android toolchain exists)
+### Why they are still open
 
-1. Add a Gradle wrapper to `android/` (`gradle wrapper --gradle-version 8.9`).
-2. Enable locking in `android/app/build.gradle`:
-   `dependencyLocking { lockAllConfigurations() }`
-3. Write the lockfile: `./gradlew :app:dependencies --write-locks` → produces `android/gradle.lockfile`.
-4. Commit that lockfile; the dependency scanner then resolves the full graph and this section can be
-   replaced with real results.
+The versions are pinned transitively by Android Gradle Plugin 8.7.3's own tooling dependencies. The
+only way to move them is an AGP (and matching Kotlin/Gradle) upgrade. That cannot be compiled or
+validated in this environment — there is no Android SDK or Gradle wrapper here — and the request was
+explicitly to preserve the working APK pipeline, so the plugin versions are unchanged and the
+findings stay visible rather than suppressed. If you want them closed, the ordered path is: bump AGP
+to the newest 8.x that supports `compileSdk 35`, regenerate the lockfile with the same workflow, and
+re-run the scan.
 
-Until step 4 is done and its output reviewed, treat dependency vulnerability status as **unverified
-beyond the five coordinates in the table above**.
+`GHSA-r937-wjx7-w2jp` / CVE-2026-53914 (Kotlin Gradle plugin 2.0.21, build-cache deserialization)
+is likewise build-time only and stays open: its only fixed release is `2.4.20-Beta1`, a beta
+requiring a newer AGP than this project builds with.
 
-#### Paste-ready workflow
+### Coverage limits
 
-This file is **additive** — it does not touch `build-android.yml` or the APK pipeline. Save it as
-`.github/workflows/dependency-scan.yml`, keep the `dependencyLocking` block from step 2 in
-`android/app/build.gradle`, then run it from the Actions tab. It writes the lockfile on a runner that
-has the Android toolchain, uploads it, and scans it.
-
-```yaml
-name: Dependency scan
-on:
-  workflow_dispatch:
-  pull_request:
-jobs:
-  scan:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-      - uses: android-actions/setup-android@v3
-      - uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.9'
-      - name: Write Gradle lockfile
-        working-directory: android
-        run: gradle :app:dependencies --write-locks
-      - name: Keep the lockfile
-        uses: actions/upload-artifact@v4
-        with:
-          name: gradle-lockfile
-          path: android/**/gradle.lockfile
-          if-no-files-found: error
-      - name: Scan resolved dependencies
-        uses: google/osv-scanner-action/osv-scanner-action@v1
-        with:
-          scan-args: |-
-            --lockfile=android/app/gradle.lockfile
-```
-
-Two caveats, stated plainly: this YAML has never been executed — there is no Gradle wrapper or
-Android SDK in the environment where it was written — so check the first run's log and adjust action
-versions if GitHub reports a stale tag. `gradle-version` 8.9 is the floor for AGP 8.7.3; bump it
-only alongside AGP. Download the uploaded `gradle-lockfile` artifact and commit it, so the scanner
-has the lockfile even when this workflow is not running.
+- The lockfile records the release unit-test runtime graph plus plugin classpaths. Debug-only
+  dependencies would not appear in it; this app declares none.
+- `android/build.gradle` and the root `build.gradle` have no resolved lockfile (the scanner warns
+  about both); their plugin versions were checked by hand and are listed above.
+- GitHub Actions runner images are not covered by this scan.
+- A dependency scan proves nothing about source-level defects, authorization logic or unknown
+  vulnerabilities.
 
 ## Client-side dependency surface (verified by inspection)
 
