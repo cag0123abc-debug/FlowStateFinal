@@ -234,20 +234,48 @@ body.focus main{padding-bottom:24px}
 <div id="bubble"></div>
 <script>
 const clone=o=>JSON.parse(JSON.stringify(o));
-const KEY='flowstate-v2';
+const KEY='flowstate-v3';
+const LEGACY_KEYS=['flowstate-v2','flowstate'];
 const PAL=['#ff8fa3','#8fd3a8','#f7c77a','#9db4f0','#c39bf0','#7fd6e8','#f49a6b'];
+const DASH_DEF=[{id:'widget',on:true,size:'m'},{id:'today',on:true,size:'m'},{id:'calendar',on:true,size:'l'},{id:'books',on:true,size:'l'},{id:'upcoming',on:true,size:'m'},{id:'notes',on:true,size:'s'},{id:'recordings',on:true,size:'s'}];
 const DEF={items:[],classes:[{id:'math',name:'Math',icon:'➕',color:'#ff8fa3'}],notifs:[],dnd:false,fired:{},
+  templates:[],images:[],bookmarks:[],recordings:[],quotes:[],dashboard:null,
   settings:{speed:1,reduce:false,font:'system-ui, sans-serif',fs:16,text:'#1d2440',cal:'#3d5ba9',
-  bg:{home:'#f5e6e1',school:'#f7dede',work:'#dfe7f5',deyc:'#dcf2e2',personal:'#e5dcf5'}}};
+  bg:{home:'#f5e6e1',school:'#f7dede',work:'#dfe7f5',deyc:'#dcf2e2',personal:'#e5dcf5'},
+  googleSync:false,syncLast:0,syncCalendar:'FlowState',pendingGoogleSync:[],
+  widget:{on:true,size:'m',rot:'tab',collections:['scenic','quotes'],last:0,idx:0}}};
+function normalizeItem(i){
+  const o=Object.assign({reminders:[],done:false,priority:'',list:'',duration:0,body:'',source:'flowstate'},i||{});
+  if(!Array.isArray(o.reminders))o.reminders=[];
+  if(!Array.isArray(o.exdates))o.exdates=[];
+  if(!o.overrides||typeof o.overrides!=='object')o.overrides={};
+  if(o.repeat){try{o.repeat=FSRec.normalise(o.repeat)}catch(e){o.repeat=null}}
+  return o;
+}
+function migrate(x){
+  const d=JSON.parse(JSON.stringify(DEF));
+  if(!x||typeof x!=='object'){d.dashboard=DASH_DEF.map(s=>Object.assign({},s));return d}
+  const out=Object.assign(d,x);
+  out.settings=Object.assign({},DEF.settings,x.settings||{});
+  out.settings.bg=Object.assign({},DEF.settings.bg,(x.settings||{}).bg||{});
+  out.settings.widget=Object.assign({},DEF.settings.widget,(x.settings||{}).widget||{});
+  ['items','classes','notifs','templates','images','bookmarks','recordings','quotes'].forEach(k=>{if(!Array.isArray(out[k]))out[k]=[]});
+  if(!out.classes.length)out.classes=JSON.parse(JSON.stringify(DEF.classes));
+  out.classes=out.classes.map((c,n)=>Object.assign({order:n,style:'photo',stickers:[],font:'',bg2:''},c));
+  out.items=out.items.map(normalizeItem);
+  if(!Array.isArray(out.dashboard)||!out.dashboard.length)out.dashboard=DASH_DEF.map(s=>Object.assign({},s));
+  if(!Array.isArray(out.settings.pendingGoogleSync))out.settings.pendingGoogleSync=[];
+  return out;
+}
 function load(){
-  try{
-    const x=JSON.parse(localStorage.getItem(KEY));
-    if(x&&x.items){const d=clone(DEF);return Object.assign(d,x,{settings:Object.assign(d.settings,x.settings||{},{bg:Object.assign(d.settings.bg,(x.settings||{}).bg||{})})})}
-  }catch(e){}
-  return clone(DEF);
+  let raw=null;
+  try{raw=localStorage.getItem(KEY)}catch(e){}
+  if(!raw){for(const k of LEGACY_KEYS){try{const v=localStorage.getItem(k);if(v){raw=v;break}}catch(e){}}}
+  if(!raw)return migrate(null);
+  try{return migrate(JSON.parse(raw))}catch(e){return migrate(null)}
 }
 let D=load();
-const S={tab:'home',cls:null,collapsed:false,bubble:null,drop:false,sel:'',month:null,view:'month'};
+const S={tab:'home',cls:null,collapsed:false,bubble:null,drop:false,sel:'',month:null,view:'month',focus:false,calMode:'month',bookEdit:null,libOpen:false,quickDate:'',seriesCtx:null,widgetIdx:0,recCtx:null};
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
 const uid=()=>Math.random().toString(36).slice(2,10);
@@ -258,10 +286,11 @@ const byC=(a,b)=>b.created-a.created;
 const val=k=>$('#f-'+k)?.value??'';
 const CATS={home:'Home',school:'School',work:'Work',deyc:'DEYC',personal:'Personal'};
 const BGK=['home','school','work','deyc','personal'];
-const RAIL=[['home','🏠','Home'],['school','🎓','School'],['work','💼','Work'],['deyc','🤝','DEYC'],['personal','🌟','Personal']];
+const RAIL=[['home','🏠','Home'],['school','🎓','School'],['work','💼','Work'],['deyc','🤝','DEYC'],['personal','🌟','Personal'],['browser','🌐','Web'],['media','🎧','Recordings']];
 const LISTS=['Must Watch','Must Read','Must Play','To Do','Websites','Potential Ideas','Games to Play'];
 const LABEL={event:'Event',homework:'Homework',test:'Test',summary:'Summary',project:'Project',note:'Note',bucket:'List item',recording:'Recording'};
 let FORM={},REC=null,RC='school',CCOL=PAL[0],UNDO=null,TT=null,CONF=null;
+let SYNC_BUSY=false,IMPORT_Q=[],WIDGET_CACHE={},CLIP=null;
 S.sel=dk(new Date());
 S.month=new Date(new Date().getFullYear(),new Date().getMonth(),1);
 
