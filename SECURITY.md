@@ -90,15 +90,40 @@ findings.
 is still open and is build-time only: its only fixed release is `2.4.20-Beta1`, a beta requiring a
 newer AGP than this project builds with.
 
+### The uncovered buildscript classpath (checked directly)
+
+The scanner's two warnings are accurate: the root `build.gradle` and `android/build.gradle` declare
+plugins with no resolvable lockfile, so OSV-Scanner has nothing to read there. That surface is tiny
+and fully enumerable — both files contain the same two declarations and nothing else:
+
+```gradle
+plugins {
+    id 'com.android.application' version '8.7.3' apply false
+    id 'org.jetbrains.kotlin.android' version '2.0.21' apply false
+}
+```
+
+Both artifacts were queried directly against the same OSV API the scanner uses, so the uncovered
+part is checked even though it cannot be locked:
+
+| Artifact | Version | OSV result |
+|---|---|---|
+| com.android.tools.build:gradle | 8.7.3 | no advisories returned |
+| org.jetbrains.kotlin:kotlin-gradle-plugin | 2.0.21 | GHSA-r937-wjx7-w2jp — fixed only in 2.4.20-Beta1 |
+
+So the remaining gap is coverage, not a hidden finding: of the two components the scanner could not
+resolve, one is clean and the other is the build-time Kotlin advisory already described above.
+Locking that classpath would reveal nothing new and would drag the whole plugin graph into the
+lockfile, so it stays unlocked and is verified this way instead.
+
 ### Coverage limits
 
 - The lockfile records the release unit-test runtime graph plus plugin classpaths. Debug-only
   dependencies would not appear in it; this app declares none.
 - `android/build.gradle` and the root `build.gradle` have no resolved lockfile (the scanner warns
   about both, which is why it still reports its status as *incomplete* even with zero findings).
-  Locking those buildscript classpaths would add the AGP/Kotlin plugin graph — including the
-  beta-only-fix Kotlin advisory above — rather than reduce risk, so they stay unlocked and are
-  documented here instead.
+  Their two declared plugins were queried directly against OSV instead — see the section above —
+  rather than locked.
 - GitHub Actions runner images are not covered by this scan.
 - A dependency scan proves nothing about source-level defects, authorization logic or unknown
   vulnerabilities.
