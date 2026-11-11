@@ -77,3 +77,50 @@ advisories — they are simply unverified.
 
 Until step 4 is done and its output reviewed, treat dependency vulnerability status as **unverified
 beyond the five coordinates in the table above**.
+
+#### Paste-ready workflow
+
+This file is **additive** — it does not touch `build-android.yml` or the APK pipeline. Save it as
+`.github/workflows/dependency-scan.yml`, keep the `dependencyLocking` block from step 2 in
+`android/app/build.gradle`, then run it from the Actions tab. It writes the lockfile on a runner that
+has the Android toolchain, uploads it, and scans it.
+
+```yaml
+name: Dependency scan
+on:
+  workflow_dispatch:
+  pull_request:
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - name: Write Gradle lockfile
+        working-directory: android
+        run: gradle :app:dependencies --write-locks
+      - name: Keep the lockfile
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-lockfile
+          path: android/**/gradle.lockfile
+          if-no-files-found: error
+      - name: Scan resolved dependencies
+        uses: google/osv-scanner-action/osv-scanner-action@v1
+        with:
+          scan-args: |-
+            --lockfile=android/app/gradle.lockfile
+```
+
+Two caveats, stated plainly: this YAML has never been executed — there is no Gradle wrapper or
+Android SDK in the environment where it was written — so check the first run's log and adjust action
+versions if GitHub reports a stale tag. `gradle-version` 8.9 is the floor for AGP 8.7.3; bump it
+only alongside AGP. Download the uploaded `gradle-lockfile` artifact and commit it, so the scanner
+has the lockfile even when this workflow is not running.
