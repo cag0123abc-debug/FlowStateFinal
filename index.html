@@ -209,9 +209,10 @@ body.focus main{padding-bottom:24px}
 .lib .li button{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:999px;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:12px;line-height:1;cursor:pointer}
 .row.wrap{flex-wrap:wrap}
 /* ==== FlowState 2.0 layout additions ==== */
-#fs-tools{position:fixed;top:10px;right:12px;display:flex;gap:6px;align-items:center;z-index:60}
-#fs-tools button{border:0;background:rgba(255,255,255,.85);border-radius:12px;padding:8px 10px;font-size:16px;box-shadow:0 2px 10px rgba(0,0,0,.12);cursor:pointer}
-#fs-tools .dot{color:#3d5ba9;font-size:18px}
+#fs-tools{display:inline-flex;gap:2px;align-items:center;margin-left:2px}
+#fs-tools button{border:0;background:transparent;border-radius:10px;padding:6px 8px;font-size:16px;line-height:1;cursor:pointer}
+#fs-tools button:hover{background:rgba(0,0,0,.06)}
+#fs-tools .dot{color:#3d5ba9;font-size:14px;margin-left:2px}
 body.focus .rail,body.focus #badge,body.focus #fab{display:none!important}
 body.focus #view{max-width:900px;margin:0 auto}
 .fadeIn{animation:fsIn .22s ease}
@@ -1050,11 +1051,19 @@ function readICS(file){
 
 /* ---------- chrome ---------- */
 function injectChrome(){
-  if(document.getElementById('fs-tools'))return;
-  const bar=document.createElement('div');
+  const existing=document.getElementById('fs-tools');
+  if(existing){
+    const b=existing.querySelector('button');
+    if(b)b.textContent=S.focus?'🌿':'🎯';
+    updateSyncBadge();
+    return;
+  }
+  const bar=document.createElement('span');
   bar.id='fs-tools';
-  bar.innerHTML=`<button title="Search everything" onclick="openSearch()">🔍</button><button title="Focus mode" onclick="toggleFocus()">${S.focus?'🌿':'🎯'}</button><span id="syncDot" class="dot"></span>`;
-  document.body.appendChild(bar);
+  bar.innerHTML=`<button title="Focus mode" aria-label="Focus mode" onclick="toggleFocus();injectChrome()">${S.focus?'🌿':'🎯'}</button><span id="syncDot" class="dot" title="Calendar sync"></span>`;
+  // Lives inside the header controls so it can never cover the Settings gear.
+  const host=document.querySelector('header .tr');
+  if(host)host.appendChild(bar);else document.body.appendChild(bar);
   updateSyncBadge();
 }
 window.addEventListener('load',injectChrome);
