@@ -69,3 +69,29 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.13.1'
     implementation 'androidx.webkit:webkit:1.12.1'
 }
+
+// Dependency locking is opt-in so the normal APK build is completely unaffected:
+// without -PfsWriteLocks nothing below is configured and assembleDebug behaves as before.
+// CI passes -PfsWriteLocks to record android/app/gradle.lockfile for vulnerability scanning.
+if (project.hasProperty('fsWriteLocks')) {
+    dependencyLocking {
+        lockAllConfigurations()
+    }
+
+    tasks.register('resolveAndLockAll') {
+        description = 'Resolves all resolvable configurations so --write-locks can record them.'
+        group = 'dependency locking'
+        doLast {
+            if (!gradle.startParameter.writeDependencyLocks) {
+                throw new GradleException('Run with --write-locks to record dependency locks.')
+            }
+            configurations.findAll { it.canBeResolved }.each { cfg ->
+                try {
+                    cfg.resolve()
+                } catch (Exception e) {
+                    logger.warn("FlowState: skipping configuration '${cfg.name}': ${e.message}")
+                }
+            }
+        }
+    }
+}

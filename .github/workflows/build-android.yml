@@ -33,14 +33,18 @@ jobs:
           gradle-version: '8.9'
 
       # Records the resolved AndroidX/Kotlin graph in android/app/gradle.lockfile so
-      # dependency scanners can see exact versions. Locking lives in an init script, so
-      # the APK build below is unaffected.
+      # dependency scanners see exact versions. Locking is opt-in via -PfsWriteLocks,
+      # so the APK build below is unaffected.
       - name: Generate dependency lockfile
-        run: gradle -p android -I android/dependency-lock.init.gradle :app:resolveAndLockAll --write-locks
+        id: locks
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          gradle -p android -PfsWriteLocks :app:resolveAndLockAll --write-locks 2>&1 | tee android/lock-generation.log
 
       - name: Commit lockfile to branch
         run: |
-          git add -A -- 'android/gradle.lockfile' 'android/app/gradle.lockfile' || true
+          git add -A -- 'android/gradle.lockfile' 'android/app/gradle.lockfile' 'android/lock-generation.log' || true
           if git diff --cached --quiet; then
             echo "No lockfile changes to commit."
           else
@@ -49,6 +53,12 @@ jobs:
             git commit -m "chore(android): record dependency lockfile [skip ci]"
             git push
           fi
+
+      - name: Fail if lockfile generation failed
+        if: steps.locks.outcome == 'failure'
+        run: |
+          echo "Dependency lockfile generation failed; diagnostics committed to android/lock-generation.log"
+          exit 1
 
       - name: Build debug APK
         run: gradle -p android assembleDebug
