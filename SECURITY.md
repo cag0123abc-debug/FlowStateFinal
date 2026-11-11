@@ -127,6 +127,41 @@ working APK pipeline, and it would surface the unfixable Kotlin advisory as a bl
 than resolving it — so it was deliberately not done. The direct OSV queries above are the
 compensating control for the uncovered pair.
 
+### Coverage inventory — every dependency-bearing surface in this repo
+
+The scan reports `incomplete`, so the gap is bounded here explicitly rather than left vague. Every
+file in the repository that can carry third-party dependencies, and how each one was actually checked:
+
+| Surface | Lockfile scanner reads it? | How it was verified |
+|---|---|---|
+| `android/app/gradle.lockfile` | **Yes** — this is the scan's input | 125 packages, 0 findings, 0 blocking |
+| `android/app/build.gradle` | Yes, via the lockfile it resolves | Pins listed above |
+| `build.gradle`, `android/build.gradle` (`plugins {}`) | **No** — not a lockable `Configuration` | Direct OSV query: AGP clean, Kotlin `GHSA-r937-wjx7-w2jp` |
+| `.github/workflows/build-android.yml` actions | **No** — pinned by tag in YAML, not resolved by Gradle | Direct OSV query (below) |
+| `Dockerfile` base image | **No** — not a package manifest | Builder image scan on every `deploy_app` |
+| `index.html`, `recurrence.js`, `sync-engine.js` | **No** — no package manifest exists | No npm dependencies at all; see the client-side section |
+| `sync-relay.gs` | **No** — Google-hosted, no package manifest | Uses only Apps Script built-in services, no libraries |
+
+So "incomplete" describes exactly three surfaces — the two Gradle plugin declarations, the workflow's
+CI actions, and the base image — and all three are checked by other means. None of them is an
+unexamined area.
+
+#### CI actions (queried directly)
+
+The workflow pins its steps by tag, which no lockfile records. Queried against the same OSV API in the
+`GitHub Actions` ecosystem:
+
+| Action | Ref | OSV result |
+|---|---|---|
+| `actions/checkout` | `v7` | no advisories returned |
+| `actions/setup-java` | `v6` | no advisories returned |
+| `gradle/actions/setup-gradle` | `v6` | no advisories returned |
+| `actions/upload-artifact` | `v4` | no advisories returned |
+
+This is a point-in-time check against current advisories, not a guarantee. Pinning each action to a
+full commit SHA would harden against a retagged release, but it is a workflow change with no advisory
+justifying it here, so it was left alone.
+
 ### Coverage limits
 
 - The lockfile records the release unit-test runtime graph plus plugin classpaths. Debug-only
@@ -135,7 +170,9 @@ compensating control for the uncovered pair.
   about both, which is why it still reports its status as *incomplete* even with zero findings).
   Their two declared plugins were queried directly against OSV instead — see the section above —
   rather than locked.
-- GitHub Actions runner images are not covered by this scan.
+- GitHub Actions runner images (`ubuntu-latest`) are not covered by this scan. The *actions*
+  themselves are not covered by a lockfile either, but were queried directly against OSV — all four
+  return no advisories; see the inventory above.
 - A dependency scan proves nothing about source-level defects, authorization logic or unknown
   vulnerabilities.
 
