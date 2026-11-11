@@ -62,7 +62,7 @@ test('count limits the number of occurrences', () => {
 /* --- skipping and overrides --- */
 test('skipped occurrence disappears but series continues', () => {
   const item = { id: 'f', due: '2026-03-02T09:00', repeat: { freq: 'weekly', interval: 1, byWeekday: [1] }, exdates: ['2026-03-09'] };
-  const dates = R.occurrences(item).map(o => o.key);
+  const dates = R.occurrences(item, null, new Date(2026, 2, 31)).map(o => o.key);
   assert.deepStrictEqual(dates, ['2026-03-02', '2026-03-16', '2026-03-23']);
 });
 
