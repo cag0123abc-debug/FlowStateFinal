@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.venv/
+.test-results/
+local-backups/
+android/.gradle/
+android/app/build/
+android/local.properties
+**/keystore.properties
+*.keystore
+*.jks
