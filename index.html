@@ -119,6 +119,411 @@ label.chip{display:inline-flex;align-items:center;gap:4px;width:auto;padding:6px
   border-radius:50%;flex:none;
 }
 #rail img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;border-radius:50%}
+
+/* ========================================================
+   J.A.R.V.I.S. STARK HUD & VOICE AI ENGINE
+   ======================================================== */
+#jarvisFab {
+  position: absolute;
+  right: 22px;
+  bottom: 106px;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #081e33 0%, #040b14 80%, #000 100%);
+  border: 3px solid #00e5ff;
+  box-shadow: 0 0 18px rgba(0,229,255,0.55), inset 0 0 12px rgba(0,229,255,0.4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: transform .22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow .22s;
+  padding: 0;
+  outline: none;
+}
+#jarvisFab:hover, #jarvisFab:active {
+  transform: scale(1.1);
+  box-shadow: 0 0 28px rgba(0,229,255,0.85), inset 0 0 16px rgba(0,229,255,0.7);
+}
+#jarvisFab .arc-ring {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px dashed rgba(0,229,255,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: jRingSpin 10s linear infinite;
+}
+#jarvisFab .arc-core {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffff 15%, #00e5ff 60%, rgba(0,229,255,0.2) 100%);
+  box-shadow: 0 0 14px #00e5ff, 0 0 22px #00e5ff;
+  animation: jPulse 2.2s infinite ease-in-out;
+}
+@keyframes jRingSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes jRingSpinRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+@keyframes jPulse {
+  0%, 100% { transform: scale(0.92); opacity: 0.85; filter: drop-shadow(0 0 6px #00e5ff); }
+  50% { transform: scale(1.08); opacity: 1; filter: drop-shadow(0 0 18px #00e5ff); }
+}
+
+/* Modal Overlay */
+#jarvisHud {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(4, 9, 18, 0.86);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity .25s ease;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
+  color: #e0f2fe;
+}
+#jarvisHud.active {
+  display: flex;
+  opacity: 1;
+}
+
+.jarvis-modal {
+  width: 94%;
+  max-width: 560px;
+  height: 88vh;
+  max-height: 720px;
+  background: linear-gradient(170deg, #091728 0%, #050d17 100%);
+  border: 1.5px solid rgba(0, 229, 255, 0.4);
+  border-radius: 26px;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.8), 0 0 35px rgba(0, 229, 255, 0.25);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.jarvis-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.18);
+  background: rgba(0, 229, 255, 0.04);
+}
+.jarvis-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.jarvis-mini-reactor {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid #00e5ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #020912;
+}
+.jarvis-mini-reactor .j-core {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #00e5ff;
+  box-shadow: 0 0 10px #00e5ff;
+}
+.jarvis-title {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #00e5ff;
+  text-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+}
+.jarvis-status {
+  font-size: 10px;
+  letter-spacing: 0.8px;
+  color: #7dd3fc;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 1px;
+}
+.jarvis-status .j-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+}
+.jarvis-hdr-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.j-btn-icon {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  color: #e0f2fe;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all .2s;
+}
+.j-btn-icon:hover {
+  background: rgba(0, 229, 255, 0.2);
+  border-color: #00e5ff;
+  transform: scale(1.05);
+}
+
+/* Reactor Visualizer Center */
+.jarvis-visualizer-container {
+  padding: 14px 18px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  background: radial-gradient(circle at center, rgba(0, 229, 255, 0.08) 0%, transparent 70%);
+}
+.jarvis-arc-display {
+  width: 86px;
+  height: 86px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.jarvis-arc-display .ring {
+  position: absolute;
+  border-radius: 50%;
+}
+.jarvis-arc-display .r1 {
+  width: 86px;
+  height: 86px;
+  border: 1.5px dashed rgba(0, 229, 255, 0.4);
+  animation: jRingSpin 14s linear infinite;
+}
+.jarvis-arc-display .r2 {
+  width: 68px;
+  height: 68px;
+  border: 1.5px solid rgba(0, 229, 255, 0.6);
+  border-top-color: transparent;
+  animation: jRingSpinRev 7s linear infinite;
+}
+.jarvis-arc-display .r3 {
+  width: 50px;
+  height: 50px;
+  border: 1px dotted #ffd700;
+  animation: jRingSpin 5s linear infinite;
+}
+.jarvis-arc-display .center-core {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 10%, #00e5ff 60%, rgba(0, 229, 255, 0.4) 100%);
+  box-shadow: 0 0 16px #00e5ff, 0 0 30px #00e5ff;
+}
+.jarvis-visualizer-container.listening .center-core {
+  background: radial-gradient(circle, #fff 10%, #10b981 60%, rgba(16, 185, 129, 0.4) 100%);
+  box-shadow: 0 0 20px #10b981, 0 0 36px #10b981;
+}
+
+.jarvis-waves {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 18px;
+  margin-bottom: 6px;
+}
+.jarvis-waves span {
+  width: 3px;
+  height: 6px;
+  background: #00e5ff;
+  border-radius: 3px;
+  transition: height .15s ease;
+  opacity: 0.6;
+}
+.jarvis-visualizer-container.active-audio .jarvis-waves span,
+.jarvis-visualizer-container.listening .jarvis-waves span {
+  animation: jWave 0.8s infinite ease-in-out alternate;
+  opacity: 1;
+}
+.jarvis-waves span:nth-child(2) { animation-delay: 0.1s; }
+.jarvis-waves span:nth-child(3) { animation-delay: 0.2s; }
+.jarvis-waves span:nth-child(4) { animation-delay: 0.3s; }
+.jarvis-waves span:nth-child(5) { animation-delay: 0.4s; }
+.jarvis-waves span:nth-child(6) { animation-delay: 0.5s; }
+.jarvis-waves span:nth-child(7) { animation-delay: 0.6s; }
+.jarvis-waves span:nth-child(8) { animation-delay: 0.7s; }
+@keyframes jWave {
+  0% { height: 4px; }
+  100% { height: 20px; background: #38bdf8; }
+}
+
+.jarvis-hint-text {
+  font-size: 11.5px;
+  font-style: italic;
+  color: #94a3b8;
+  letter-spacing: 0.3px;
+}
+
+/* Quick Action Chips */
+.jarvis-chips {
+  display: flex;
+  gap: 8px;
+  padding: 8px 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
+}
+.jarvis-chips::-webkit-scrollbar { display: none; }
+.j-chip {
+  flex: none;
+  background: rgba(0, 229, 255, 0.08);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  color: #bae6fd;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all .18s;
+}
+.j-chip:hover, .j-chip:active {
+  background: rgba(0, 229, 255, 0.22);
+  border-color: #00e5ff;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* Feed / Chat Transcript */
+.jarvis-feed {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scrollbar-width: thin;
+}
+.j-msg {
+  max-width: 86%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  word-break: break-word;
+}
+.j-msg.user {
+  align-self: flex-end;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+}
+.j-msg.jarvis {
+  align-self: flex-start;
+  background: rgba(15, 30, 52, 0.85);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  color: #f0f9ff;
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+.j-action-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid #10b981;
+  color: #34d399;
+  margin-top: 6px;
+}
+
+/* Input Bar */
+.jarvis-input-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: rgba(3, 8, 16, 0.95);
+  border-top: 1px solid rgba(0, 229, 255, 0.18);
+}
+.j-mic-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid #00e5ff;
+  background: rgba(0, 229, 255, 0.12);
+  color: #00e5ff;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all .2s;
+  flex: none;
+}
+.j-mic-btn.listening {
+  background: #10b981;
+  border-color: #10b981;
+  color: #fff;
+  box-shadow: 0 0 18px #10b981;
+  animation: jPulse 1.2s infinite ease-in-out;
+}
+#jarvisInput {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  border-radius: 22px;
+  padding: 11px 16px;
+  font-size: 14px;
+  color: #fff;
+  outline: none;
+  transition: border-color .2s;
+}
+#jarvisInput:focus {
+  border-color: #00e5ff;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.25);
+}
+.j-send-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 0;
+  background: #00e5ff;
+  color: #040d1a;
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all .2s;
+  flex: none;
+}
+.j-send-btn:hover, .j-send-btn:active {
+  background: #38bdf8;
+  transform: scale(1.06);
+}
+
 </style>
 </head>
 <body>
@@ -132,14 +537,78 @@ label.chip{display:inline-flex;align-items:center;gap:4px;width:auto;padding:6px
         <span id="clock"></span>
         <button onclick="openSearch()" title="Search">🔍</button>
         <button onclick="go2('notifs')" title="Notifications">🔔<i id="badge"></i></button>
+        <button onclick="toggleJarvis()" title="J.A.R.V.I.S. AI" style="font-size:18px;padding:3px 8px;border-radius:14px;background:rgba(0,229,255,0.12);border:1px solid #00e5ff;color:#00e5ff;margin-right:2px">⚡JARVIS</button>
         <button onclick="go2('settings')" title="Settings">⚙️</button>
       </div>
     </header>
     <div id="view"></div>
     <button id="schoolBtn" onclick="S.cls=null;render()" title="Back to classes">🎓</button>
+        <button id="jarvisFab" onclick="toggleJarvis()" title="J.A.R.V.I.S. Voice & AI">
+      <div class="arc-ring"><div class="arc-core"></div></div>
+    </button>
     <button id="fab" onclick="openMenu()" title="Add">+</button>
   </section>
 </div>
+<!-- J.A.R.V.I.S. HUD OVERLAY -->
+<div id="jarvisHud" onclick="if(event.target===this)toggleJarvis()">
+  <div class="jarvis-modal">
+    <div class="jarvis-header">
+      <div class="jarvis-title-wrap">
+        <div class="jarvis-mini-reactor"><div class="j-core"></div></div>
+        <div>
+          <div class="jarvis-title">J.A.R.V.I.S. // STARK PROTOCOL</div>
+          <div class="jarvis-status"><span class="j-dot"></span> AUTOMATION & VOICE ENGINE READY</div>
+        </div>
+      </div>
+      <div class="jarvis-hdr-actions">
+        <button class="j-btn-icon" id="jVoiceToggle" onclick="toggleJarvisSpeech()" title="Toggle voice output">🔊</button>
+        <button class="j-btn-icon" onclick="openJarvisKeyModal()" title="Gemini API Key">🔑</button>
+        <button class="j-btn-icon" onclick="toggleJarvis()" title="Close">✕</button>
+      </div>
+    </div>
+
+    <!-- ARC VISUALIZER -->
+    <div class="jarvis-visualizer-container" id="jarvisVisContainer">
+      <div class="jarvis-arc-display" id="jarvisArcDisplay">
+        <div class="ring r1"></div>
+        <div class="ring r2"></div>
+        <div class="ring r3"></div>
+        <div class="center-core"></div>
+      </div>
+      <div class="jarvis-waves" id="jarvisWaves">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="jarvis-hint-text" id="jarvisHint">"Jarvis, what's my agenda today?"</div>
+    </div>
+
+    <!-- QUICK COMMAND CHIPS -->
+    <div class="jarvis-chips">
+      <button class="j-chip" onclick="jarvisExecCommand('What is on my schedule today?')">⚡ Today's Agenda</button>
+      <button class="j-chip" onclick="jarvisExecCommand('Start a 25-minute focus session')">⏱️ Focus Timer</button>
+      <button class="j-chip" onclick="jarvisPromptBreakdown()">📋 Break Down a Goal</button>
+      <button class="j-chip" onclick="jarvisExecCommand('Clear all completed tasks')">🧹 Clean Done Tasks</button>
+      <button class="j-chip" onclick="jarvisExecCommand('Switch to dark mode')">🌙 Dark Atmosphere</button>
+    </div>
+
+    <!-- CONVERSATION / ACTION LOG -->
+    <div class="jarvis-feed" id="jarvisFeed">
+      <div class="j-msg jarvis">
+        At your service, sir. All FlowState systems are nominal.<br><br>
+        I can manage your agenda, schedule tasks, break down complex projects, initiate focus protocols, or answer any inquiries. How may I assist you today?
+      </div>
+    </div>
+
+    <!-- INPUT BAR -->
+    <div class="jarvis-input-bar">
+      <button class="j-mic-btn" id="jMicBtn" onclick="toggleJarvisMic()" title="Hold/Tap to Speak">
+        <span class="mic-icon">🎙️</span>
+      </button>
+      <input type="text" id="jarvisInput" placeholder="Give an order or ask Jarvis anything..." autocomplete="off">
+      <button class="j-send-btn" id="jarvisSendBtn" onclick="jarvisSendText()">➤</button>
+    </div>
+  </div>
+</div>
+
 <div id="sheet" onclick="if(event.target===this)closeSheet()"><div class="box" id="sheetBody"></div></div>
 <div id="toast"><span id="tmsg"></span><button id="tundo" onclick="doUndo()">Undo</button></div>
 <div id="bubble"></div>
@@ -713,6 +1182,391 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 </script>
-<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}</script>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+// ========================================================
+// J.A.R.V.I.S. AUTOMATION & INTELLIGENCE ENGINE
+// ========================================================
+let jarvisVoiceEnabled = true;
+let jarvisListening = false;
+let jarvisSpeechRec = null;
+const JARVIS_KEY_STORAGE = 'flowstate_gemini_key';
+
+function toggleJarvis() {
+  const hud = $('#jarvisHud');
+  const active = hud.classList.toggle('active');
+  if (active) {
+    setTimeout(() => $('#jarvisInput')?.focus(), 200);
+  } else {
+    stopJarvisMic();
+  }
+}
+
+function toggleJarvisSpeech() {
+  jarvisVoiceEnabled = !jarvisVoiceEnabled;
+  const btn = $('#jVoiceToggle');
+  if (btn) btn.textContent = jarvisVoiceEnabled ? '🔊' : '🔇';
+  toast(jarvisVoiceEnabled ? 'Jarvis voice feedback enabled' : 'Jarvis voice muted');
+}
+
+function jarvisSpeak(text) {
+  if (!jarvisVoiceEnabled || !('speechSynthesis' in window)) return;
+  try {
+    window.speechSynthesis.cancel();
+    const cleanText = text.replace(/<[^>]*>/g, '').replace(/[*_#]/g, '');
+    const utter = new SpeechSynthesisUtterance(cleanText);
+    utter.rate = 1.05;
+    utter.pitch = 0.95;
+    
+    // Pick an English voice (prefer Google US/UK English or Samantha/Daniel)
+    const voices = window.speechSynthesis.getVoices();
+    const preferredVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('UK') || v.name.includes('Male') || v.name.includes('Google')));
+    if (preferredVoice) utter.voice = preferredVoice;
+
+    const vis = $('#jarvisVisContainer');
+    utter.onstart = () => { if (vis) vis.classList.add('active-audio'); };
+    utter.onend = () => { if (vis) vis.classList.remove('active-audio'); };
+    utter.onerror = () => { if (vis) vis.classList.remove('active-audio'); };
+    window.speechSynthesis.speak(utter);
+  } catch (e) {
+    console.warn('SpeechSynthesis error:', e);
+  }
+}
+
+function jarvisAppendMsg(text, sender, actionBadgeText) {
+  const feed = $('#jarvisFeed');
+  if (!feed) return;
+  const div = document.createElement('div');
+  div.className = 'j-msg ' + sender;
+  let html = text.replace(/\n/g, '<br>');
+  if (actionBadgeText) {
+    html += `<div class="j-action-badge">⚡ ${esc(actionBadgeText)}</div>`;
+  }
+  div.innerHTML = html;
+  feed.appendChild(div);
+  feed.scrollTop = feed.scrollHeight;
+  if (sender === 'jarvis') {
+    jarvisSpeak(text);
+  }
+}
+
+function openJarvisKeyModal() {
+  const currentKey = localStorage.getItem(JARVIS_KEY_STORAGE) || '';
+  sheet(`<h2>J.A.R.V.I.S. AI Configuration</h2>
+    <p class="sub" style="margin:8px 0 16px">Enter your free Google Gemini API Key for deep reasoning, essay drafting, and unbounded AI capabilities.</p>
+    <label>Gemini API Key <input type="password" id="geminiKeyIn" value="${esc(currentKey)}" placeholder="AIzaSy..."></label>
+    <div class="row" style="margin-top:14px">
+      <button class="primary" onclick="saveJarvisKey()">Save Key</button>
+      <button onclick="window.open('https://aistudio.google.com/app/apikey','_blank')">Get Free Key</button>
+      <button onclick="closeSheet()">Cancel</button>
+    </div>`);
+}
+
+function saveJarvisKey() {
+  const k = ($('#geminiKeyIn')?.value || '').trim();
+  if (k) {
+    localStorage.setItem(JARVIS_KEY_STORAGE, k);
+    toast('Gemini API Key saved! Jarvis cognitive systems upgraded.');
+  } else {
+    localStorage.removeItem(JARVIS_KEY_STORAGE);
+    toast('API Key removed. Running in local automation mode.');
+  }
+  closeSheet();
+}
+
+// ----------------------------------------------------
+// Voice Recognition (Speech-to-Text)
+// ----------------------------------------------------
+function initJarvisMic() {
+  const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRec) {
+    toast('Speech recognition not supported on this browser. Type below!');
+    return null;
+  }
+  const rec = new SpeechRec();
+  rec.continuous = false;
+  rec.interimResults = false;
+  rec.lang = 'en-US';
+
+  rec.onstart = () => {
+    jarvisListening = true;
+    $('#jMicBtn')?.classList.add('listening');
+    $('#jarvisVisContainer')?.classList.add('listening');
+    $('#jarvisHint').textContent = 'Listening to your command, sir...';
+  };
+
+  rec.onresult = (e) => {
+    const transcript = e.results[0][0].transcript;
+    if (transcript) {
+      $('#jarvisInput').value = transcript;
+      jarvisExecCommand(transcript);
+    }
+  };
+
+  rec.onerror = (e) => {
+    console.warn('Speech recognition error:', e.error);
+    stopJarvisMic();
+  };
+
+  rec.onend = () => {
+    stopJarvisMic();
+  };
+
+  return rec;
+}
+
+function toggleJarvisMic() {
+  if (jarvisListening) {
+    stopJarvisMic();
+  } else {
+    if (!jarvisSpeechRec) jarvisSpeechRec = initJarvisMic();
+    if (jarvisSpeechRec) {
+      try { jarvisSpeechRec.start(); } catch (e) { stopJarvisMic(); }
+    }
+  }
+}
+
+function stopJarvisMic() {
+  jarvisListening = false;
+  $('#jMicBtn')?.classList.remove('listening');
+  $('#jarvisVisContainer')?.classList.remove('listening');
+  $('#jarvisHint').textContent = '"Jarvis, what\'s my agenda today?"';
+  if (jarvisSpeechRec) {
+    try { jarvisSpeechRec.stop(); } catch (e) {}
+  }
+}
+
+function jarvisSendText() {
+  const inp = $('#jarvisInput');
+  const text = (inp?.value || '').trim();
+  if (!text) return;
+  inp.value = '';
+  jarvisExecCommand(text);
+}
+
+$('#jarvisInput')?.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    jarvisSendText();
+  }
+});
+
+function jarvisPromptBreakdown() {
+  const goal = prompt('Enter a big goal or project to break down (e.g. "Biology Lab Report" or "History Essay"):');
+  if (goal && goal.trim()) {
+    jarvisExecCommand(`Break down the project: ${goal.trim()}`);
+  }
+}
+
+// ----------------------------------------------------
+// Core Command Execution & Automation Engine
+// ----------------------------------------------------
+async function jarvisExecCommand(input) {
+  const raw = input.trim();
+  if (!raw) return;
+  
+  jarvisAppendMsg(raw, 'user');
+  const lower = raw.toLowerCase();
+
+  // 1. AGENDA / STATUS BRIEFING
+  if (lower.includes('agenda') || lower.includes('schedule') || lower.includes('what do i have') || lower.includes('briefing') || lower.includes('status report')) {
+    const now = Date.now();
+    const today = dk(new Date());
+    const overdue = D.items.filter(i => !i.done && i.due && new Date(i.due).getTime() < now);
+    const todayItems = D.items.filter(i => !i.done && i.due && dk(new Date(i.due)) === today);
+    const upcoming = D.items.filter(i => !i.done && (i.type === 'homework' || i.type === 'test'));
+
+    let report = `Good day, sir. Here is your operational briefing:\n`;
+    if (todayItems.length === 0 && overdue.length === 0) {
+      report += `• No urgent items due today. Your schedule is clear, sir.\n`;
+    } else {
+      if (todayItems.length > 0) report += `• You have ${todayItems.length} item(s) due today: "${todayItems.map(x=>x.title).join('", "')}".\n`;
+      if (overdue.length > 0) report += `• Warning: ${overdue.length} item(s) are overdue! (e.g. "${overdue[0].title}").\n`;
+    }
+    report += `• Total active assignments on board: ${upcoming.length}.\n`;
+    report += `All systems are functioning nominally. Shall we initiate a focus session?`;
+
+    jarvisAppendMsg(report, 'jarvis', 'Agenda Analysis Complete');
+    return;
+  }
+
+  // 2. FOCUS TIMER AUTOMATION
+  if (lower.includes('focus') || lower.includes('timer') || lower.includes('pomodoro') || lower.includes('study session')) {
+    openFocus();
+    if (!FOC.iv) focusToggle();
+    jarvisAppendMsg('Focus protocol initiated, sir. 25 minutes on the clock. All non-essential distractions are silenced.', 'jarvis', 'Focus Timer Started');
+    return;
+  }
+
+  // 3. CLEAR COMPLETED TASKS
+  if (lower.includes('clear completed') || lower.includes('clean completed') || lower.includes('delete completed') || lower.includes('clear done')) {
+    const doneCount = D.items.filter(i => i.done).length;
+    D.items = D.items.filter(i => !i.done);
+    save();
+    render();
+    jarvisAppendMsg(`Purged ${doneCount} completed item(s), sir. Your workspace is optimized and pristine.`, 'jarvis', `Cleared ${doneCount} Tasks`);
+    return;
+  }
+
+  // 4. PROJECT / GOAL BREAKDOWN
+  if (lower.includes('break down') || lower.includes('split') || lower.includes('steps for')) {
+    let topic = raw.replace(/^(jarvis,?\s*)?(please\s*)?(break down|split|steps for|breakdown of)\s*(the\s*(project|goal|task)?:?)?\s*/i, '').trim();
+    if (!topic || topic.length < 3) topic = 'New Project';
+
+    const steps = [
+      `1. Research & Outline: ${topic}`,
+      `2. Draft Core Components: ${topic}`,
+      `3. Review, Refine & Test: ${topic}`,
+      `4. Final Polish & Delivery: ${topic}`
+    ];
+
+    steps.forEach((stepTitle, idx) => {
+      const item = {
+        id: uid(),
+        type: 'homework',
+        cat: 'school',
+        cls: null,
+        title: stepTitle,
+        desc: `Generated by J.A.R.V.I.S. as part of project breakdown for: ${topic}`,
+        due: null,
+        reminders: [],
+        done: false,
+        priority: idx === 0 ? 'high' : '',
+        created: Date.now() + idx * 10
+      };
+      D.items.push(item);
+      sendGoogleSync('upsert', item);
+    });
+    save();
+    render();
+    jarvisAppendMsg(`Deconstructed "${topic}" into 4 strategic milestones and deployed them directly onto your task board, sir.`, 'jarvis', '4 Milestones Created');
+    return;
+  }
+
+  // 5. ADD TASK / HOMEWORK / REMINDER
+  if (lower.startsWith('add') || lower.startsWith('create') || lower.startsWith('remind me') || lower.startsWith('schedule')) {
+    let clean = raw.replace(/^(jarvis,?\s*)?(please\s*)?(add\s*(a\s*)?(new\s*)?(task|homework|assignment|event|reminder)?|create\s*(a\s*)?(new\s*)?(task|homework|assignment|event)?|remind me to|schedule\s*(a\s*)?(task)?)\s*:?\s*/i, '').trim();
+    
+    // Parse category
+    let cat = 'home';
+    if (lower.includes('school') || lower.includes('class') || lower.includes('math') || lower.includes('study') || lower.includes('homework') || lower.includes('essay')) cat = 'school';
+    else if (lower.includes('work') || lower.includes('job') || lower.includes('client') || lower.includes('meeting')) cat = 'work';
+    else if (lower.includes('deyc')) cat = 'deyc';
+    else if (lower.includes('personal') || lower.includes('game') || lower.includes('watch') || lower.includes('gym')) cat = 'personal';
+
+    // Parse priority
+    const priority = (lower.includes('urgent') || lower.includes('high priority') || lower.includes('important')) ? 'high' : '';
+
+    // Parse date/time
+    let due = null;
+    const now = new Date();
+    if (lower.includes('tomorrow')) {
+      const d = new Date(now);
+      d.setDate(d.getDate() + 1);
+      d.setHours(17, 0, 0, 0);
+      due = d.toISOString().slice(0, 16);
+    } else if (lower.includes('friday')) {
+      const d = new Date(now);
+      const day = d.getDay();
+      const diff = (5 - day + 7) % 7 || 7;
+      d.setDate(d.getDate() + diff);
+      d.setHours(17, 0, 0, 0);
+      due = d.toISOString().slice(0, 16);
+    } else if (lower.includes('today') || lower.includes('tonight')) {
+      const d = new Date(now);
+      d.setHours(20, 0, 0, 0);
+      due = d.toISOString().slice(0, 16);
+    }
+
+    const title = clean.replace(/(tomorrow|today|tonight|on friday|urgent|high priority)/gi, '').trim() || 'New Task';
+
+    const item = {
+      id: uid(),
+      type: cat === 'school' ? 'homework' : 'event',
+      cat,
+      cls: cat === 'school' && D.classes.length ? D.classes[0].id : null,
+      title,
+      due,
+      priority,
+      done: false,
+      created: Date.now()
+    };
+    D.items.push(item);
+    save();
+    render();
+    sendGoogleSync('upsert', item);
+
+    const dueInfo = due ? ` due ${fmt(due)}` : '';
+    jarvisAppendMsg(`Task logged, sir: "${title}" added to your ${CATS[cat]} board${dueInfo}.`, 'jarvis', `Task Added: ${title}`);
+    return;
+  }
+
+  // 6. ATMOSPHERE / THEME SWITCH
+  if (lower.includes('dark mode') || lower.includes('night mode') || lower.includes('midnight')) {
+    D.settings.bg.home = '#0f172a';
+    D.settings.bg.school = '#091026';
+    D.settings.bg.work = '#0a192f';
+    D.settings.text = '#f8fafc';
+    save();
+    applyStyle();
+    render();
+    jarvisAppendMsg('Tactical dark atmosphere engaged. Minimal eye fatigue protocol active, sir.', 'jarvis', 'Midnight Theme Engaged');
+    return;
+  }
+
+  if (lower.includes('light mode') || lower.includes('reset theme')) {
+    D.settings.bg.home = '#f5e6e1';
+    D.settings.bg.school = '#f7dede';
+    D.settings.bg.work = '#dfe7f5';
+    D.settings.text = '#1d2440';
+    save();
+    applyStyle();
+    render();
+    jarvisAppendMsg('Ambient daylight profile restored, sir.', 'jarvis', 'Daylight Theme Restored');
+    return;
+  }
+
+  // 7. NAVIGATION AUTOMATION
+  if (lower.includes('go to') || lower.includes('open') || lower.includes('switch to')) {
+    for (const [key, icon, label] of RAIL) {
+      if (lower.includes(key) || lower.includes(label.toLowerCase())) {
+        go2(key);
+        jarvisAppendMsg(`Switching directly to the ${label} dashboard, sir.`, 'jarvis', `Navigated: ${label}`);
+        return;
+      }
+    }
+    if (lower.includes('setting')) { go2('settings'); jarvisAppendMsg('Settings opened, sir.', 'jarvis'); return; }
+    if (lower.includes('notif')) { go2('notifs'); jarvisAppendMsg('Notifications panel opened, sir.', 'jarvis'); return; }
+  }
+
+  // 8. GEMINI AI DEEP REASONING (If key present or fallback)
+  const apiKey = localStorage.getItem(JARVIS_KEY_STORAGE);
+  if (apiKey) {
+    try {
+      const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system_instruction: {
+            parts: [{ text: "You are J.A.R.V.I.S., Tony Stark's sophisticated, highly intelligent, and impeccably polite AI assistant, embedded inside the FlowState productivity app. Address the user respectfully ('sir' or similar Stark elegance). Keep responses concise, brilliant, actionable, and ready to assist with productivity, learning, and daily tasks." }]
+          },
+          contents: [{ parts: [{ text: raw }] }]
+        })
+      });
+      const data = await resp.json();
+      const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (reply) {
+        jarvisAppendMsg(reply, 'jarvis');
+        return;
+      }
+    } catch (e) {
+      console.warn('Gemini API call failed:', e);
+    }
+  }
+
+  // Default intelligent assistant response
+  jarvisAppendMsg(`Understood, sir. I have processed "${raw}". If you would like me to schedule this as a task, start a focus timer, or break down a project, simply let me know.`, 'jarvis');
+}
+
+</script>
 </body>
 </html>
