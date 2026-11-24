@@ -63,14 +63,8 @@ textarea{min-height:170px}
 label{display:block;margin:6px 0}
 label.chip{display:inline-flex;align-items:center;gap:4px;width:auto;padding:6px 10px;border:2px solid var(--cal);border-radius:20px;margin:4px}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
-/* FAB & Fan Menu */
-#fab{position:absolute;right:22px;bottom:18px;width:74px;height:74px;border-radius:50%;background:#111;color:#fff;font-size:44px;border:4px solid #2fd46b;padding:0;line-height:1;z-index:10;transition:transform .3s}
-#fab.open{transform:rotate(45deg)}
-#fab-fan{position:absolute;right:22px;bottom:18px;z-index:9;pointer-events:none}
-#fab-fan.open{pointer-events:all}
-.fab-opt{position:absolute;width:54px;height:54px;border-radius:50%;background:#222;color:#fff;border:3px solid #fff;font-size:22px;padding:0;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:opacity .25s,transform .25s;cursor:pointer;white-space:nowrap}
-.fab-opt .fab-label{position:absolute;right:60px;background:#222;color:#fff;border-radius:8px;padding:4px 8px;font-size:13px;white-space:nowrap;pointer-events:none}
-#fab-fan.open .fab-opt{opacity:1;transform:scale(1)}
+/* FAB Button */
+#fab{position:absolute;right:22px;bottom:18px;width:74px;height:74px;border-radius:50%;background:#111;color:#fff;font-size:44px;border:4px solid #2fd46b;padding:0;line-height:1;z-index:10;box-shadow:0 4px 14px rgba(0,0,0,.35);cursor:pointer}
 #schoolBtn{position:absolute;right:112px;bottom:26px;width:62px;height:62px;border-radius:50%;background:#f7d28a;padding:0;font-size:30px;display:none;z-index:10}
 #schoolBtn.on{display:block}
 #sheet{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;z-index:20}
@@ -147,15 +141,28 @@ label.chip{display:inline-flex;align-items:center;gap:4px;width:auto;padding:6px
 .browser-bar button{padding:8px 10px;min-width:36px;font-size:18px}
 #browser-frame{width:100%;flex:1;border:none;border-radius:12px;background:#fff;min-height:400px}
 .bmark-card{background:#fff;border-radius:12px;padding:10px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,.1)}
-/* Widgets */
-.widgets-row{display:flex;gap:14px;overflow-x:auto;padding:4px 0 8px}
-.widget-card{flex:none;border-radius:16px;padding:14px;background:#fff;box-shadow:0 3px 8px rgba(0,0,0,.12);cursor:pointer;min-width:140px;max-width:220px;position:relative}
-.widget-card.small{width:140px}
-.widget-card.medium{width:200px}
-.widget-card.large{width:280px}
-.widget-card .w-title{font-weight:700;font-size:.95em;margin-bottom:6px}
-.widget-card .w-body{font-size:.9em;opacity:.8}
-.widget-card .w-del{position:absolute;top:6px;right:8px;background:none;border:none;font-size:18px;padding:0;opacity:.4;cursor:pointer}
+/* Photo Widgets */
+.photo-widgets-wrap{display:flex;flex-direction:column;gap:14px;margin-bottom:14px}
+.photo-widgets-wrap.photo-pos-top{width:100%;margin-bottom:18px}
+.photo-widget{position:relative;width:100%;border-radius:20px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.15);background:#222;user-select:none}
+.photo-widget.landscape{aspect-ratio:16/9;max-height:360px}
+.photo-widget.classic{aspect-ratio:4/3;max-height:380px}
+.photo-widget.square{aspect-ratio:1/1;max-height:320px}
+.photo-widget.banner{aspect-ratio:21/9;max-height:260px}
+.photo-widget.compact{height:140px}
+.photo-widget-img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:opacity .35s ease-in-out;cursor:pointer}
+.photo-widget-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:160px;background:rgba(255,255,255,.85);border:2px dashed var(--cal);border-radius:20px;color:var(--text);cursor:pointer;gap:6px}
+.w-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.45);color:#fff;border:none;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;opacity:0;transition:opacity .2s;z-index:2;padding:0}
+.photo-widget:hover .w-arrow,.photo-widget:active .w-arrow{opacity:1}
+.w-prev{left:10px}
+.w-next{right:10px}
+.w-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:2;padding:4px 8px;background:rgba(0,0,0,.35);border-radius:12px;backdrop-filter:blur(4px)}
+.w-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.5);cursor:pointer;transition:background .2s,transform .2s}
+.w-dot.active{background:#fff;transform:scale(1.25)}
+.pw-thumbs-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;max-height:220px;overflow-y:auto;padding:4px}
+.pw-thumb-item{position:relative;width:72px;height:72px;border-radius:10px;overflow:hidden;border:2px solid #ccc;flex:none}
+.pw-thumb-item img{width:100%;height:100%;object-fit:cover}
+.pw-thumb-del{position:absolute;top:2px;right:2px;background:rgba(200,0,0,.85);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
 /* Offline banner */
 #offline-banner{position:fixed;top:0;left:0;right:0;background:#c00;color:#fff;text-align:center;padding:8px;z-index:50;display:none;font-size:14px}
 #offline-banner.on{display:block}
@@ -195,8 +202,7 @@ label.chip{display:inline-flex;align-items:center;gap:4px;width:auto;padding:6px
     </header>
     <div id="view"></div>
     <button id="schoolBtn" onclick="S.cls=null;render()" title="Back to classes">🎓</button>
-    <div id="fab-fan"></div>
-    <button id="fab" onclick="toggleFabMenu()" title="Add">+</button>
+    <button id="fab" onclick="openMenu()" title="Add">+</button>
   </section>
 </div>
 <div id="sheet" onclick="if(event.target===this)closeSheet()"><div class="box" id="sheetBody"></div></div>
@@ -308,7 +314,7 @@ function load(){
 }
 
 let D=load();
-const S={tab:D.settings.defaultTab||'home',cls:null,collapsed:false,bubble:null,drop:false,sel:'',month:null,view:'month',fabOpen:false};
+const S={tab:D.settings.defaultTab||'home',cls:null,collapsed:false,bubble:null,drop:false,sel:'',month:null,view:'month'};
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
 const uid=()=>Math.random().toString(36).slice(2,10);
@@ -477,7 +483,7 @@ function render(){
   if(t==='school'&&!S.cls&&S.bubble)showBubble();else hideBubble();
   if(t==='notifs'){D.notifs.forEach(n=>n.read=true);save()}
   updateBell();
-  if(t==='home')initSectionDrag();
+  if(t==='home'){initSectionDrag();startWidgetRotations();}else{stopWidgetRotations();}
 }
 function updateBell(){const n=D.notifs.filter(x=>!x.read).length;$('#badge').textContent=n||''}
 
@@ -541,27 +547,24 @@ function viewHome(){
     recs:sectionHtml('recs','Recent Recordings',recs)
   };
 
-  // Widgets section
-  const widgetsHtml=renderWidgets();
-
-  return `<div class="home"><div class="sticky-col" id="sections-col">
-    ${sectionOrder.map(k=>sections[k]||'').join('')}
-    <div class="sticky" id="widgets-section">
-      <div class="section-hdr" onclick="toggleSection('widgets')">
-        <h3>Widgets<span class="s-count">(${D.widgets.length})</span></h3>
-        <button class="collapse-btn">${isSectionHidden('widgets')?'▸':'▾'}</button>
-      </div>
-      <div class="section-body${isSectionHidden('widgets')?' collapsed':''}">
-        ${widgetsHtml}
-        <div class="row"><button onclick="openAddWidget()">+ Add widget</button></div>
-      </div>
+  return `${renderPhotoWidgets('top')}
+  <div class="home">
+    <div class="sticky-col" id="sections-col">
+      ${renderPhotoWidgets('left_top')}
+      ${sectionOrder.map(k=>sections[k]||'').join('')}
+      ${renderPhotoWidgets('left_bottom')}
     </div>
-  </div>
-  <div class="cal"><div class="calhead"><button onclick="moveMonth(-1)">‹</button><b>${m.toLocaleString([],{month:'long',year:'numeric'})}</b><button onclick="toggleView()">${S.view==='week'?'Month':'Week'}</button><button onclick="moveMonth(1)">›</button></div>
-    <div class="wk">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<span>${d}</span>`).join('')}</div>
-    ${S.view==='week'?weekGrid():`<div class="days">${cells}</div>`}
-    <h3 class="dl">${new Date(S.sel+'T00:00').toDateString()}</h3><div class="dayList">${list(dayItems)}</div>
-  </div></div>`;
+    <div class="cal-col">
+      ${renderPhotoWidgets('right_top')}
+      <div class="cal">
+        <div class="calhead"><button onclick="moveMonth(-1)">‹</button><b>${m.toLocaleString([],{month:'long',year:'numeric'})}</b><button onclick="toggleView()">${S.view==='week'?'Month':'Week'}</button><button onclick="moveMonth(1)">›</button></div>
+        <div class="wk">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<span>${d}</span>`).join('')}</div>
+        ${S.view==='week'?weekGrid():`<div class="days">${cells}</div>`}
+        <h3 class="dl">${new Date(S.sel+'T00:00').toDateString()}</h3><div class="dayList">${list(dayItems)}</div>
+      </div>
+      ${renderPhotoWidgets('right_bottom')}
+    </div>
+  </div>`;
 }
 
 function selDay(k){S.sel=k;render()}
@@ -666,99 +669,303 @@ function saveQuickAdd(dayKey){
   D.items.push(it);save();sendGoogleSync('upsert',it);closeQuickAdd();render();toast('Event added');
 }
 
-/* ===== WIDGETS ===== */
-function renderWidgets(){
-  if(!D.widgets.length)return '<p class="empty">No widgets yet. Add one below.</p>';
-  return `<div class="widgets-row">${D.widgets.sort((a,b)=>(a.order||0)-(b.order||0)).map(w=>renderWidget(w)).join('')}</div>`;
+/* ===== PHOTO WIDGET ENGINE ===== */
+let WIDGET_TIMERS={};
+
+function formatWidgetPos(p){
+  const m={
+    top:'Top Banner',
+    left_top:'Left (Top)',
+    left_bottom:'Left (Bottom)',
+    right_top:'Right (Above Calendar)',
+    right_bottom:'Right (Below Calendar)'
+  };
+  return m[p]||'Top Banner';
 }
-function renderWidget(w){
-  let body='';
-  if(w.type==='countdown'){
-    const days=Math.ceil((new Date(w.data.target)-Date.now())/864e5);
-    body=`<div style="font-size:2em;font-weight:700;color:var(--cal)">${days>0?days:'🎉'}</div><div style="font-size:12px;opacity:.6">${days>0?'days remaining':'Today!'}</div>`;
-  } else if(w.type==='quote'){
-    body=`<div style="font-style:italic;font-size:.9em">"${esc(w.data.text)}"</div>`;
-  } else if(w.type==='sticky'){
-    body=`<div style="font-size:.9em;white-space:pre-wrap">${esc(w.data.text)}</div>`;
-  } else if(w.type==='image'){
-    body=w.data.src?`<img src="${w.data.src}" style="width:100%;border-radius:8px;max-height:120px;object-fit:cover">`:'-';
-  }
-  return `<div class="widget-card ${w.size||'medium'}" data-widget="${w.id}">
-    <button class="w-del" onclick="event.stopPropagation();deleteWidget('${w.id}')" title="Delete">✕</button>
-    <div class="w-title">${esc(w.title||w.type)}</div>
-    <div class="w-body">${body}</div>
-  </div>`;
+
+function formatWidgetAspect(a){
+  const m={
+    landscape:'Landscape 16:9',
+    classic:'Classic 4:3',
+    square:'Square 1:1',
+    banner:'Wide Banner 21:9',
+    compact:'Compact (140px)'
+  };
+  return m[a]||'Landscape 16:9';
 }
-function openAddWidget(){
-  sheet(`<h2>Add Widget</h2>
-    <div class="row">
-      ${['countdown','quote','sticky','image'].map(t=>`<button onclick="openWidgetForm('${t}')">${{countdown:'⏳ Countdown',quote:'💬 Quote',sticky:'📌 Sticky',image:'🖼️ Image'}[t]}</button>`).join('')}
+
+function renderPhotoWidgets(pos){
+  const list=(D.widgets||[]).filter(w=>(w.position||'top')===pos);
+  if(!list.length)return '';
+  return `<div class="photo-widgets-wrap photo-pos-${pos}">${list.map(w=>renderPhotoWidget(w)).join('')}</div>`;
+}
+
+function renderPhotoWidget(w){
+  const imgs=w.images||[];
+  const idx=Math.min(w._idx||0,Math.max(0,imgs.length-1));
+  const curImg=imgs[idx]||'';
+  const aspect=w.aspectRatio||'landscape';
+
+  return `
+    <div class="photo-widget ${aspect}" id="widget-${w.id}">
+      ${imgs.length>0?`
+        <img id="w-img-${w.id}" class="photo-widget-img" src="${curImg}" alt="${esc(w.name||'Photo')}" onclick="advanceWidgetPhoto('${w.id}',1)">
+        ${imgs.length>1?`
+          <button class="w-arrow w-prev" onclick="advanceWidgetPhoto('${w.id}',-1)" title="Previous photo">‹</button>
+          <button class="w-arrow w-next" onclick="advanceWidgetPhoto('${w.id}',1)" title="Next photo">›</button>
+          <div class="w-dots" id="w-dots-${w.id}">
+            ${imgs.map((_,i)=>`<span class="w-dot${i===idx?' active':''}" onclick="setWidgetPhoto('${w.id}',${i})"></span>`).join('')}
+          </div>
+        `:''}
+      `:`
+        <div class="photo-widget-empty" onclick="go2('settings')">
+          <span style="font-size:32px">🖼️</span>
+          <b>${esc(w.name||'Photo Widget')}</b>
+          <small>Tap to add photos in Settings</small>
+        </div>
+      `}
     </div>
-    <button onclick="closeSheet()">Cancel</button>`);
+  `;
 }
-function openWidgetForm(type){
-  let extra='';
-  if(type==='countdown')extra=`<label>Target date <input id="wf-target" type="date"></label>`;
-  else if(type==='quote'||type==='sticky')extra=`<textarea id="wf-text" placeholder="${type==='quote'?'Enter a quote':'Sticky note text'}"></textarea>`;
-  else if(type==='image')extra=`<input type="file" accept="image/*" id="wf-img-file" onchange="handleWidgetImg(this.files[0])"><div id="wf-img-prev"></div>`;
-  sheet(`<h2>New ${type} widget</h2>
-    <input id="wf-title" placeholder="Widget title (optional)">
-    <label>Size <select id="wf-size"><option value="small">Small</option><option value="medium" selected>Medium</option><option value="large">Large</option></select></label>
-    ${extra}
-    <div class="row"><button class="primary" onclick="saveWidget('${type}')">Add</button><button onclick="closeSheet()">Cancel</button></div>`);
+
+function startWidgetRotations(){
+  stopWidgetRotations();
+  if(!D.widgets||!D.widgets.length)return;
+  D.widgets.forEach(w=>{
+    if(w.images&&w.images.length>1){
+      const sec=Math.max(2,parseInt(w.interval,10)||5);
+      WIDGET_TIMERS[w.id]=setInterval(()=>{
+        advanceWidgetPhoto(w.id,1);
+      },sec*1000);
+    }
+  });
 }
-let WIDGET_IMG_DATA=null;
-function handleWidgetImg(file){
-  if(!file)return;
-  WIDGET_IMG_DATA=null;
+
+function stopWidgetRotations(){
+  Object.values(WIDGET_TIMERS).forEach(clearInterval);
+  WIDGET_TIMERS={};
+}
+
+function advanceWidgetPhoto(widgetId,dir){
+  const w=(D.widgets||[]).find(x=>x.id===widgetId);
+  if(!w||!w.images||w.images.length<=1)return;
+  w._idx=((w._idx||0)+dir+w.images.length)%w.images.length;
+  updateWidgetPhotoDisplay(w);
+}
+
+function setWidgetPhoto(widgetId,index){
+  const w=(D.widgets||[]).find(x=>x.id===widgetId);
+  if(!w||!w.images||index<0||index>=w.images.length)return;
+  w._idx=index;
+  updateWidgetPhotoDisplay(w);
+}
+
+function updateWidgetPhotoDisplay(w){
+  const imgEl=document.getElementById(`w-img-${w.id}`);
+  const dotsEl=document.getElementById(`w-dots-${w.id}`);
+  if(imgEl&&w.images&&w.images.length){
+    imgEl.style.opacity='0';
+    setTimeout(()=>{
+      imgEl.src=w.images[w._idx||0];
+      imgEl.style.opacity='1';
+    },200);
+  }
+  if(dotsEl){
+    const dots=dotsEl.querySelectorAll('.w-dot');
+    dots.forEach((dot,idx)=>{
+      dot.classList.toggle('active',idx===(w._idx||0));
+    });
+  }
+}
+
+function compressWidgetImage(file,callback){
   const fr=new FileReader();
   fr.onload=()=>{
-    const im=new Image();im.onload=()=>{
-      const sc=Math.min(1,600/Math.max(im.width,im.height));
-      const c=document.createElement('canvas');c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);
-      c.getContext('2d').drawImage(im,0,0,c.width,c.height);
-      WIDGET_IMG_DATA=c.toDataURL('image/jpeg',.7);
-      const pv=$('#wf-img-prev');if(pv)pv.innerHTML=`<img src="${WIDGET_IMG_DATA}" style="max-width:100%;border-radius:8px;margin-top:8px">`;
-    };im.src=fr.result;
-  };fr.readAsDataURL(file);
+    const img=new Image();
+    img.onload=()=>{
+      const maxDim=900;
+      let w=img.width,h=img.height;
+      if(w>maxDim||h>maxDim){
+        if(w>h){h=Math.round(h*(maxDim/w));w=maxDim;}
+        else{w=Math.round(w*(maxDim/h));h=maxDim;}
+      }
+      const canvas=document.createElement('canvas');
+      canvas.width=w;canvas.height=h;
+      const ctx=canvas.getContext('2d');
+      ctx.drawImage(img,0,0,w,h);
+      callback(canvas.toDataURL('image/jpeg',0.75));
+    };
+    img.src=fr.result;
+  };
+  fr.readAsDataURL(file);
 }
-function saveWidget(type){
-  const title=val('wf-title').trim()||type;
-  const size=val('wf-size')||'medium';
-  let data={};
-  if(type==='countdown')data={target:$('#wf-target')?.value};
-  else if(type==='quote'||type==='sticky')data={text:$('#wf-text')?.value||''};
-  else if(type==='image')data={src:WIDGET_IMG_DATA||''};
-  WIDGET_IMG_DATA=null;
-  const w={id:uid(),type,title,data,size,order:D.widgets.length};
-  D.widgets.push(w);save();closeSheet();render();toast('Widget added');
+
+let CURRENT_PW_IMAGES=[];
+let EDITING_PW_ID=null;
+
+function openAddPhotoWidget(){
+  EDITING_PW_ID=null;
+  CURRENT_PW_IMAGES=[];
+  showPhotoWidgetForm({
+    name:'Home Photos',
+    position:'top',
+    interval:5,
+    aspectRatio:'landscape',
+    images:[]
+  });
 }
-function deleteWidget(id){
-  D.widgets=D.widgets.filter(w=>w.id!==id);save();render();
+
+function openEditPhotoWidget(id){
+  const w=(D.widgets||[]).find(x=>x.id===id);
+  if(!w)return;
+  EDITING_PW_ID=id;
+  CURRENT_PW_IMAGES=(w.images||[]).slice();
+  showPhotoWidgetForm(w);
 }
-document.addEventListener('click',e=>{
-  const wc=e.target.closest('[data-widget]');
-  if(wc&&!e.target.classList.contains('w-del')){
-    const w=D.widgets.find(x=>x.id===wc.dataset.widget);
-    if(w)openEditWidget(w);
+
+function showPhotoWidgetForm(w){
+  sheet(`
+    <h2>${EDITING_PW_ID?'Edit':'New'} Photo Widget</h2>
+    
+    <label>Widget Name
+      <input id="pw-name" placeholder="e.g. Favorite Photos, Aesthetic" value="${esc(w.name||'')}">
+    </label>
+
+    <label>Placement on Home Page
+      <select id="pw-pos">
+        <option value="top" ${(w.position||'top')==='top'?'selected':''}>Top Banner (Full width across dashboard)</option>
+        <option value="left_top" ${w.position==='left_top'?'selected':''}>Left Column (Above Tasks)</option>
+        <option value="left_bottom" ${w.position==='left_bottom'?'selected':''}>Left Column (Below Tasks)</option>
+        <option value="right_top" ${w.position==='right_top'?'selected':''}>Right Column (Above Calendar)</option>
+        <option value="right_bottom" ${w.position==='right_bottom'?'selected':''}>Right Column (Below Calendar)</option>
+      </select>
+    </label>
+
+    <label>Switch Photos Every (Slideshow interval)
+      <select id="pw-interval">
+        <option value="3" ${String(w.interval)==='3'?'selected':''}>3 seconds (Fast)</option>
+        <option value="5" ${(String(w.interval)==='5'||!w.interval)?'selected':''}>5 seconds (Standard)</option>
+        <option value="10" ${String(w.interval)==='10'?'selected':''}>10 seconds</option>
+        <option value="15" ${String(w.interval)==='15'?'selected':''}>15 seconds</option>
+        <option value="30" ${String(w.interval)==='30'?'selected':''}>30 seconds</option>
+        <option value="60" ${String(w.interval)==='60'?'selected':''}>60 seconds (1 minute)</option>
+      </select>
+    </label>
+
+    <label>Widget Shape / Aspect Ratio
+      <select id="pw-aspect">
+        <option value="landscape" ${(w.aspectRatio||'landscape')==='landscape'?'selected':''}>Landscape (16:9)</option>
+        <option value="classic" ${w.aspectRatio==='classic'?'selected':''}>Classic Photo (4:3)</option>
+        <option value="square" ${w.aspectRatio==='square'?'selected':''}>Square (1:1)</option>
+        <option value="banner" ${w.aspectRatio==='banner'?'selected':''}>Wide Banner (21:9)</option>
+        <option value="compact" ${w.aspectRatio==='compact'?'selected':''}>Compact (140px height)</option>
+      </select>
+    </label>
+
+    <div style="margin:14px 0 6px">
+      <b>Select Photos (You can pick multiple):</b>
+      <input type="file" accept="image/*" multiple id="pw-file-input" onchange="handleWidgetPhotoUpload(this.files)" style="margin-top:6px">
+    </div>
+
+    <div id="pw-thumbs" class="pw-thumbs-grid">
+      ${renderPwThumbsHtml()}
+    </div>
+
+    <div class="row" style="margin-top:16px">
+      <button class="primary" onclick="savePhotoWidget()">Save Widget</button>
+      ${EDITING_PW_ID?`<button class="danger" onclick="deletePhotoWidget('${EDITING_PW_ID}');closeSheet()">Delete</button>`:''}
+      <button onclick="closeSheet()">Cancel</button>
+    </div>
+  `);
+}
+
+function renderPwThumbsHtml(){
+  if(!CURRENT_PW_IMAGES.length){
+    return '<p class="empty" style="width:100%">No photos added yet. Tap Choose Files above to pick images.</p>';
   }
-});
-function openEditWidget(w){
-  let extra='';
-  if(w.type==='countdown')extra=`<label>Target date <input id="wf-target" type="date" value="${w.data.target||''}"></label>`;
-  else if(w.type==='quote'||w.type==='sticky')extra=`<textarea id="wf-text">${esc(w.data.text||'')}</textarea>`;
-  sheet(`<h2>Edit widget</h2>
-    <input id="wf-title" value="${esc(w.title)}" placeholder="Widget title">
-    <label>Size <select id="wf-size"><option value="small" ${w.size==='small'?'selected':''}>Small</option><option value="medium" ${w.size==='medium'?'selected':''}>Medium</option><option value="large" ${w.size==='large'?'selected':''}>Large</option></select></label>
-    ${extra}
-    <div class="row"><button class="primary" onclick="updateWidget('${w.id}','${w.type}')">Save</button><button class="danger" onclick="deleteWidget('${w.id}');closeSheet()">Delete</button><button onclick="closeSheet()">Cancel</button></div>`);
+  return CURRENT_PW_IMAGES.map((src,idx)=>`
+    <div class="pw-thumb-item">
+      <img src="${src}">
+      <button class="pw-thumb-del" onclick="removePwThumb(${idx})" title="Remove">✕</button>
+    </div>
+  `).join('');
 }
-function updateWidget(id,type){
-  const w=D.widgets.find(x=>x.id===id);if(!w)return;
-  w.title=val('wf-title').trim()||type;w.size=val('wf-size')||'medium';
-  if(type==='countdown')w.data.target=$('#wf-target')?.value;
-  else if(type==='quote'||type==='sticky')w.data.text=$('#wf-text')?.value||'';
-  save();closeSheet();render();
+
+function removePwThumb(idx){
+  CURRENT_PW_IMAGES.splice(idx,1);
+  const container=$('#pw-thumbs');
+  if(container)container.innerHTML=renderPwThumbsHtml();
+}
+
+function handleWidgetPhotoUpload(fileList){
+  if(!fileList||!fileList.length)return;
+  const files=Array.from(fileList);
+  toast(`Compressing ${files.length} photo(s)...`);
+  let remaining=files.length;
+  files.forEach(file=>{
+    compressWidgetImage(file,dataUrl=>{
+      CURRENT_PW_IMAGES.push(dataUrl);
+      remaining--;
+      if(remaining<=0){
+        const container=$('#pw-thumbs');
+        if(container)container.innerHTML=renderPwThumbsHtml();
+        toast(`${files.length} photo(s) added!`);
+      }
+    });
+  });
+}
+
+function savePhotoWidget(){
+  const name=($('#pw-name')?.value||'').trim()||'Photo Widget';
+  const position=$('#pw-pos')?.value||'top';
+  const interval=parseInt($('#pw-interval')?.value||'5',10);
+  const aspectRatio=$('#pw-aspect')?.value||'landscape';
+
+  if(!CURRENT_PW_IMAGES.length){
+    return toast('Please select at least one photo for the widget');
+  }
+
+  if(EDITING_PW_ID){
+    const w=(D.widgets||[]).find(x=>x.id===EDITING_PW_ID);
+    if(w){
+      w.name=name;
+      w.position=position;
+      w.interval=interval;
+      w.aspectRatio=aspectRatio;
+      w.images=CURRENT_PW_IMAGES;
+      w._idx=0;
+    }
+  } else {
+    D.widgets=D.widgets||[];
+    D.widgets.push({
+      id:uid(),
+      name,
+      position,
+      interval,
+      aspectRatio,
+      images:CURRENT_PW_IMAGES,
+      _idx:0,
+      order:D.widgets.length
+    });
+  }
+
+  save();
+  closeSheet();
+  render();
+  toast('Photo widget saved!');
+}
+
+function deletePhotoWidget(id){
+  confirmSheet('Delete this photo widget?',()=>{
+    D.widgets=(D.widgets||[]).filter(w=>w.id!==id);
+    if(WIDGET_TIMERS[id]){
+      clearInterval(WIDGET_TIMERS[id]);
+      delete WIDGET_TIMERS[id];
+    }
+    save();
+    render();
+    toast('Photo widget deleted');
+  });
 }
 
 /* ===== CLASS SELECT / VIEW ===== */
@@ -825,13 +1032,36 @@ function viewSettings(){
   <div class="panel"><h3>Dashboard Layout</h3>
     <p class="empty">Section order can be changed by dragging the ⠿ handles on the home view.</p>
     <div class="row"><button onclick="D.settings.sectionOrder=['overdue','today','soon','notes','recs'];D.settings.hiddenSections=[];save();render();toast('Dashboard reset')">Reset section order &amp; visibility</button></div></div>
+  <div class="panel"><h3>🖼️ Photo Widgets</h3>
+    <p class="empty">Configure alternating photo widgets for your Home dashboard. Pick photos, set rotation speed, and select where each widget appears.</p>
+    <div id="settings-widgets-list">
+      ${(D.widgets||[]).length?D.widgets.map((w,idx)=>`
+        <div class="card" style="align-items:center;padding:12px;margin-bottom:10px">
+          ${w.images&&w.images.length?`
+            <img src="${w.images[0]}" style="width:64px;height:64px;border-radius:12px;object-fit:cover;flex:none;box-shadow:0 2px 6px rgba(0,0,0,.15)">
+          `:`<div style="width:64px;height:64px;border-radius:12px;background:#eee;display:flex;align-items:center;justify-content:center;font-size:26px;flex:none">🖼️</div>`}
+          <div class="grow" style="margin-left:6px">
+            <b>${esc(w.name||'Photo Widget '+(idx+1))}</b>
+            <small>${(w.images||[]).length} photo${(w.images||[]).length===1?'':'s'} · Switches every ${w.interval||5}s</small>
+            <small>Placement: <b>${formatWidgetPos(w.position)}</b> · Shape: <b>${formatWidgetAspect(w.aspectRatio)}</b></small>
+          </div>
+          <button onclick="openEditPhotoWidget('${w.id}')">Edit</button>
+          <button class="danger" onclick="deletePhotoWidget('${w.id}')">Delete</button>
+        </div>
+      `).join(''):'<p class="empty">No photo widgets created yet.</p>'}
+    </div>
+    <div class="row">
+      <button class="primary" onclick="openAddPhotoWidget()">+ Create Photo Widget</button>
+    </div>
+  </div>
   <div class="panel"><h3>Google integration</h3>
     <p class="empty">${D.settings.googleSync?'Google sync is enabled on this device.':'Connect FlowState to send your items to Google Calendar and receive scheduled Gmail reminders.'}</p>
     <div class="row">${D.settings.googleSync?'<button class="primary" onclick="connectGoogleSync()">Sync all items now</button><button onclick="testGoogleSync()">Send test email</button><button onclick="disconnectGoogleSync()">Pause sync</button>':'<button class="primary" onclick="connectGoogleSync()">Connect Google &amp; sync items</button>'}</div>
     <small>Only items created or changed on this device are sent. Keep this app connected to the internet when making changes. Calendar and email delivery are handled by your Google Apps Script.</small></div>
-  <div class="panel"><h3>Backup</h3>
-    <div class="row"><button onclick="exportData()">Export data</button><button onclick="importData()">Import data</button></div>
-    <div class="row"><button class="danger" onclick="clearAllData()">Clear all data</button></div></div>
+  <div class="panel"><h3>Backup &amp; Restore</h3>
+    <p class="empty">Safely download, copy, share, or restore your complete FlowState database (tasks, notes, classes, recordings, widgets, and preferences).</p>
+    <div class="row"><button class="primary" onclick="exportData()">💾 Backup Data</button><button onclick="importData()">📥 Restore Backup</button></div>
+    <div class="row" style="margin-top:10px"><button class="danger" onclick="clearAllData()">Clear all data</button></div></div>
   <div class="panel"><h3>Classes</h3>${D.classes.map((c,idx)=>`<div class="cls-card" data-cls-id="${c.id}"><div style="width:28px;height:28px;border-radius:50%;background:${c.color};flex:none"></div><div class="grow">${esc(c.icon)} ${esc(c.name)}</div><button onclick="moveClass('${c.id}',-1)" title="Up">▲</button><button onclick="moveClass('${c.id}',1)" title="Down">▼</button><button onclick="editClass('${c.id}')">Edit</button> <button class="danger" onclick="delClass('${c.id}')">Delete</button></div>`).join('')}
     <button class="primary" onclick="openForm('class')">+ Add class</button></div>`;
 }
@@ -961,53 +1191,30 @@ function go(dir){
 }
 function go2(t){S.tab=t;S.bubble=null;S.enter=true;render()}
 
-/* ===== FAB FAN MENU ===== */
-function toggleFabMenu(){
-  S.fabOpen=!S.fabOpen;
-  const fab=$('#fab'),fan=$('#fab-fan');
-  fab.classList.toggle('open',S.fabOpen);
-  fan.classList.toggle('open',S.fabOpen);
-  if(S.fabOpen){
-    const opts=[
-      {icon:'📅',label:'Event',fn:"closeFab();openForm('event')"},
-      {icon:'📝',label:'Note',fn:"closeFab();openForm('note')"},
-      {icon:'📚',label:'Summary',fn:"closeFab();openForm('summary')"},
-      {icon:'✅',label:'Task',fn:"closeFab();openForm('homework')"},
-      {icon:'🎵',label:'Recording',fn:"closeFab();openRec()"},
-      {icon:'📂',label:'List item',fn:"closeFab();openForm('bucket')"},
-      {icon:'⚡',label:'Quick',fn:"closeFab();openMenu()"}
-    ];
-    fan.innerHTML=opts.map((o,i)=>{
-      const angle=-(90+i*(180/(opts.length-1)));
-      const rad=angle*Math.PI/180;
-      const r=90+i*8;
-      const x=Math.round(Math.cos(rad)*r);
-      const y=Math.round(Math.sin(rad)*r);
-      return `<button class="fab-opt" style="bottom:${37+(-y)}px;right:${37+(-x)}px;transition-delay:${i*40}ms" onclick="${o.fn}"><span>${o.icon}</span><span class="fab-label">${o.label}</span></button>`;
-    }).join('');
-    setTimeout(()=>{},10);
-  } else {
-    fan.innerHTML='';
-  }
-}
-function closeFab(){S.fabOpen=false;$('#fab').classList.remove('open');$('#fab-fan').innerHTML='';$('#fab-fan').classList.remove('open');}
-document.addEventListener('pointerdown',e=>{if(S.fabOpen&&!e.target.closest('#fab,#fab-fan'))closeFab();});
-
+/* ===== QUICK ADD MENU ===== */
 function openMenu(){
-  let opts;
-  if(S.tab==='home')opts=[['Add event','event'],['Add homework','homework'],['Add test','test'],['Quick recording','rec'],['Import recording','imprec']];
-  else if(S.tab==='school')opts=S.cls?[['Add summary','summary'],['Add homework','homework'],['Add test','test']]:[['Add class','class']];
-  else if(S.tab==='work')opts=[['Add summary','summary'],['Add project','project'],['Add event','event'],['Import recording','imprec']];
-  else if(S.tab==='deyc')opts=[['Add meeting summary','summary'],['Add meeting','project'],['Add event','event'],['Import recording','imprec']];
-  else if(S.tab==='personal')opts=[['Add note','note'],['Add to a list','bucket']];
-  else opts=[['Add note','note']];
-  opts.unshift(['Quick paste summary','quick']);
-  sheet('<h2>Add</h2>'+opts.map(([l,k])=>`<button class="big" onclick="pick('${k}')">${l}</button>`).join(''));
+  let opts=[
+    ['📅 Add Event','event'],
+    ['📝 Add Note','note'],
+    ['✅ Add Homework / Task','homework'],
+    ['📝 Add Test / Exam','test'],
+    ['📚 Add Summary','summary'],
+    ['💼 Add Project / Meeting','project'],
+    ['🎵 Quick Voice Recording','rec'],
+    ['📥 Import Voice Recording','imprec'],
+    ['📂 Add to List','bucket'],
+    ['⚡ Quick Paste Summary','quick']
+  ];
+  if(S.tab==='school'&&!S.cls){
+    opts.unshift(['🎓 Add Class','class']);
+  }
+  sheet('<h2>Add to FlowState</h2>'+opts.map(([l,k])=>`<button class="big" onclick="pick('${k}')">${l}</button>`).join(''));
 }
 function pick(k){
   if(k==='rec')return openRec();
   if(k==='quick')return openQuick();
   if(k==='imprec')return openImportRec();
+  if(k==='class')return openForm('class');
   openForm(k,null,S.tab==='school'&&S.cls?{cls:S.cls,cat:'school'}:{});
 }
 
@@ -1280,37 +1487,174 @@ function runSearch(q){
 
 /* ===== EXPORT / IMPORT ===== */
 function exportData(){
-  const json=JSON.stringify(D,null,2);
-  const blob=new Blob([json],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='flowstate-backup-'+dk(new Date())+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
-  toast('Backup downloaded');
+  const jsonStr=JSON.stringify(D,null,2);
+  const itemCount=(D.items||[]).length;
+  const classCount=(D.classes||[]).length;
+  const widgetCount=(D.widgets||[]).length;
+  const dateStr=dk(new Date());
+  const filename=`flowstate-backup-${dateStr}.json`;
+
+  sheet(`
+    <h2>💾 Backup FlowState Data</h2>
+    <p class="empty" style="margin-bottom:12px">Current database: <b>${itemCount}</b> items, <b>${classCount}</b> classes, <b>${widgetCount}</b> widgets.</p>
+
+    <div class="stack" style="gap:10px">
+      <button class="primary big" onclick="triggerBackupDownload('${filename}')" style="text-align:center">
+        📥 Download Backup File (.json)
+      </button>
+      ${navigator.share?`
+        <button class="big" onclick="triggerBackupShare('${filename}')" style="text-align:center">
+          📤 Share / Save to Drive or Files
+        </button>
+      `:''}
+      <button class="big" onclick="copyBackupToClipboard()" style="text-align:center">
+        📋 Copy Backup to Clipboard
+      </button>
+    </div>
+
+    <label style="margin-top:14px"><b>Raw Backup JSON:</b></label>
+    <textarea id="export-json-preview" style="min-height:160px;font-size:12px;font-family:monospace;background:#f4eeee" readonly>${esc(jsonStr)}</textarea>
+
+    <div class="row">
+      <button onclick="copyBackupToClipboard()">Copy All Text</button>
+      <button onclick="closeSheet()">Close</button>
+    </div>
+  `);
 }
+
+function triggerBackupDownload(filename){
+  const jsonStr=JSON.stringify(D,null,2);
+  try{
+    const dataUri='data:application/json;charset=utf-8,'+encodeURIComponent(jsonStr);
+    const a=document.createElement('a');
+    a.href=dataUri;
+    a.download=filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>a.remove(),200);
+    toast('Backup file created');
+  }catch(e){
+    try{
+      const blob=new Blob([jsonStr],{type:'application/json'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');
+      a.href=url;
+      a.download=filename;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(()=>{a.remove();URL.revokeObjectURL(url);},2000);
+      toast('Backup file created');
+    }catch(err){
+      copyBackupToClipboard();
+    }
+  }
+}
+
+function triggerBackupShare(filename){
+  const jsonStr=JSON.stringify(D,null,2);
+  try{
+    const file=new File([jsonStr],filename,{type:'application/json'});
+    navigator.share({
+      title:'FlowState Backup',
+      text:'FlowState backup data ('+dk(new Date())+')',
+      files:[file]
+    }).catch(()=>{});
+  }catch(e){
+    copyBackupToClipboard();
+  }
+}
+
+function copyBackupToClipboard(){
+  const txt=$('#export-json-preview')?$('#export-json-preview').value:JSON.stringify(D,null,2);
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(()=>{
+      toast('✅ Backup JSON copied to clipboard!');
+    }).catch(()=>{
+      selectBackupText();
+    });
+  }else{
+    selectBackupText();
+  }
+}
+
+function selectBackupText(){
+  const el=$('#export-json-preview');
+  if(el){el.focus();el.select();toast('Text selected. Press Copy.');}
+}
+
 function importData(){
-  sheet(`<h2>Restore backup</h2><p class="empty">Select a FlowState JSON backup file or paste backup text.</p>
-  <input type="file" accept=".json,application/json" onchange="handleImportFile(this.files[0])">
-  <p style="text-align:center;opacity:.5">— or paste below —</p>
-  <textarea id="bk" placeholder="Paste backup JSON text"></textarea>
-  <div class="row"><button class="danger" onclick="restoreData()">Restore from text</button><button onclick="closeSheet()">Cancel</button></div>`);
+  sheet(`
+    <h2>📥 Restore Backup</h2>
+    <p class="empty">Select a FlowState backup JSON file or paste backup text below.</p>
+
+    <label style="margin-top:10px"><b>Option 1: Choose File</b></label>
+    <input type="file" accept=".json,application/json" onchange="handleImportFile(this.files[0])" style="background:#fff">
+
+    <div style="text-align:center;margin:12px 0;opacity:.5">— or —</div>
+
+    <label><b>Option 2: Paste Backup JSON</b></label>
+    <textarea id="import-json-text" placeholder="Paste backup JSON text here..." style="min-height:140px;font-family:monospace;font-size:12px"></textarea>
+    
+    <div class="row">
+      <button onclick="pasteClipboardToImport()">📋 Paste from Clipboard</button>
+      <button class="primary" onclick="restoreFromInputText()">Verify &amp; Restore</button>
+      <button onclick="closeSheet()">Cancel</button>
+    </div>
+  `);
 }
+
+function pasteClipboardToImport(){
+  if(navigator.clipboard&&navigator.clipboard.readText){
+    navigator.clipboard.readText().then(t=>{
+      const el=$('#import-json-text');
+      if(el){el.value=t;toast('Pasted from clipboard');}
+    }).catch(()=>toast('Hold and tap Paste in the text area'));
+  }else{
+    toast('Hold and tap Paste in the text area');
+  }
+}
+
+function restoreFromInputText(){
+  const val=($('#import-json-text')?.value||'').trim();
+  if(!val)return toast('Please paste backup JSON first');
+  try{
+    const parsed=JSON.parse(val);
+    applyRestoredBackup(parsed);
+  }catch(e){
+    toast('Invalid JSON format. Please verify the copied text.');
+  }
+}
+
 function handleImportFile(file){
   if(!file)return;
   const fr=new FileReader();
   fr.onload=()=>{
     try{
-      const x=JSON.parse(fr.result);
-      if(!x||!Array.isArray(x.items)||!Array.isArray(x.classes))return toast('Not a valid FlowState backup');
-      D=Object.assign(clone(DEF),x);D.settings=Object.assign(clone(DEF.settings),x.settings||{});
-      save();closeSheet();render();toast('Backup restored from file');
-    }catch(e){toast('Could not parse the file')}
+      const parsed=JSON.parse(fr.result);
+      applyRestoredBackup(parsed);
+    }catch(e){
+      toast('Could not parse JSON file');
+    }
   };
   fr.readAsText(file);
 }
-function restoreData(){
-  let x;try{x=JSON.parse($('#bk').value)}catch(e){return toast('That is not a valid backup')}
-  if(!x||!Array.isArray(x.items)||!Array.isArray(x.classes))return toast('That is not a FlowState backup');
-  D=Object.assign(clone(DEF),x);D.settings=Object.assign(clone(DEF.settings),x.settings||{});
-  save();closeSheet();render();toast('Backup restored');
+
+function applyRestoredBackup(data){
+  if(!data||!Array.isArray(data.items)){
+    return toast('Not a valid FlowState backup file');
+  }
+  const count=data.items.length;
+  confirmSheet(`Found ${count} items and ${(data.classes||[]).length} classes. Replace current data with this backup?`,()=>{
+    D=Object.assign(clone(DEF),data);
+    D.settings=Object.assign(clone(DEF.settings),data.settings||{});
+    D.widgets=data.widgets||[];
+    D.bookmarks=data.bookmarks||[];
+    save();
+    closeSheet();
+    render();
+    startWidgetRotations();
+    toast(`✅ Backup successfully restored (${count} items)!`);
+  });
 }
 
 /* ===== CALENDAR / ICS ===== */

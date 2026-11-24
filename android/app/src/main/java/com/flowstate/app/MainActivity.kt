@@ -133,6 +133,11 @@ class MainActivity : ComponentActivity() {
 
         webView.setDownloadListener(DownloadListener { url, userAgent, contentDisposition, mimeType, _ ->
             try {
+                if (url.startsWith("data:")) {
+                    saveDataUrl(url)
+                    Toast.makeText(this, "Backup file saved to Downloads", Toast.LENGTH_SHORT).show()
+                    return@DownloadListener
+                }
                 val fileName = URLUtil.guessFileName(url, contentDisposition, mimeType)
                 val request = DownloadManager.Request(Uri.parse(url))
                 request.setMimeType(mimeType)
@@ -156,6 +161,29 @@ class MainActivity : ComponentActivity() {
             webView.loadUrl(FLOWSTATE_URL)
         } else {
             webView.restoreState(savedInstanceState)
+        }
+    }
+
+    private fun saveDataUrl(dataUrl: String) {
+        val commaIndex = dataUrl.indexOf(',')
+        if (commaIndex == -1) return
+        val meta = dataUrl.substring(0, commaIndex)
+        val dataPart = dataUrl.substring(commaIndex + 1)
+        val bytes = if (meta.contains(";base64")) {
+            android.util.Base64.decode(dataPart, android.util.Base64.DEFAULT)
+        } else {
+            Uri.decode(dataPart).toByteArray(Charsets.UTF_8)
+        }
+        val fileName = "flowstate-backup-" + System.currentTimeMillis() + ".json"
+        try {
+            val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            if (!downloadsDir.exists()) downloadsDir.mkdirs()
+            val file = java.io.File(downloadsDir, fileName)
+            file.writeBytes(bytes)
+        } catch (_: Exception) {
+            val fallbackDir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) ?: filesDir
+            val file = java.io.File(fallbackDir, fileName)
+            file.writeBytes(bytes)
         }
     }
 
