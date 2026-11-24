@@ -1,3 +1,4 @@
+
 package com.flowstate.app
 
 import android.app.DownloadManager
@@ -52,8 +53,8 @@ class MainActivity : ComponentActivity() {
         webView.settings.databaseEnabled = true
         webView.settings.allowFileAccess = false
         webView.settings.allowContentAccess = true
-        webView.settings.javaScriptCanOpenWindowsAutomatically = false
-        webView.settings.setSupportMultipleWindows(false)
+        webView.settings.javaScriptCanOpenWindowsAutomatically = true
+        webView.settings.setSupportMultipleWindows(true)
         webView.settings.loadsImagesAutomatically = true
         webView.settings.useWideViewPort = true
         webView.settings.loadWithOverviewMode = true
@@ -84,6 +85,28 @@ class MainActivity : ComponentActivity() {
         }
 
         webView.webChromeClient = object : WebChromeClient() {
+            override fun onCreateWindow(
+                view: WebView?,
+                isDialog: Boolean,
+                isUserGesture: Boolean,
+                resultMsg: android.os.Message?
+            ): Boolean {
+                val transport = resultMsg?.obj as? WebView.WebViewTransport ?: return false
+                val popupWebView = WebView(this@MainActivity)
+                popupWebView.webViewClient = object : WebViewClient() {
+                    override fun shouldOverrideUrlLoading(
+                        view: WebView,
+                        request: WebResourceRequest
+                    ): Boolean {
+                        openExternal(request.url)
+                        return true
+                    }
+                }
+                transport.webView = popupWebView
+                resultMsg.sendToTarget()
+                return true
+            }
+
             override fun onShowFileChooser(
                 webView: WebView?,
                 filePathCallback: ValueCallback<Array<Uri>>?,

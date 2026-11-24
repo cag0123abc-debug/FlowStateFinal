@@ -860,19 +860,39 @@ function viewBrowser(){
     <input id="browser-url" type="url" placeholder="Enter URL..." value="" onkeydown="if(event.key==='Enter')browserNav()">
     <button onclick="browserNav()">Go</button>
     <button id="bmark-star" onclick="toggleBookmark()" title="Bookmark">☆</button>
+    <button onclick="openExternalBrowser()" title="Open in Device Browser (Samsung Internet / Chrome)">↗</button>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:0 6px 8px;font-size:0.85em;opacity:0.85">
+    <span>💡 If a site blocks embedding or has SSL errors, tap <b>↗</b> to open in your browser app.</span>
+    <button style="padding:3px 10px;font-size:0.85em;border-radius:8px" onclick="openExternalBrowser()">Open in App ↗</button>
   </div>
   <div id="browser-content" style="flex:1;display:flex;flex-direction:column">
     ${bmarks.length&&!$('#browser-frame')?`<div id="bmark-list"><h3>Bookmarks</h3>${bmarks.map(b=>`<div class="bmark-card" onclick="browserGo('${esc(b.url)}')"><span style="font-size:22px">🔖</span><div class="grow"><b>${esc(b.title||b.url)}</b><small>${esc(b.url)}</small></div><button onclick="event.stopPropagation();removeBookmark('${esc(b.url)}')" title="Remove">✕</button></div>`).join('')}</div>`:''}
     <iframe id="browser-frame" src="${esc(home)}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" style="width:100%;flex:1;border:none;border-radius:12px;min-height:420px" onload="onFrameLoad(this)" onerror="showBrowserErr()"></iframe>
-    <div id="browser-err" style="display:none;padding:20px;text-align:center"><p>This site blocked embedding.</p><a id="browser-ext-link" href="${esc(home)}" target="_blank">Open in new tab ↗</a></div>
+    <div id="browser-err" style="display:none;padding:20px;text-align:center"><p>This site blocked embedding or encountered a security error.</p><button class="primary" onclick="openExternalBrowser()">Open in Device Browser ↗</button></div>
   </div>`;
+}
+function openExternalBrowser(url){
+  const target = url || ($('#browser-url') ? $('#browser-url').value : '') || (BROWSER_HIST[BROWSER_IDX]) || D.settings.browserHome || 'https://www.google.com';
+  let cleanUrl = target.trim();
+  if(!cleanUrl) return;
+  if(!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) cleanUrl = 'https://' + cleanUrl;
+  try {
+    const w = window.open(cleanUrl, '_blank');
+    if (!w || w.closed || typeof w.closed === 'undefined') {
+      window.location.href = cleanUrl;
+    }
+  } catch(e) {
+    window.location.href = cleanUrl;
+  }
 }
 function browserGo(url){
   if(!url)return;
-  if(!url.startsWith('http'))url='https://'+url;
+  if(!url.startsWith('http://') && !url.startsWith('https://'))url='https://'+url;
   BROWSER_HIST=BROWSER_HIST.slice(0,BROWSER_IDX+1);BROWSER_HIST.push(url);BROWSER_IDX=BROWSER_HIST.length-1;
   const fr=$('#browser-frame');if(fr){fr.src=url;fr.style.display='block';}
   const ui=$('#browser-url');if(ui)ui.value=url;
+  const ext=$('#browser-ext-link');if(ext){ext.href=url;ext.textContent='Open '+url+' in device browser ↗';}
   updateBmarkStar(url);
 }
 function browserNav(){const u=($('#browser-url').value||'').trim();if(u)browserGo(u)}
