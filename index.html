@@ -135,12 +135,67 @@ label.chip{display:inline-flex;align-items:center;gap:4px;width:auto;padding:6px
 #focus-overlay .focus-row{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
 #focus-overlay button{background:#333;border-color:#555;color:#fff;font-size:1.1em;padding:12px 24px}
 #focus-overlay button.primary{background:var(--cal)}
-/* Browser view */
-.browser-bar{display:flex;gap:8px;align-items:center;padding:10px;background:rgba(255,255,255,.9);border-radius:14px;margin-bottom:10px}
-.browser-bar input{flex:1;margin:0}
-.browser-bar button{padding:8px 10px;min-width:36px;font-size:18px}
-#browser-frame{width:100%;flex:1;border:none;border-radius:12px;background:#fff;min-height:400px}
-.bmark-card{background:#fff;border-radius:12px;padding:10px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,.1)}
+
+
+
+/* Themes & Visual Customization */
+[data-theme="oled"]{--text:#f0f2f5;--cal:#5e81f4;background:#000000!important}
+[data-theme="oled"] .panel,[data-theme="oled"] .card,[data-theme="oled"] .box{background:#111111!important;color:#ffffff!important;border-color:#2a2a2a!important}
+[data-theme="oled"] .cal{background:#0a0a0a!important;border-color:#3d5ba9!important}
+[data-theme="oled"] .day{background:#181818!important;color:#eee!important}
+[data-theme="oled"] .day.today{outline:3px solid #5e81f4!important}
+[data-theme="oled"] .day.sel{background:#5e81f4!important;color:#fff!important}
+[data-theme="oled"] .sticky{background:#1a1a1a!important;color:#fff!important;border:1px solid #333!important}
+[data-theme="oled"] .body{background:#1e1e1e!important;color:#ddd!important}
+[data-theme="oled"] header{background:#000000!important}
+[data-theme="oled"] #rail{background:rgba(20,20,25,.85)!important}
+[data-theme="oled"] #rail button{background:#1a1a1a!important;color:#fff!important;border-color:#333!important}
+
+[data-theme="sunset"]{--text:#2d1e2f;--cal:#e05638;background:#fceade!important}
+[data-theme="neon"]{--text:#0cf;--cal:#f0f;background:#0d0221!important}
+[data-theme="neon"] .panel,[data-theme="neon"] .card{background:#19053b!important;color:#0cf!important;border-color:#f0f!important}
+[data-theme="forest"]{--text:#1c2d27;--cal:#2d6a4f;background:#e8f5e9!important}
+
+/* Greeting Banner */
+.greeting-banner{background:linear-gradient(135deg,rgba(61,91,169,.12),rgba(196,76,201,.12));border-radius:18px;padding:14px 18px;margin-bottom:14px;border:2px solid var(--cal);display:flex;justify-content:space-between;align-items:center}
+.greeting-title{font-size:1.35em;font-weight:800;color:var(--text)}
+.greeting-sub{font-size:.9em;opacity:.75}
+
+/* Pinned task styling */
+.card.pinned{border-left:5px solid #ffb300!important;background:rgba(255,248,225,.9)}
+[data-theme="oled"] .card.pinned{background:#231e10!important;border-left:5px solid #ffb300!important}
+.pin-btn{background:none;border:none;font-size:16px;cursor:pointer;padding:2px 6px;opacity:.7}
+.pin-btn.active{opacity:1}
+
+/* Task Tags & Estimated Time */
+.task-tag{display:inline-block;padding:2px 7px;border-radius:12px;font-size:11px;font-weight:700;margin-right:4px;background:rgba(61,91,169,.15);color:var(--cal)}
+.task-est{display:inline-block;padding:2px 6px;border-radius:6px;font-size:11px;background:#eee;color:#555;margin-right:4px}
+[data-theme="oled"] .task-est{background:#2a2a2a;color:#aaa}
+
+/* Habit Tracker Row */
+.habit-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.06)}
+.habit-title{font-weight:600;font-size:.95em}
+.habit-days{display:flex;gap:6px}
+.habit-check{width:28px;height:28px;border-radius:8px;border:2px solid var(--cal);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;background:#fff;user-select:none}
+.habit-check.done{background:var(--cal);color:#fff}
+.habit-streak{font-size:12px;font-weight:700;color:#e65100;margin-left:6px}
+
+/* Stopwatch / Study Timer */
+.stopwatch-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,0,0,.06);padding:3px 8px;border-radius:12px;font-size:12px;font-family:monospace;font-weight:700}
+.sw-btn{padding:2px 6px;font-size:11px;border-radius:6px;cursor:pointer}
+
+/* Grade Calculator */
+.grade-table{width:100%;border-collapse:collapse;margin:10px 0}
+.grade-table th,.grade-table td{padding:6px 8px;text-align:left;border-bottom:1px solid #ddd}
+.grade-badge{font-size:1.1em;font-weight:800;padding:4px 10px;border-radius:12px;background:var(--cal);color:#fff;display:inline-block}
+
+/* Agenda View */
+.agenda-day{margin-bottom:12px}
+.agenda-date{font-size:1em;font-weight:800;opacity:.8;padding-bottom:4px;border-bottom:2px solid var(--cal);margin-bottom:6px}
+
+/* Trash Bin */
+.trash-item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:#fff;border-radius:10px;margin-bottom:6px}
+
 /* Photo Widgets */
 .photo-widgets-wrap{display:flex;flex-direction:column;gap:14px;margin-bottom:14px}
 .photo-widgets-wrap.photo-pos-top{width:100%;margin-bottom:18px}
@@ -247,17 +302,23 @@ const OLD_KEY='flowstate-v2';
 const PAL=['#ff8fa3','#8fd3a8','#f7c77a','#9db4f0','#c39bf0','#7fd6e8','#f49a6b','#f9b4c8','#b4f4c8','#b4d9f9','#f9e4b4','#e4b4f9'];
 const DEF={
   items:[],
-  classes:[{id:'math',name:'Math',icon:'➕',color:'#ff8fa3',order:0,customColor:'',collapsed:false}],
+  classes:[{id:'math',name:'Math',icon:'➕',color:'#ff8fa3',order:0,customColor:'',collapsed:false,grades:[]}],
   notifs:[],dnd:false,fired:{},
   bookmarks:[],widgets:[],focusHistory:[],
+  habits:[
+    {id:'h_deyc',title:'Review DEYC Updates',days:{}},
+    {id:'h_plan',title:'Plan Next Day',days:{}},
+    {id:'h_read',title:'Read & Study 20m',days:{}}
+  ],
+  trash:[],
   settings:{
     speed:1,reduce:false,font:'system-ui, sans-serif',fs:16,text:'#1d2440',cal:'#3d5ba9',
+    theme:'default',oled:false,userName:'',
     bg:{home:'#f5e6e1',school:'#f7dede',work:'#dfe7f5',deyc:'#dcf2e2',personal:'#e5dcf5'},
-    sectionOrder:['overdue','today','soon','notes','recs'],
+    sectionOrder:['agenda','habits','overdue','today','soon','notes','recs'],
     hiddenSections:[],
     defaultTab:'home',
     animations:true,
-    browserHome:'https://www.google.com',
     focusWork:25,focusBreak:5
   }
 };
@@ -276,7 +337,7 @@ function migrateV2(){
     // Add new class fields
     d.classes=d.classes.map((c,idx)=>Object.assign({order:idx,customColor:'',collapsed:false},c));
     // New top-level fields
-    d.bookmarks=d.bookmarks||[];d.widgets=d.widgets||[];d.focusHistory=d.focusHistory||[];
+    d.bookmarks=d.bookmarks||[];d.widgets=d.widgets||[];d.focusHistory=d.focusHistory||[];d.habits=d.habits||[{id:'h_deyc',title:'Review DEYC Updates',days:{}},{id:'h_plan',title:'Plan Next Day',days:{}},{id:'h_read',title:'Read & Study 20m',days:{}}];d.trash=d.trash||[];d.classes=(d.classes||[]).map(c=>Object.assign({grades:[]},c));if(!d.settings.theme)d.settings.theme='default';
     // New settings fields
     if(!d.settings.sectionOrder)d.settings.sectionOrder=['overdue','today','soon','notes','recs'];
     if(!d.settings.hiddenSections)d.settings.hiddenSections=[];
@@ -325,7 +386,7 @@ const byC=(a,b)=>b.created-a.created;
 const val=k=>$('#f-'+k)?.value??'';
 const CATS={home:'Home',school:'School',work:'Work',deyc:'DEYC',personal:'Personal'};
 const BGK=['home','school','work','deyc','personal'];
-const RAIL=[['home','🏠','Home'],['school','🎓','School'],['work','💼','Work'],['deyc','🤝','DEYC'],['personal','🌟','Personal'],['browser','🌐','Browser']];
+const RAIL=[['home','🏠','Home'],['school','🎓','School'],['work','💼','Work'],['deyc','🤝','DEYC'],['personal','🌟','Personal']];
 const LISTS=['Must Watch','Must Read','Must Play','To Do','Websites','Potential Ideas','Games to Play'];
 const LABEL={event:'Event',homework:'Homework',test:'Test',summary:'Summary',project:'Project',note:'Note',bucket:'List item',recording:'Recording'};
 let FORM={},REC=null,RC='school',CCOL=PAL[0],UNDO=null,TT=null,CONF=null;
@@ -382,6 +443,7 @@ function expandRecurring(item,startDate,endDate){
   const rr=parseRRule(item.rrule);
   if(!rr||!rr.FREQ)return[];
   const freq=rr.FREQ;
+  const interval=Math.max(1,parseInt(rr.INTERVAL,10)||1);
   const count=rr.COUNT?parseInt(rr.COUNT,10):null;
   const until=rr.UNTIL?new Date(rr.UNTIL):null;
   const byday=rr.BYDAY?rr.BYDAY.split(','):null;
@@ -391,13 +453,12 @@ function expandRecurring(item,startDate,endDate){
   const results=[];
   let cur=new Date(baseDate);
   let iterations=0;
-  const maxIter=400;
+  const maxIter=500;
   while(iterations<maxIter){
     iterations++;
     if(count!==null&&results.length>=count)break;
     if(until&&cur>until)break;
     if(cur>endDate)break;
-    // Check BYDAY for weekly
     let valid=true;
     if(freq==='WEEKLY'&&byday){
       const days=['SU','MO','TU','WE','TH','FR','SA'];
@@ -409,12 +470,17 @@ function expandRecurring(item,startDate,endDate){
         results.push({...item,id:item.id+'_'+curKey,seriesId:item.id,due:cur.toISOString(),_virtual:true});
       }
     }
-    // Advance
     const next=new Date(cur);
-    if(freq==='DAILY')next.setDate(next.getDate()+1);
-    else if(freq==='WEEKLY')next.setDate(next.getDate()+1);
-    else if(freq==='MONTHLY')next.setMonth(next.getMonth()+1);
-    else if(freq==='YEARLY')next.setFullYear(next.getFullYear()+1);
+    if(freq==='DAILY')next.setDate(next.getDate()+interval);
+    else if(freq==='WEEKLY'){
+      if(interval>1){
+        next.setDate(next.getDate()+7*interval);
+      } else {
+        next.setDate(next.getDate()+1);
+      }
+    }
+    else if(freq==='MONTHLY')next.setMonth(next.getMonth()+interval);
+    else if(freq==='YEARLY')next.setFullYear(next.getFullYear()+interval);
     else break;
     cur=next;
   }
@@ -476,7 +542,7 @@ function render(){
   else if(t==='personal')v.innerHTML=viewPersonal();
   else if(t==='notifs')v.innerHTML=viewNotifs();
   else if(t==='settings')v.innerHTML=viewSettings();
-  else if(t==='browser')v.innerHTML=viewBrowser();
+  
   else v.innerHTML=viewCat(t);
   bind(v);
   $('#schoolBtn').classList.toggle('on',t==='school'&&!!S.cls);
@@ -488,7 +554,22 @@ function render(){
 function updateBell(){const n=D.notifs.filter(x=>!x.read).length;$('#badge').textContent=n||''}
 
 /* ===== CARDS ===== */
-const card=i=>`<div class="card${i.done?' done':''}" data-item="${i._virtual?i.seriesId:i.id}">${['homework','test','bucket','project'].includes(i.type)?`<button class="chk" onclick="toggleDone('${i._virtual?i.seriesId:i.id}');">${i.done?'✓':''}</button>`:''}<div class="grow"><b>${esc(i.title)}</b>${i.rrule?'<span class="recur-icon">🔁</span>':''}<small>${i.due?esc(fmt(i.due))+' · ':''}${esc(LABEL[i.type]||'')}${i.cls?' · '+esc(clsName(i.cls)):''}${i.priority==='high'?' · 🔴 High priority':i.priority==='low'?' · Low priority':''}</small></div></div>`;
+const card=i=>{
+  const id=i._virtual?i.seriesId:i.id;
+  const isPinned=Boolean(i.pinned);
+  const tags=(i.tags||[]).map(t=>`<span class="task-tag">#${esc(t)}</span>`).join('');
+  const est=i.est?`<span class="task-est">⏱ ${esc(i.est)}</span>`:'';
+  const swTime=i.studyTime?`<span class="stopwatch-badge">⏱ ${fmtDur(i.studyTime*1000)}</span>`:'';
+  return `<div class="card${i.done?' done':''}${isPinned?' pinned':''}" data-item="${id}">
+    ${['homework','test','bucket','project'].includes(i.type)?`<button class="chk" onclick="toggleDone('${id}');">${i.done?'✓':''}</button>`:''}
+    <button class="pin-btn${isPinned?' active':''}" onclick="event.stopPropagation();togglePin('${id}')" title="${isPinned?'Unpin':'Pin to top'}">${isPinned?'⭐':'☆'}</button>
+    <div class="grow">
+      <b>${esc(i.title)}</b>${i.rrule?'<span class="recur-icon">🔁</span>':''}
+      <div>${tags}${est}${swTime}</div>
+      <small>${i.due?esc(fmt(i.due))+' · ':''}${esc(LABEL[i.type]||'')}${i.cls?' · '+esc(clsName(i.cls)):''}${i.priority==='high'?' · 🔴 High priority':i.priority==='low'?' · Low priority':''}</small>
+    </div>
+  </div>`;
+};
 const list=a=>a.length?a.map(card).join(''):'<p class="empty">Nothing here yet. Tap + to add.</p>';
 
 /* ===== HOME VIEW ===== */
@@ -537,17 +618,39 @@ function viewHome(){
   }
   const dayItems=getItemsForDay(S.sel);
 
+  // Sorting with pinned first
+  const sortPinned=(arr)=>[...arr].sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0));
+
+  // Greeting
+  const hour=new Date().getHours();
+  const timeWord=hour<12?'Good morning':hour<17?'Good afternoon':'Good evening';
+  const uName=D.settings.userName?`, ${esc(D.settings.userName)}`:'';
+  const dueCount=todayItems.length;
+  const greetingHtml=`<div class="greeting-banner">
+    <div>
+      <div class="greeting-title">${timeWord}${uName} 👋</div>
+      <div class="greeting-sub">You have <b>${dueCount}</b> task${dueCount===1?'':'s'} due today.</div>
+    </div>
+    <div style="display:flex;gap:6px">
+      <button class="chip" onclick="openMemoRecord()" title="Quick Audio Note">🎙️ Memo</button>
+      <button class="chip" onclick="openJumpDate()" title="Jump to Date">📅 Date</button>
+    </div>
+  </div>`;
+
   // Section order
-  const sectionOrder=D.settings.sectionOrder||['overdue','today','soon','notes','recs'];
+  const sectionOrder=D.settings.sectionOrder||['agenda','habits','overdue','today','soon','notes','recs'];
   const sections={
-    overdue:sectionHtml('overdue','Overdue',overdue),
-    today:sectionHtml('today','Due Today',todayItems),
-    soon:sectionHtml('soon','Due Date Approaching',soon),
+    agenda:sectionHtml('agenda','Upcoming Agenda (Next 7 Days)',[],renderUpcomingAgenda(7)),
+    habits:sectionHtml('habits','Daily Habits & Streaks',[],renderHabitsSection()),
+    overdue:sectionHtml('overdue','Overdue',sortPinned(overdue)),
+    today:sectionHtml('today','Due Today',sortPinned(todayItems)),
+    soon:sectionHtml('soon','Due Date Approaching',sortPinned(soon)),
     notes:sectionHtml('notes','Recent Notes',notes,isSectionHidden('notes')?'':list(notes)+(notes.length?`<div class="row"><button onclick="go2('personal')">View all notes</button></div>`:'')),
     recs:sectionHtml('recs','Recent Recordings',recs)
   };
 
   return `${renderPhotoWidgets('top')}
+  ${greetingHtml}
   <div class="home">
     <div class="sticky-col" id="sections-col">
       ${renderPhotoWidgets('left_top')}
@@ -557,10 +660,18 @@ function viewHome(){
     <div class="cal-col">
       ${renderPhotoWidgets('right_top')}
       <div class="cal">
-        <div class="calhead"><button onclick="moveMonth(-1)">‹</button><b>${m.toLocaleString([],{month:'long',year:'numeric'})}</b><button onclick="toggleView()">${S.view==='week'?'Month':'Week'}</button><button onclick="moveMonth(1)">›</button></div>
+        <div class="calhead">
+          <button onclick="moveMonth(-1)">‹</button>
+          <b onclick="openJumpDate()" style="cursor:pointer" title="Tap to jump to date">${m.toLocaleString([],{month:'long',year:'numeric'})} ▾</b>
+          <div style="display:flex;gap:4px">
+            <button onclick="toggleView()">${S.view==='week'?'Month':S.view==='agenda'?'Month':'Week'}</button>
+            <button onclick="toggleAgendaView()">${S.view==='agenda'?'Grid':'Agenda'}</button>
+            <button onclick="moveMonth(1)">›</button>
+          </div>
+        </div>
         <div class="wk">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<span>${d}</span>`).join('')}</div>
-        ${S.view==='week'?weekGrid():`<div class="days">${cells}</div>`}
-        <h3 class="dl">${new Date(S.sel+'T00:00').toDateString()}</h3><div class="dayList">${list(dayItems)}</div>
+        ${S.view==='agenda'?renderAgendaView():S.view==='week'?weekGrid():`<div class="days">${cells}</div>`}
+        ${S.view==='agenda'?'':`<h3 class="dl">${new Date(S.sel+'T00:00').toDateString()}</h3><div class="dayList">${list(dayItems)}</div>`}
       </div>
       ${renderPhotoWidgets('right_bottom')}
     </div>
@@ -631,7 +742,13 @@ function quickAddForDay(dayKey){
       <label>Category <select id="qa-cat">${['school','work','deyc','personal'].map(c=>`<option value="${c}">${CATS[c]}</option>`).join('')}</select></label>
     </div>
     <label>Repeat <select id="qa-repeat" onchange="qaRepeatChange()">
-      <option value="">None</option><option value="DAILY">Daily</option><option value="WEEKLY">Weekly</option><option value="MONTHLY">Monthly</option><option value="YEARLY">Yearly</option>
+      <option value="">None</option>
+      <option value="BIWEEKLY_FRIDAY">Every 2nd Friday (DEYC)</option>
+      <option value="DAILY">Daily</option>
+      <option value="WEEKLY">Weekly</option>
+      <option value="BIWEEKLY">Every 2 Weeks (Custom)</option>
+      <option value="MONTHLY">Monthly</option>
+      <option value="YEARLY">Yearly</option>
     </select></label>
     <div id="qa-repeat-opts"></div>
     <div class="row">
@@ -658,7 +775,13 @@ function saveQuickAdd(dayKey){
   const cat=$('#qa-cat').value||'school';
   const repeatFreq=$('#qa-repeat').value;
   let rrule=null;
-  if(repeatFreq){
+  if(repeatFreq==='BIWEEKLY_FRIDAY'){
+    rrule='FREQ=WEEKLY;INTERVAL=2;BYDAY=FR';
+  } else if(repeatFreq==='BIWEEKLY'){
+    rrule='FREQ=WEEKLY;INTERVAL=2';
+    const days=[...document.querySelectorAll('.qa-dow:checked')].map(x=>x.value);
+    if(days.length)rrule+=`;BYDAY=${days.join(',')}`;
+  } else if(repeatFreq){
     rrule=`FREQ=${repeatFreq}`;
     if(repeatFreq==='WEEKLY'){
       const days=[...document.querySelectorAll('.qa-dow:checked')].map(x=>x.value);
@@ -980,7 +1103,12 @@ function viewClass(id){
   return `<h1>${esc(c.icon)} ${esc(c.name)}</h1><div class="cols">
     <div class="panel tall"><h3>Recent Class Summary</h3>${sums[0]?card(sums[0])+`<div class="body">${esc(sums[0].body)}</div>`:'<p class="empty">No summaries yet.</p>'}</div>
     <div class="stack"><div class="panel"><h3>Previous Summaries</h3>${list(sums.slice(1))}</div>
-    <div class="panel"><h3>Homework + Studying</h3><div class="row"><button class="primary" onclick="openFocus()">Focus timer</button></div>${list(hw)}</div></div></div>`;
+    <div class="panel"><h3>Homework + Studying</h3>
+  <div class="row" style="margin-bottom:8px">
+    <button class="primary" onclick="openFocus()">Focus timer</button>
+    <button onclick="startStudyTimer('${c.id}')">⏱️ Study Stopwatch</button>
+    <button onclick="openGradeCalculator('${c.id}')">📊 Grade Calculator</button>
+  </div>${list(hw)}</div></div></div>`;
 }
 function viewCat(c){
   const sums=D.items.filter(i=>i.type==='summary'&&i.cat===c).sort(byC);
@@ -1012,14 +1140,25 @@ function viewSettings(){
   const bgRows=BGK.map(k=>`<label>${CATS[k]} background <input type="color" value="${s.bg[k]}" onchange="setS('bg.${k}',this.value)"></label>`).join('');
   const fonts=[['system-ui, sans-serif','Clean'],['Georgia, serif','Serif'],['ui-monospace, monospace','Mono'],['Trebuchet MS, sans-serif','Friendly'],['Fredoka, sans-serif','Round'],['Patrick Hand, cursive','Handwritten'],['Lexend, sans-serif','Clear'],['Caveat, cursive','Script'],['Nunito, sans-serif','Soft']];
   return `<h1>Settings</h1>
-  <div class="panel"><h3>Look</h3>${bgRows}
+  <div class="panel"><h3>Personalization &amp; Themes</h3>
+    <label>Your Name (for dashboard greeting): <input type="text" value="${esc(s.userName||'')}" onchange="setS('userName',this.value)" placeholder="Enter your name"></label>
+    <label>Color Theme: <select onchange="setS('theme',this.value);applyTheme(this.value)">
+      <option value="default" ${(s.theme||'default')==='default'?'selected':''}>Classic FlowState</option>
+      <option value="oled" ${s.theme==='oled'?'selected':''}>OLED Pure Dark (Tab S9+ Battery Saver)</option>
+      <option value="sunset" ${s.theme==='sunset'?'selected':''}>Sunset Warm</option>
+      <option value="neon" ${s.theme==='neon'?'selected':''}>Cyber Neon</option>
+      <option value="forest" ${s.theme==='forest'?'selected':''}>Forest Calm</option>
+    </select></label>
+    <label><input type="checkbox" ${s.oled?'checked':''} onchange="setS('oled',this.checked);applyTheme(s.theme)"> AMOLED True Black Background</label>
+    ${bgRows}
     <label>Background image for <select id="bgSel">${BGK.map(k=>`<option value="${k}">${CATS[k]}</option>`).join('')}</select></label>
     <input type="file" accept="image/*" onchange="setBgImg(this.files[0],$('#bgSel').value)">
     <div class="row"><button onclick="setBgImg(null,$('#bgSel').value)">Remove image for this tab</button></div>
     <label>Text color <input type="color" value="${s.text}" onchange="setS('text',this.value)"></label>
     <label>Calendar color <input type="color" value="${s.cal}" onchange="setS('cal',this.value)"></label>
     <label>Font <select onchange="setS('font',this.value)">${fonts.map(([v,l])=>`<option value="${v}" ${s.font===v?'selected':''}>${l}</option>`).join('')}</select></label>
-    <label>Text size <input type="range" min="13" max="22" value="${s.fs}" onchange="setS('fs',+this.value)"></label></div>
+    <label>Text size <input type="range" min="13" max="22" value="${s.fs}" onchange="setS('fs',+this.value)"></label>
+  </div>
   <div class="panel"><h3>Background animation</h3>
     <label>Style <select onchange="setS('anim',this.value)">${Object.entries(ANIMS).map(([k,l])=>`<option value="${k}" ${(s.anim||'bubbles')===k?'selected':''}>${l}</option>`).join('')}</select></label>
     <label>Speed <input type="range" min="0" max="3" step="0.1" value="${s.speed}" onchange="setS('speed',+this.value)"></label>
@@ -1027,8 +1166,7 @@ function viewSettings(){
   <div class="panel"><h3>Focus Defaults</h3>
     <label>Work duration (minutes) <input type="number" min="1" max="120" value="${s.focusWork||25}" onchange="setS('focusWork',+this.value)" style="width:80px;display:inline-block;margin-left:8px"></label>
     <label>Break duration (minutes) <input type="number" min="1" max="60" value="${s.focusBreak||5}" onchange="setS('focusBreak',+this.value)" style="width:80px;display:inline-block;margin-left:8px"></label></div>
-  <div class="panel"><h3>Browser</h3>
-    <label>Default homepage <input type="url" value="${esc(s.browserHome||'https://www.google.com')}" onchange="setS('browserHome',this.value)" placeholder="https://..."></label></div>
+  
   <div class="panel"><h3>Dashboard Layout</h3>
     <p class="empty">Section order can be changed by dragging the ⠿ handles on the home view.</p>
     <div class="row"><button onclick="D.settings.sectionOrder=['overdue','today','soon','notes','recs'];D.settings.hiddenSections=[];save();render();toast('Dashboard reset')">Reset section order &amp; visibility</button></div></div>
@@ -1058,6 +1196,10 @@ function viewSettings(){
     <p class="empty">${D.settings.googleSync?'Google sync is enabled on this device.':'Connect FlowState to send your items to Google Calendar and receive scheduled Gmail reminders.'}</p>
     <div class="row">${D.settings.googleSync?'<button class="primary" onclick="connectGoogleSync()">Sync all items now</button><button onclick="testGoogleSync()">Send test email</button><button onclick="disconnectGoogleSync()">Pause sync</button>':'<button class="primary" onclick="connectGoogleSync()">Connect Google &amp; sync items</button>'}</div>
     <small>Only items created or changed on this device are sent. Keep this app connected to the internet when making changes. Calendar and email delivery are handled by your Google Apps Script.</small></div>
+  <div class="panel"><h3>🗑️ Trash Bin (Safety Recovery)</h3>
+    <p class="empty">${(D.trash||[]).length} item(s) in trash.</p>
+    <div class="row"><button onclick="openTrashBin()">Open Trash Bin</button></div>
+  </div>
   <div class="panel"><h3>Backup &amp; Restore</h3>
     <p class="empty">Safely download, copy, share, or restore your complete FlowState database (tasks, notes, classes, recordings, widgets, and preferences).</p>
     <div class="row"><button class="primary" onclick="exportData()">💾 Backup Data</button><button onclick="importData()">📥 Restore Backup</button></div>
@@ -1078,78 +1220,7 @@ function clearAllData(){
   });
 }
 
-/* ===== BROWSER VIEW ===== */
-function viewBrowser(){
-  const home=D.settings.browserHome||'https://www.google.com';
-  const bmarks=D.bookmarks||[];
-  return `<h1>🌐 Browser</h1>
-  <div class="browser-bar">
-    <button onclick="browserBack()" title="Back">←</button>
-    <button onclick="browserForward()" title="Forward">→</button>
-    <button onclick="browserRefresh()" title="Refresh">↻</button>
-    <input id="browser-url" type="url" placeholder="Enter URL..." value="" onkeydown="if(event.key==='Enter')browserNav()">
-    <button onclick="browserNav()">Go</button>
-    <button id="bmark-star" onclick="toggleBookmark()" title="Bookmark">☆</button>
-    <button onclick="openExternalBrowser()" title="Open in Device Browser (Samsung Internet / Chrome)">↗</button>
-  </div>
-  <div style="display:flex;justify-content:space-between;align-items:center;padding:0 6px 8px;font-size:0.85em;opacity:0.85">
-    <span>💡 If a site blocks embedding or has SSL errors, tap <b>↗</b> to open in your browser app.</span>
-    <button style="padding:3px 10px;font-size:0.85em;border-radius:8px" onclick="openExternalBrowser()">Open in App ↗</button>
-  </div>
-  <div id="browser-content" style="flex:1;display:flex;flex-direction:column">
-    ${bmarks.length&&!$('#browser-frame')?`<div id="bmark-list"><h3>Bookmarks</h3>${bmarks.map(b=>`<div class="bmark-card" onclick="browserGo('${esc(b.url)}')"><span style="font-size:22px">🔖</span><div class="grow"><b>${esc(b.title||b.url)}</b><small>${esc(b.url)}</small></div><button onclick="event.stopPropagation();removeBookmark('${esc(b.url)}')" title="Remove">✕</button></div>`).join('')}</div>`:''}
-    <iframe id="browser-frame" src="${esc(home)}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" style="width:100%;flex:1;border:none;border-radius:12px;min-height:420px" onload="onFrameLoad(this)" onerror="showBrowserErr()"></iframe>
-    <div id="browser-err" style="display:none;padding:20px;text-align:center"><p>This site blocked embedding or encountered a security error.</p><button class="primary" onclick="openExternalBrowser()">Open in Device Browser ↗</button></div>
-  </div>`;
-}
-function openExternalBrowser(url){
-  const target = url || ($('#browser-url') ? $('#browser-url').value : '') || (BROWSER_HIST[BROWSER_IDX]) || D.settings.browserHome || 'https://www.google.com';
-  let cleanUrl = target.trim();
-  if(!cleanUrl) return;
-  if(!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) cleanUrl = 'https://' + cleanUrl;
-  try {
-    const w = window.open(cleanUrl, '_blank');
-    if (!w || w.closed || typeof w.closed === 'undefined') {
-      window.location.href = cleanUrl;
-    }
-  } catch(e) {
-    window.location.href = cleanUrl;
-  }
-}
-function browserGo(url){
-  if(!url)return;
-  if(!url.startsWith('http://') && !url.startsWith('https://'))url='https://'+url;
-  BROWSER_HIST=BROWSER_HIST.slice(0,BROWSER_IDX+1);BROWSER_HIST.push(url);BROWSER_IDX=BROWSER_HIST.length-1;
-  const fr=$('#browser-frame');if(fr){fr.src=url;fr.style.display='block';}
-  const ui=$('#browser-url');if(ui)ui.value=url;
-  const ext=$('#browser-ext-link');if(ext){ext.href=url;ext.textContent='Open '+url+' in device browser ↗';}
-  updateBmarkStar(url);
-}
-function browserNav(){const u=($('#browser-url').value||'').trim();if(u)browserGo(u)}
-function browserBack(){if(BROWSER_IDX>0){BROWSER_IDX--;const url=BROWSER_HIST[BROWSER_IDX];const fr=$('#browser-frame');if(fr)fr.src=url;const ui=$('#browser-url');if(ui)ui.value=url;updateBmarkStar(url);}}
-function browserForward(){if(BROWSER_IDX<BROWSER_HIST.length-1){BROWSER_IDX++;const url=BROWSER_HIST[BROWSER_IDX];const fr=$('#browser-frame');if(fr)fr.src=url;const ui=$('#browser-url');if(ui)ui.value=url;updateBmarkStar(url);}}
-function browserRefresh(){const fr=$('#browser-frame');if(fr)fr.src=fr.src;}
-function onFrameLoad(fr){
-  try{
-    const url=fr.contentWindow.location.href;
-    const ui=$('#browser-url');if(ui&&url&&url!=='about:blank')ui.value=url;
-    updateBmarkStar(url);
-  }catch(e){}
-}
-function showBrowserErr(){const e=$('#browser-err');if(e)e.style.display='block';}
-function updateBmarkStar(url){
-  const star=$('#bmark-star');if(!star)return;
-  const isBookmarked=(D.bookmarks||[]).some(b=>b.url===url);
-  star.textContent=isBookmarked?'★':'☆';
-}
-function toggleBookmark(){
-  const url=($('#browser-url').value||'').trim();if(!url)return;
-  const idx=(D.bookmarks||[]).findIndex(b=>b.url===url);
-  if(idx>=0){D.bookmarks.splice(idx,1);toast('Bookmark removed');}
-  else{D.bookmarks=D.bookmarks||[];D.bookmarks.push({url,title:url,favicon:''});toast('Bookmarked!');}
-  save();updateBmarkStar(url);
-}
-function removeBookmark(url){D.bookmarks=(D.bookmarks||[]).filter(b=>b.url!==url);save();render();}
+
 
 /* ===== HOLD / BIND ===== */
 function hold(el,tap,long){
@@ -1185,7 +1256,7 @@ function addFor(k,c){S.bubble=null;hideBubble();openForm(k,null,{cls:c,cat:'scho
 
 /* ===== NAVIGATION ===== */
 function go(dir){
-  const order=['home','school','work','deyc','personal','browser'];
+  const order=['home','school','work','deyc','personal'];
   let i=order.indexOf(S.tab);i=Math.max(0,Math.min(order.length-1,(i<0?0:i)+dir));
   S.tab=order[i];S.cls=null;S.collapsed=false;S.bubble=null;S.enter=true;render();
 }
@@ -1252,8 +1323,10 @@ function openForm(type,id,pre={}){
   <input id="f-custom" placeholder="Custom minutes, e.g. 45, 90">
   <label>Repeat <select id="f-repeat" onchange="toggleRepeatUI()">
     <option value="" ${!freq?'selected':''}>None</option>
-    <option value="DAILY" ${freq==='DAILY'?'selected':''}>Daily</option>
-    <option value="WEEKLY" ${freq==='WEEKLY'?'selected':''}>Weekly</option>
+    <option value="BIWEEKLY_FRIDAY" ${rr&&rr.INTERVAL==='2'&&rr.BYDAY==='FR'?'selected':''}>Every 2nd Friday (DEYC)</option>
+    <option value="DAILY" ${freq==='DAILY'&&(!rr||rr.INTERVAL!=='2')?'selected':''}>Daily</option>
+    <option value="WEEKLY" ${freq==='WEEKLY'&&(!rr||rr.INTERVAL!=='2')?'selected':''}>Weekly</option>
+    <option value="BIWEEKLY" ${freq==='WEEKLY'&&rr&&rr.INTERVAL==='2'&&rr.BYDAY!=='FR'?'selected':''}>Every 2 Weeks (Bi-weekly)</option>
     <option value="MONTHLY" ${freq==='MONTHLY'?'selected':''}>Monthly</option>
     <option value="YEARLY" ${freq==='YEARLY'?'selected':''}>Yearly</option>
   </select></label>
@@ -1863,6 +1936,337 @@ function frame(){
 }
 
 /* ===== BOOT ===== */
+
+/* ===== NEW PRODUCTIVITY FEATURES ===== */
+
+// 1. Task Pinning
+function togglePin(id){
+  const item=D.items.find(x=>x.id===id);
+  if(!item)return;
+  item.pinned=!item.pinned;
+  save();render();
+  toast(item.pinned?'Task pinned to top ⭐':'Task unpinned');
+}
+
+// 2. Daily Habits Tracker
+function renderHabitsSection(){
+  D.habits=D.habits||[
+    {id:'h_deyc',title:'Review DEYC Updates',days:{}},
+    {id:'h_plan',title:'Plan Next Day',days:{}},
+    {id:'h_read',title:'Read & Study 20m',days:{}}
+  ];
+  const todayKey=dk(new Date());
+  // Last 5 days keys
+  const pastDays=[];
+  for(let i=4;i>=0;i--){
+    const d=new Date();d.setDate(d.getDate()-i);
+    pastDays.push({key:dk(d),label:['Su','Mo','Tu','We','Th','Fr','Sa'][d.getDay()]});
+  }
+
+  let html='<div style="margin-bottom:8px">';
+  html+=D.habits.map(h=>{
+    // calculate streak
+    let streak=0;
+    let checkDate=new Date();
+    while(true){
+      const k=dk(checkDate);
+      if(h.days&&h.days[k]){streak++;checkDate.setDate(checkDate.getDate()-1);}
+      else break;
+    }
+    return `<div class="habit-row">
+      <div>
+        <span class="habit-title">${esc(h.title)}</span>
+        ${streak>0?`<span class="habit-streak">🔥 ${streak}d streak</span>`:''}
+      </div>
+      <div class="habit-days">
+        ${pastDays.map(pd=>{
+          const isDone=Boolean(h.days&&h.days[pd.key]);
+          return `<div class="habit-check${isDone?' done':''}" onclick="toggleHabit('${h.id}','${pd.key}')" title="${pd.key}">
+            ${isDone?'✓':pd.label}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }).join('');
+  html+=`<div class="row" style="margin-top:8px">
+    <button onclick="openAddHabit()">+ Add Habit</button>
+  </div></div>`;
+  return html;
+}
+
+function toggleHabit(habitId,dateKey){
+  const h=(D.habits||[]).find(x=>x.id===habitId);
+  if(!h)return;
+  h.days=h.days||{};
+  if(h.days[dateKey])delete h.days[dateKey];
+  else h.days[dateKey]=1;
+  save();render();
+}
+
+function openAddHabit(){
+  sheet(`<h2>Add Daily Habit</h2>
+    <input id="new-habit-title" placeholder="e.g. Drink Water, DEYC Prep, Workout">
+    <div class="row">
+      <button class="primary" onclick="saveNewHabit()">Save</button>
+      <button onclick="closeSheet()">Cancel</button>
+    </div>`);
+}
+
+function saveNewHabit(){
+  const title=val('new-habit-title').trim();
+  if(!title)return toast('Please enter a habit title');
+  D.habits=D.habits||[];
+  D.habits.push({id:uid(),title,days:{}});
+  save();closeSheet();render();toast('Habit added');
+}
+
+// 3. Agenda & Calendar Jump Views
+function renderAgendaView(){
+  return renderUpcomingAgenda(30);
+}
+
+function toggleAgendaView(){
+  S.view=S.view==='agenda'?'month':'agenda';
+  render();
+}
+
+function renderUpcomingAgenda(daysCount){
+  const start=new Date();start.setHours(0,0,0,0);
+  const end=new Date(start);end.setDate(end.getDate()+daysCount);
+  const all=getAllItemsInRange(start,end).sort((a,b)=>new Date(a.due)-new Date(b.due));
+  if(!all.length)return '<p class="empty">No events or tasks scheduled for the next '+daysCount+' days.</p>';
+
+  // Group by date
+  const groups={};
+  all.forEach(item=>{
+    const k=dk(new Date(item.due));
+    if(!groups[k])groups[k]=[];
+    groups[k].push(item);
+  });
+
+  return `<div class="agenda-container" style="max-height:420px;overflow:auto">
+    ${Object.entries(groups).map(([k,items])=>`
+      <div class="agenda-day">
+        <div class="agenda-date">${new Date(k+'T00:00').toLocaleDateString([],{weekday:'short',month:'short',day:'numeric'})}</div>
+        ${items.map(card).join('')}
+      </div>
+    `).join('')}
+  </div>`;
+}
+
+function openJumpDate(){
+  sheet(`<h2>Jump to Date</h2>
+    <label>Select Date: <input id="jump-date-val" type="date" value="${S.sel}"></label>
+    <div class="row">
+      <button class="primary" onclick="doJumpDate()">Go to Date</button>
+      <button onclick="doJumpToday()">Today</button>
+      <button onclick="closeSheet()">Cancel</button>
+    </div>`);
+}
+
+function doJumpDate(){
+  const v=$('#jump-date-val')?.value;
+  if(!v)return;
+  S.sel=v;
+  const d=new Date(v+'T00:00');
+  S.month=new Date(d.getFullYear(),d.getMonth(),1);
+  closeSheet();render();
+}
+
+function doJumpToday(){
+  const now=new Date();
+  S.sel=dk(now);
+  S.month=new Date(now.getFullYear(),now.getMonth(),1);
+  closeSheet();render();
+}
+
+// 4. Class Stopwatch & Grade Calculator
+function startStudyTimer(clsId){
+  const c=D.classes.find(x=>x.id===clsId);
+  if(!c)return;
+  let sec=0;
+  sheet(`<h2>⏱️ Study Session: ${esc(c.name)}</h2>
+    <div style="font-size:54px;font-family:monospace;font-weight:800;text-align:center;margin:20px 0" id="study-stopwatch">00:00</div>
+    <div class="row" style="justify-content:center">
+      <button class="primary big" id="sw-toggle-btn" onclick="toggleStudySession('${clsId}')">Start</button>
+      <button class="big" onclick="resetStudySession()">Reset</button>
+      <button onclick="closeSheet()">Done</button>
+    </div>`);
+}
+
+let STUDY_SW={iv:null,sec:0,clsId:null};
+function toggleStudySession(clsId){
+  const btn=$('#sw-toggle-btn');
+  if(STUDY_SW.iv){
+    clearInterval(STUDY_SW.iv);
+    STUDY_SW.iv=null;
+    if(btn)btn.textContent='Resume';
+    // record to class
+    const c=D.classes.find(x=>x.id===clsId);
+    if(c){c.studyTime=(c.studyTime||0)+STUDY_SW.sec;save();}
+  } else {
+    STUDY_SW.clsId=clsId;
+    STUDY_SW.iv=setInterval(()=>{
+      STUDY_SW.sec++;
+      const el=$('#study-stopwatch');
+      if(el)el.textContent=fmtDur(STUDY_SW.sec*1000);
+    },1000);
+    if(btn)btn.textContent='Pause';
+  }
+}
+function resetStudySession(){
+  if(STUDY_SW.iv)clearInterval(STUDY_SW.iv);
+  STUDY_SW={iv:null,sec:0,clsId:null};
+  const el=$('#study-stopwatch');if(el)el.textContent='00:00';
+  const btn=$('#sw-toggle-btn');if(btn)btn.textContent='Start';
+}
+
+function openGradeCalculator(clsId){
+  const c=D.classes.find(x=>x.id===clsId);
+  if(!c)return;
+  c.grades=c.grades||[];
+  const totalScore=c.grades.reduce((acc,g)=>acc+((g.score/g.total)*g.weight),0);
+  const totalWeight=c.grades.reduce((acc,g)=>acc+g.weight,0);
+  const pct=totalWeight>0?Math.round((totalScore/totalWeight)*100):null;
+  const letter=pct===null?'N/A':pct>=90?'A':pct>=80?'B':pct>=70?'C':pct>=60?'D':'F';
+
+  sheet(`<h2>📊 Grade Tracker: ${esc(c.name)}</h2>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
+      <span class="grade-badge">${letter} (${pct!==null?pct+'%':'No grades'})</span>
+      <span style="opacity:.7">${c.grades.length} graded item(s)</span>
+    </div>
+    <table class="grade-table">
+      <tr><th>Assignment</th><th>Score</th><th>Out of</th><th>Weight %</th><th></th></tr>
+      ${c.grades.map((g,i)=>`
+        <tr>
+          <td>${esc(g.name)}</td>
+          <td>${g.score}</td>
+          <td>${g.total}</td>
+          <td>${g.weight}%</td>
+          <td><button onclick="delGrade('${clsId}',${i})">✕</button></td>
+        </tr>
+      `).join('')}
+    </table>
+    <div class="card" style="padding:10px;margin-top:10px">
+      <b>+ Add Grade</b>
+      <div class="row">
+        <input id="gr-name" placeholder="Assignment (e.g. Midterm)" style="flex:1">
+        <input id="gr-score" type="number" placeholder="Score" style="width:70px">
+        <input id="gr-total" type="number" placeholder="Out of" value="100" style="width:70px">
+        <input id="gr-weight" type="number" placeholder="Weight %" value="10" style="width:70px">
+        <button class="primary" onclick="saveGrade('${clsId}')">Add</button>
+      </div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button onclick="closeSheet()">Close</button>
+    </div>`);
+}
+
+function saveGrade(clsId){
+  const c=D.classes.find(x=>x.id===clsId);if(!c)return;
+  const name=val('gr-name').trim()||'Assignment';
+  const score=parseFloat(val('gr-score'))||0;
+  const total=parseFloat(val('gr-total'))||100;
+  const weight=parseFloat(val('gr-weight'))||10;
+  c.grades=c.grades||[];
+  c.grades.push({name,score,total,weight});
+  save();openGradeCalculator(clsId);
+}
+
+function delGrade(clsId,idx){
+  const c=D.classes.find(x=>x.id===clsId);if(!c)return;
+  c.grades.splice(idx,1);
+  save();openGradeCalculator(clsId);
+}
+
+// 5. Trash Bin & Safety Deletion Recovery
+function delItem(id){
+  const i=D.items.findIndex(x=>x.id===id);if(i<0)return;
+  const [it]=D.items.splice(i,1);
+  // Add to trash with deleted timestamp
+  D.trash=D.trash||[];
+  D.trash.unshift({...it,deletedAt:Date.now()});
+  D.trash=D.trash.slice(0,50); // keep last 50
+  save();sendGoogleSync('delete',null,it.id);closeSheet();render();
+  toast('Moved "'+it.title+'" to Trash',{
+    undo:()=>{
+      D.items.splice(i,0,it);
+      D.trash=(D.trash||[]).filter(x=>x.id!==it.id);
+      save();sendGoogleSync('upsert',it);render();
+    }
+  });
+}
+
+function openTrashBin(){
+  D.trash=D.trash||[];
+  sheet(`<h2>🗑️ Trash Bin (Recently Deleted)</h2>
+    <p class="empty">${D.trash.length?'Items are kept here for recovery. Tap Restore to recover.':'Trash is empty.'}</p>
+    <div style="max-height:360px;overflow:auto">
+      ${D.trash.map(it=>`
+        <div class="trash-item">
+          <div>
+            <b>${esc(it.title)}</b>
+            <small style="display:block;opacity:.6">${esc(LABEL[it.type]||'')} · Deleted ${new Date(it.deletedAt).toLocaleDateString()}</small>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button class="primary" onclick="restoreFromTrash('${it.id}')">Restore</button>
+            <button class="danger" onclick="permanentlyDeleteTrash('${it.id}')">Delete</button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="row" style="margin-top:12px">
+      ${D.trash.length?'<button class="danger" onclick="emptyTrash()">Empty Trash</button>':''}
+      <button onclick="closeSheet()">Close</button>
+    </div>`);
+}
+
+function restoreFromTrash(id){
+  const idx=(D.trash||[]).findIndex(x=>x.id===id);
+  if(idx<0)return;
+  const [it]=D.trash.splice(idx,1);
+  delete it.deletedAt;
+  D.items.push(it);
+  save();sendGoogleSync('upsert',it);openTrashBin();render();
+  toast('Restored "'+it.title+'"');
+}
+
+function permanentlyDeleteTrash(id){
+  D.trash=(D.trash||[]).filter(x=>x.id!==id);
+  save();openTrashBin();toast('Item permanently removed');
+}
+
+function emptyTrash(){
+  confirmSheet('Permanently delete all items in trash?',()=>{
+    D.trash=[];save();openTrashBin();toast('Trash emptied');
+  });
+}
+
+// 6. Floating Audio Memo Button
+function openMemoRecord(){
+  openRec();
+}
+
+// 7. Interactive Markdown Checkbox inside note overlay
+function toggleNoteCheckbox(checkboxIndex){
+  const el=$('#note-ov-body');
+  if(!el)return;
+  const lines=el.value.split('\n');
+  let cbCount=0;
+  for(let i=0;i<lines.length;i++){
+    if(lines[i].match(/^\s*-\s*\[([ xX])\]/)){
+      if(cbCount===checkboxIndex){
+        if(lines[i].includes('[ ]')) lines[i]=lines[i].replace('[ ]','[x]');
+        else lines[i]=lines[i].replace(/\[[xX]\]/,'[ ]');
+        break;
+      }
+      cbCount++;
+    }
+  }
+  el.value=lines.join('\n');
+  noteAutoSave();
+}
+
 window.addEventListener('resize',resize);
 resize();rail_init();clock();render();tick();flushGoogleSync();
 setInterval(tick,15000);setInterval(clock,1000);
