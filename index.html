@@ -238,6 +238,79 @@ label.chip{display:inline-flex;align-items:center;gap:4px;width:auto;padding:6px
 #quick-add-sheet{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:flex-end;justify-content:center;z-index:21}
 #quick-add-sheet.on{display:flex}
 #quick-add-box{background:#fbf7f6;border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:640px;animation:pop .22s ease-out}
+
+/* ===== MOVIEHUB ===== */
+.mh-topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.mh-search-wrap{position:relative;display:flex;align-items:center;margin-bottom:12px}
+.mh-search-wrap input{padding:11px 38px 11px 38px;border-radius:14px;border:2px solid var(--cal);margin:0;background:rgba(255,255,255,.92);font-size:1em}
+.mh-search-ico{position:absolute;left:12px;font-size:17px;pointer-events:none;opacity:.65}
+.mh-search-clr{position:absolute;right:8px;border:none;background:rgba(0,0,0,.1);border-radius:50%;width:26px;height:26px;padding:0;font-size:13px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.mh-folders{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.mh-folder-chip{border-radius:20px;padding:7px 14px;font-size:.92em;border:2px solid var(--cal);background:rgba(255,255,255,.88);display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-weight:600}
+.mh-folder-chip.on{background:var(--cal);color:#fff}
+.mh-select-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;background:var(--cal);color:#fff;padding:10px 14px;border-radius:14px;margin-bottom:14px;box-shadow:0 4px 12px rgba(0,0,0,.18)}
+.mh-select-bar button{border-color:rgba(255,255,255,.5);padding:6px 12px;font-size:.9em}
+.mh-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:14px}
+@media(min-width:768px){.mh-grid{grid-template-columns:repeat(auto-fill,minmax(174px,1fr));gap:18px}}
+.mh-card{position:relative;background:rgba(255,255,255,.92);border-radius:16px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.12);border:3px solid transparent;cursor:pointer;transition:transform .18s,box-shadow .18s,border-color .18s;display:flex;flex-direction:column;user-select:none}
+.mh-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.18)}
+.mh-card.selected{border-color:var(--cal);box-shadow:0 0 0 3px rgba(61,91,169,.32)}
+.mh-poster{position:relative;width:100%;aspect-ratio:2/3;background:linear-gradient(145deg,#1d2440,#3a2352);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.mh-poster img{width:100%;height:100%;object-fit:cover;display:block}
+.mh-poster-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;color:rgba(255,255,255,.88);gap:6px;padding:12px;text-align:center}
+.mh-poster-ph span{font-size:44px}
+.mh-poster-ph small{font-size:11px;letter-spacing:1px;opacity:.7;text-transform:uppercase;background:rgba(255,255,255,.15);padding:2px 8px;border-radius:8px}
+.mh-card-folder{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.68);color:#fff;font-size:11px;padding:3px 8px;border-radius:10px;backdrop-filter:blur(4px);max-width:65%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mh-card-del{position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:50%;border:none;background:rgba(0,0,0,.65);color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer;backdrop-filter:blur(4px);transition:background .15s}
+.mh-card-del:hover{background:#d11a2a}
+.mh-card-chk{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;border:2px solid #fff;background:rgba(0,0,0,.45);color:#fff;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.mh-card.selected .mh-card-chk{background:var(--cal);border-color:#fff}
+.mh-card-rem{position:absolute;bottom:10px;left:8px;background:rgba(0,0,0,.74);color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:8px;backdrop-filter:blur(4px)}
+.mh-prog-track{position:absolute;bottom:0;left:0;right:0;height:5px;background:rgba(255,255,255,.28)}
+.mh-prog-fill{height:100%;background:#2fd46b;transition:width .25s}
+.mh-card-body{padding:10px 10px 12px;display:flex;flex-direction:column;gap:3px;flex:1}
+.mh-card-title{font-weight:700;font-size:.96em;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mh-card-sub{font-size:12px;opacity:.68}
+.mh-detail-hero{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px}
+.mh-detail-poster{width:128px;aspect-ratio:2/3;border-radius:14px;overflow:hidden;background:linear-gradient(145deg,#1d2440,#3a2352);flex:none;box-shadow:0 4px 14px rgba(0,0,0,.22);display:flex;align-items:center;justify-content:center;color:#fff;font-size:40px}
+.mh-detail-poster img{width:100%;height:100%;object-fit:cover;display:block}
+.mh-detail-prog{background:rgba(0,0,0,.06);border-radius:12px;padding:10px 12px;margin:10px 0}
+.mh-detail-bar{height:8px;border-radius:6px;background:rgba(0,0,0,.14);overflow:hidden;margin:6px 0}
+.mh-detail-bar > div{height:100%;background:#2fd46b;border-radius:6px}
+
+/* Floating / Enlarged / Fullscreen Movie Player */
+#movie-player-shell{position:fixed;background:#0e0f14;color:#fff;border-radius:16px;box-shadow:0 12px 38px rgba(0,0,0,.55);border:2px solid rgba(255,255,255,.16);z-index:18;overflow:hidden;display:none;flex-direction:column;transition:width .2s ease,border-radius .2s ease}
+#movie-player-shell.mini{display:flex;width:min(320px,88vw);left:16px;bottom:18px}
+@media(min-width:768px){#movie-player-shell.mini{left:126px;bottom:20px;width:340px}}
+#movie-player-shell.large{display:flex;width:min(680px,92vw);left:50%;bottom:24px;transform:translateX(-50%)}
+#movie-player-shell.fullscreen{display:flex;inset:0!important;left:0!important;top:0!important;right:0!important;bottom:0!important;width:100vw!important;height:100vh!important;transform:none!important;border-radius:0;border:none;z-index:80;background:#000}
+#mh-drag-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 10px;background:rgba(255,255,255,.08);cursor:grab;user-select:none;touch-action:none}
+#movie-player-shell.fullscreen #mh-drag-bar{display:none}
+#mh-player-title{font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.mh-win-btns{display:flex;gap:4px;flex:none}
+.mh-win-btns button{background:rgba(255,255,255,.12);border:none;color:#fff;width:28px;height:28px;border-radius:8px;padding:0;font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.mh-win-btns button:hover{background:rgba(255,255,255,.26)}
+#mh-video-wrap{position:relative;background:#000;width:100%;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#movie-player-shell.fullscreen #mh-video-wrap{flex:1;aspect-ratio:auto;height:100%}
+#mh-video{width:100%;height:100%;object-fit:contain;background:#000;display:block}
+#mh-fs-topbar{display:none;position:absolute;top:0;left:0;right:0;padding:14px 18px;background:linear-gradient(180deg,rgba(0,0,0,.78),transparent);align-items:center;justify-content:space-between;gap:10px;z-index:2}
+#movie-player-shell.fullscreen #mh-fs-topbar{display:flex}
+#mh-fs-topbar button{background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.28);padding:7px 13px;border-radius:10px;font-size:14px}
+#mh-fs-title{font-weight:700;font-size:1.05em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#mh-controls{display:flex;align-items:center;gap:6px;padding:8px 10px;background:#14161e;flex-wrap:nowrap}
+#movie-player-shell.fullscreen #mh-controls{padding:12px 18px;gap:10px;background:rgba(15,16,22,.92)}
+#mh-controls button{background:rgba(255,255,255,.1);border:none;color:#fff;padding:5px 8px;border-radius:8px;font-size:12px;cursor:pointer;flex:none}
+#mh-controls button:hover{background:rgba(255,255,255,.24)}
+#mh-seek{flex:1;min-width:50px;margin:0;accent-color:#2fd46b;cursor:pointer}
+#mh-time-lbl{font-size:11px;font-family:monospace;opacity:.85;white-space:nowrap;flex:none}
+
+/* MovieHub theme overrides */
+[data-theme="oled"] .mh-card{background:#121212!important;color:#fff!important;border-color:#252525}
+[data-theme="oled"] .mh-card.selected{border-color:#5e81f4!important}
+[data-theme="oled"] .mh-search-wrap input,[data-theme="oled"] .mh-folder-chip{background:#151515!important;color:#fff!important;border-color:#333!important}
+[data-theme="oled"] .mh-folder-chip.on{background:#5e81f4!important;border-color:#5e81f4!important}
+[data-theme="oled"] .mh-detail-prog{background:#1c1c1c!important}
+[data-theme="neon"] .mh-card{background:#19053b!important;color:#0cf!important;border-color:#f0f!important}
 </style>
 </head>
 <body>
@@ -294,6 +367,35 @@ label.chip{display:inline-flex;align-items:center;gap:4px;width:auto;padding:6px
   </div>
   <div style="margin-top:24px;opacity:.5;font-size:14px">Session history saved automatically</div>
 </div>
+<!-- Persistent MovieHub Floating / Fullscreen Video Player -->
+<div id="movie-player-shell" class="closed">
+  <div id="mh-drag-bar">
+    <span id="mh-player-title">🎬 Movie</span>
+    <div class="mh-win-btns">
+      <button id="mh-btn-size" onclick="mhCycleSize()" title="Enlarge / Shrink Pop-up">⤢</button>
+      <button id="mh-btn-fs" onclick="mhToggleFullscreen()" title="Fullscreen">⛶</button>
+      <button onclick="mhClosePlayer()" title="Close Player">✕</button>
+    </div>
+  </div>
+  <div id="mh-video-wrap" onclick="mhOnVideoTap(event)">
+    <video id="mh-video" playsinline webkit-playsinline controlsList="nodownload"></video>
+    <div id="mh-fs-topbar">
+      <span id="mh-fs-title"></span>
+      <div style="display:flex;gap:8px">
+        <button onclick="event.stopPropagation();mhShrinkToMini()" title="Watch as Floating Mini-Player">🗗 Mini-Player</button>
+        <button onclick="event.stopPropagation();mhClosePlayer()" title="Close Player">✕</button>
+      </div>
+    </div>
+  </div>
+  <div id="mh-controls">
+    <button id="mh-play-btn" onclick="mhTogglePlay()" title="Play/Pause">▶</button>
+    <button onclick="mhSeekBy(-10)" title="Back 10 seconds">-10s</button>
+    <button onclick="mhSeekBy(10)" title="Forward 10 seconds">+10s</button>
+    <input id="mh-seek" type="range" min="0" max="1000" value="0" oninput="mhOnSeekInput(this.value)" onchange="mhOnSeekCommit(this.value)">
+    <span id="mh-time-lbl">0:00 / 0:00</span>
+    <button id="mh-mute-btn" onclick="mhToggleMute()" title="Mute/Unmute">🔊</button>
+  </div>
+</div>
 <script>
 /* ===== CONSTANTS & DEFAULTS ===== */
 const clone=o=>JSON.parse(JSON.stringify(o));
@@ -305,6 +407,7 @@ const DEF={
   classes:[{id:'math',name:'Math',icon:'➕',color:'#ff8fa3',order:0,customColor:'',collapsed:false,grades:[]}],
   notifs:[],dnd:false,fired:{},
   bookmarks:[],widgets:[],focusHistory:[],
+  movies:[],movieFolders:[],
   habits:[
     {id:'h_deyc',title:'Review DEYC Updates',days:{}},
     {id:'h_plan',title:'Plan Next Day',days:{}},
@@ -314,7 +417,7 @@ const DEF={
   settings:{
     speed:1,reduce:false,font:'system-ui, sans-serif',fs:16,text:'#1d2440',cal:'#3d5ba9',
     theme:'default',oled:false,userName:'',
-    bg:{home:'#f5e6e1',school:'#f7dede',work:'#dfe7f5',deyc:'#dcf2e2',personal:'#e5dcf5'},
+    bg:{home:'#f5e6e1',school:'#f7dede',work:'#dfe7f5',deyc:'#dcf2e2',personal:'#e5dcf5',moviehub:'#dde3f4'},
     sectionOrder:['agenda','habits','overdue','today','soon','notes','recs'],
     hiddenSections:[],
     defaultTab:'home',
@@ -337,13 +440,12 @@ function migrateV2(){
     // Add new class fields
     d.classes=d.classes.map((c,idx)=>Object.assign({order:idx,customColor:'',collapsed:false},c));
     // New top-level fields
-    d.bookmarks=d.bookmarks||[];d.widgets=d.widgets||[];d.focusHistory=d.focusHistory||[];d.habits=d.habits||[{id:'h_deyc',title:'Review DEYC Updates',days:{}},{id:'h_plan',title:'Plan Next Day',days:{}},{id:'h_read',title:'Read & Study 20m',days:{}}];d.trash=d.trash||[];d.classes=(d.classes||[]).map(c=>Object.assign({grades:[]},c));if(!d.settings.theme)d.settings.theme='default';
+    d.bookmarks=d.bookmarks||[];d.widgets=d.widgets||[];d.focusHistory=d.focusHistory||[];d.movies=d.movies||[];d.movieFolders=d.movieFolders||[];d.habits=d.habits||[{id:'h_deyc',title:'Review DEYC Updates',days:{}},{id:'h_plan',title:'Plan Next Day',days:{}},{id:'h_read',title:'Read & Study 20m',days:{}}];d.trash=d.trash||[];d.classes=(d.classes||[]).map(c=>Object.assign({grades:[]},c));if(!d.settings.theme)d.settings.theme='default';
     // New settings fields
     if(!d.settings.sectionOrder)d.settings.sectionOrder=['overdue','today','soon','notes','recs'];
     if(!d.settings.hiddenSections)d.settings.hiddenSections=[];
     if(!d.settings.defaultTab)d.settings.defaultTab='home';
     if(d.settings.animations===undefined)d.settings.animations=true;
-    if(!d.settings.browserHome)d.settings.browserHome='https://www.google.com';
     if(!d.settings.focusWork)d.settings.focusWork=25;
     if(!d.settings.focusBreak)d.settings.focusBreak=5;
     localStorage.setItem(KEY,JSON.stringify(d));
@@ -360,9 +462,9 @@ function load(){
       Object.assign(d,x);
       d.settings=Object.assign(clone(DEF.settings),x.settings||{},{bg:Object.assign(clone(DEF.settings.bg),(x.settings||{}).bg||{})});
       if(!d.bookmarks)d.bookmarks=[];if(!d.widgets)d.widgets=[];if(!d.focusHistory)d.focusHistory=[];
+      if(!d.movies)d.movies=[];if(!d.movieFolders)d.movieFolders=[];
       if(!d.settings.sectionOrder)d.settings.sectionOrder=['overdue','today','soon','notes','recs'];
       if(!d.settings.hiddenSections)d.settings.hiddenSections=[];
-      if(!d.settings.browserHome)d.settings.browserHome='https://www.google.com';
       if(!d.settings.focusWork)d.settings.focusWork=25;
       if(!d.settings.focusBreak)d.settings.focusBreak=5;
       return d;
@@ -384,14 +486,13 @@ const fmt=s=>new Date(s).toLocaleString([],{month:'short',day:'numeric',hour:'nu
 const fmtDur=ms=>{const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
 const byC=(a,b)=>b.created-a.created;
 const val=k=>$('#f-'+k)?.value??'';
-const CATS={home:'Home',school:'School',work:'Work',deyc:'DEYC',personal:'Personal'};
-const BGK=['home','school','work','deyc','personal'];
-const RAIL=[['home','🏠','Home'],['school','🎓','School'],['work','💼','Work'],['deyc','🤝','DEYC'],['personal','🌟','Personal']];
+const CATS={home:'Home',school:'School',work:'Work',deyc:'DEYC',personal:'Personal',moviehub:'MovieHub'};
+const BGK=['home','school','work','deyc','personal','moviehub'];
+const RAIL=[['home','🏠','Home'],['school','🎓','School'],['work','💼','Work'],['deyc','🤝','DEYC'],['personal','🌟','Personal'],['moviehub','🎬','MovieHub']];
 const LISTS=['Must Watch','Must Read','Must Play','To Do','Websites','Potential Ideas','Games to Play'];
 const LABEL={event:'Event',homework:'Homework',test:'Test',summary:'Summary',project:'Project',note:'Note',bucket:'List item',recording:'Recording'};
 let FORM={},REC=null,RC='school',CCOL=PAL[0],UNDO=null,TT=null,CONF=null;
 let NOTE_EDIT_ID=null,NOTE_SAVE_TT=null;
-let BROWSER_HIST=[],BROWSER_IDX=-1;
 S.sel=dk(new Date());
 S.month=new Date(new Date().getFullYear(),new Date().getMonth(),1);
 
@@ -513,8 +614,15 @@ function toast(msg,undo){
 function doUndo(){if(UNDO)UNDO();UNDO=null;$('#toast').classList.remove('on')}
 function clock(){$('#clock').textContent=new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})}
 
+function applyTheme(themeName){
+  const t=D.settings.oled?'oled':(themeName||D.settings.theme||'default');
+  if(t==='default')document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme',t);
+}
+
 function applyStyle(){
   const s=D.settings,r=document.documentElement.style;
+  applyTheme(s.theme);
   r.setProperty('--text',s.text);r.setProperty('--cal',s.cal);r.setProperty('--font',s.font);r.setProperty('--fs',s.fs+'px');
   const bk=BGK.includes(S.tab)?S.tab:'home',img=s.bgImg&&s.bgImg[bk];
   document.body.style.background=s.bg[bk];
@@ -540,9 +648,9 @@ function render(){
   if(t==='home')v.innerHTML=viewHome();
   else if(t==='school')v.innerHTML=S.cls?viewClass(S.cls):viewClassSelect();
   else if(t==='personal')v.innerHTML=viewPersonal();
+  else if(t==='moviehub')v.innerHTML=viewMovieHub();
   else if(t==='notifs')v.innerHTML=viewNotifs();
   else if(t==='settings')v.innerHTML=viewSettings();
-  
   else v.innerHTML=viewCat(t);
   bind(v);
   $('#schoolBtn').classList.toggle('on',t==='school'&&!!S.cls);
@@ -1256,7 +1364,7 @@ function addFor(k,c){S.bubble=null;hideBubble();openForm(k,null,{cls:c,cat:'scho
 
 /* ===== NAVIGATION ===== */
 function go(dir){
-  const order=['home','school','work','deyc','personal'];
+  const order=['home','school','work','deyc','personal','moviehub'];
   let i=order.indexOf(S.tab);i=Math.max(0,Math.min(order.length-1,(i<0?0:i)+dir));
   S.tab=order[i];S.cls=null;S.collapsed=false;S.bubble=null;S.enter=true;render();
 }
@@ -1264,6 +1372,13 @@ function go2(t){S.tab=t;S.bubble=null;S.enter=true;render()}
 
 /* ===== QUICK ADD MENU ===== */
 function openMenu(){
+  if(S.tab==='moviehub'){
+    sheet(`<h2>🎬 Add to MovieHub</h2>
+      <button class="big" onclick="openAddMovieModal()">🎬 Add Movie</button>
+      <button class="big" onclick="openAddFolderModal()">📁 Create Folder / Category</button>
+      <div class="row"><button onclick="closeSheet()">Cancel</button></div>`);
+    return;
+  }
   let opts=[
     ['📅 Add Event','event'],
     ['📝 Add Note','note'],
@@ -1323,14 +1438,14 @@ function openForm(type,id,pre={}){
   <input id="f-custom" placeholder="Custom minutes, e.g. 45, 90">
   <label>Repeat <select id="f-repeat" onchange="toggleRepeatUI()">
     <option value="" ${!freq?'selected':''}>None</option>
-    <option value="BIWEEKLY_FRIDAY" ${rr&&rr.INTERVAL==='2'&&rr.BYDAY==='FR'?'selected':''}>Every 2nd Friday (DEYC)</option>
-    <option value="DAILY" ${freq==='DAILY'&&(!rr||rr.INTERVAL!=='2')?'selected':''}>Daily</option>
-    <option value="WEEKLY" ${freq==='WEEKLY'&&(!rr||rr.INTERVAL!=='2')?'selected':''}>Weekly</option>
-    <option value="BIWEEKLY" ${freq==='WEEKLY'&&rr&&rr.INTERVAL==='2'&&rr.BYDAY!=='FR'?'selected':''}>Every 2 Weeks (Bi-weekly)</option>
+    <option value="BIWEEKLY_FRIDAY" ${rrObj.INTERVAL==='2'&&rrObj.BYDAY==='FR'?'selected':''}>Every 2nd Friday (DEYC)</option>
+    <option value="DAILY" ${freq==='DAILY'&&rrObj.INTERVAL!=='2'?'selected':''}>Daily</option>
+    <option value="WEEKLY" ${freq==='WEEKLY'&&rrObj.INTERVAL!=='2'?'selected':''}>Weekly</option>
+    <option value="BIWEEKLY" ${freq==='WEEKLY'&&rrObj.INTERVAL==='2'&&rrObj.BYDAY!=='FR'?'selected':''}>Every 2 Weeks (Bi-weekly)</option>
     <option value="MONTHLY" ${freq==='MONTHLY'?'selected':''}>Monthly</option>
     <option value="YEARLY" ${freq==='YEARLY'?'selected':''}>Yearly</option>
   </select></label>
-  <div id="f-repeat-ui" style="${freq==='WEEKLY'?'':'display:none'}">
+  <div id="f-repeat-ui" style="${(freq==='WEEKLY'&&rrObj.BYDAY!=='FR')?'':'display:none'}">
     <div class="row">${dows.map((d,i)=>`<label class="chip"><input type="checkbox" class="f-dow" value="${d}" ${byday.includes(d)?'checked':''}>${dowLabels[i]}</label>`).join('')}</div>
   </div>
   <div class="row" id="f-repeat-end" style="${freq?'':'display:none'}">
@@ -1344,7 +1459,7 @@ function openForm(type,id,pre={}){
 function toggleRepeatUI(){
   const freq=$('#f-repeat').value;
   const ui=$('#f-repeat-ui');const endui=$('#f-repeat-end');
-  if(ui)ui.style.display=freq==='WEEKLY'?'':'none';
+  if(ui)ui.style.display=(freq==='WEEKLY'||freq==='BIWEEKLY')?'':'none';
   if(endui)endui.style.display=freq?'':'none';
 }
 function saveForm(){
@@ -1356,10 +1471,18 @@ function saveForm(){
   let rrule=null;
   const freq=val('repeat');
   if(freq){
-    rrule=`FREQ=${freq}`;
-    if(freq==='WEEKLY'){
+    if(freq==='BIWEEKLY_FRIDAY'){
+      rrule='FREQ=WEEKLY;INTERVAL=2;BYDAY=FR';
+    }else if(freq==='BIWEEKLY'){
+      rrule='FREQ=WEEKLY;INTERVAL=2';
       const days=[...document.querySelectorAll('.f-dow:checked')].map(x=>x.value);
       if(days.length)rrule+=`;BYDAY=${days.join(',')}`;
+    }else{
+      rrule=`FREQ=${freq}`;
+      if(freq==='WEEKLY'){
+        const days=[...document.querySelectorAll('.f-dow:checked')].map(x=>x.value);
+        if(days.length)rrule+=`;BYDAY=${days.join(',')}`;
+      }
     }
     const cnt=val('count');if(cnt&&parseInt(cnt,10)>0)rrule+=`;COUNT=${parseInt(cnt,10)}`;
     const unt=$('#f-until')?.value;if(unt)rrule+=`;UNTIL=${unt}`;
@@ -1719,9 +1842,13 @@ function applyRestoredBackup(data){
   const count=data.items.length;
   confirmSheet(`Found ${count} items and ${(data.classes||[]).length} classes. Replace current data with this backup?`,()=>{
     D=Object.assign(clone(DEF),data);
-    D.settings=Object.assign(clone(DEF.settings),data.settings||{});
+    D.settings=Object.assign(clone(DEF.settings),data.settings||{},{bg:Object.assign(clone(DEF.settings.bg),(data.settings||{}).bg||{})});
     D.widgets=data.widgets||[];
     D.bookmarks=data.bookmarks||[];
+    D.movies=data.movies||[];
+    D.movieFolders=data.movieFolders||[];
+    D.habits=data.habits||clone(DEF.habits);
+    D.trash=data.trash||[];
     save();
     closeSheet();
     render();
@@ -1889,7 +2016,7 @@ function rail_init(){
   nav.addEventListener('touchstart',e=>ty=e.touches[0].clientY,{passive:true});
   nav.addEventListener('touchend',e=>{if(ty===null)return;const dy=e.changedTouches[0].clientY-ty;ty=null;if(Math.abs(dy)>60)go(dy<0?1:-1)});
 }
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSheet();closeFocusOverlay();closeNoteOverlay();closeQuickAdd();return}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(MH.player.mode==='fullscreen'){mhShrinkToMini();return;}closeSheet();closeFocusOverlay();closeNoteOverlay();closeQuickAdd();return}
   if(['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName))return;
   if(e.key==='ArrowDown')go(1);
   if(e.key==='ArrowUp')go(-1);
@@ -2188,12 +2315,10 @@ function delItem(id){
   D.trash.unshift({...it,deletedAt:Date.now()});
   D.trash=D.trash.slice(0,50); // keep last 50
   save();sendGoogleSync('delete',null,it.id);closeSheet();render();
-  toast('Moved "'+it.title+'" to Trash',{
-    undo:()=>{
-      D.items.splice(i,0,it);
-      D.trash=(D.trash||[]).filter(x=>x.id!==it.id);
-      save();sendGoogleSync('upsert',it);render();
-    }
+  toast('Moved "'+it.title+'" to Trash',()=>{
+    D.items.splice(i,0,it);
+    D.trash=(D.trash||[]).filter(x=>x.id!==it.id);
+    save();sendGoogleSync('upsert',it);render();
   });
 }
 
@@ -2266,6 +2391,771 @@ function toggleNoteCheckbox(checkboxIndex){
   el.value=lines.join('\n');
   noteAutoSave();
 }
+
+/* ===== MOVIEHUB MODULE ===== */
+const MOVIE_SESSION_URLS={};
+const MH={
+  folder:'all',
+  query:'',
+  selectMode:false,
+  selected:new Set(),
+  player:{movieId:null,mode:'closed',lastSaveTs:0,seeking:false},
+  draftPoster:null,
+  draftDuration:0
+};
+
+const MovieDB=(()=>{
+  let dbProm=null;
+  function open(){
+    if(dbProm)return dbProm;
+    dbProm=new Promise((resolve,reject)=>{
+      if(!('indexedDB' in window))return reject(new Error('IndexedDB unsupported'));
+      const req=indexedDB.open('FlowStateMoviesDB',1);
+      req.onupgradeneeded=()=>{
+        const db=req.result;
+        if(!db.objectStoreNames.contains('videos'))db.createObjectStore('videos');
+      };
+      req.onsuccess=()=>resolve(req.result);
+      req.onerror=()=>reject(req.error||new Error('DB open failed'));
+    });
+    return dbProm;
+  }
+  async function put(id,blob){
+    try{
+      const db=await open();
+      return await new Promise((resolve,reject)=>{
+        const tx=db.transaction('videos','readwrite');
+        tx.objectStore('videos').put(blob,id);
+        tx.oncomplete=()=>resolve({ok:true});
+        tx.onerror=()=>reject(tx.error);
+        tx.onabort=()=>reject(tx.error||new Error('Transaction aborted'));
+      });
+    }catch(e){return {ok:false,error:e};}
+  }
+  async function get(id){
+    try{
+      const db=await open();
+      return await new Promise((resolve)=>{
+        const tx=db.transaction('videos','readonly');
+        const req=tx.objectStore('videos').get(id);
+        req.onsuccess=()=>resolve(req.result||null);
+        req.onerror=()=>resolve(null);
+      });
+    }catch(e){return null;}
+  }
+  async function delMany(ids){
+    if(!ids||!ids.length)return;
+    try{
+      const db=await open();
+      await new Promise((resolve)=>{
+        const tx=db.transaction('videos','readwrite');
+        const st=tx.objectStore('videos');
+        ids.forEach(id=>st.delete(id));
+        tx.oncomplete=()=>resolve();
+        tx.onerror=()=>resolve();
+      });
+    }catch(e){}
+  }
+  return {put,get,del:(id)=>delMany([id]),delMany};
+})();
+
+function mhFmtSec(sec){
+  sec=Math.max(0,Math.floor(sec||0));
+  const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;
+  if(h>0)return h+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  return m+':'+String(s).padStart(2,'0');
+}
+
+function mhRemainingText(mv){
+  const dur=mv.duration||0,cur=mv.currentTime||0;
+  if(!dur)return cur>5?mhFmtSec(cur)+' watched':'Not started';
+  const rem=Math.max(0,dur-cur);
+  if(cur>=10&&rem<=8)return '✓ Finished';
+  if(cur<3)return mhFmtSec(dur)+' total';
+  return mhFmtSec(rem)+' left';
+}
+
+function mhPct(mv){
+  if(!mv.duration||mv.duration<=0)return 0;
+  return Math.max(0,Math.min(100,Math.round(((mv.currentTime||0)/mv.duration)*100)));
+}
+
+function mhFolderName(fid){
+  if(!fid)return '';
+  const f=(D.movieFolders||[]).find(x=>x.id===fid);
+  return f?((f.icon||'📁')+' '+f.name):'';
+}
+
+function mhFilteredMovies(){
+  const all=(D.movies||[]).slice().sort((a,b)=>(b.lastWatched||b.addedAt||0)-(a.lastWatched||a.addedAt||0));
+  const q=(MH.query||'').trim().toLowerCase();
+  return all.filter(mv=>{
+    if(MH.folder==='uncategorized'&&mv.folderId)return false;
+    if(MH.folder!=='all'&&MH.folder!=='uncategorized'&&mv.folderId!==MH.folder)return false;
+    if(!q)return true;
+    const fName=mhFolderName(mv.folderId).toLowerCase();
+    return ((mv.title||'')+' '+(mv.description||'')+' '+fName).toLowerCase().includes(q);
+  });
+}
+
+function mhCardHtml(mv){
+  const isSel=MH.selected.has(mv.id);
+  const pct=mhPct(mv);
+  const rem=mhRemainingText(mv);
+  const fLabel=mhFolderName(mv.folderId);
+  const ext=(mv.fileName||'').split('.').pop().toUpperCase().slice(0,4)||'VIDEO';
+  return `<div class="mh-card${isSel?' selected':''}" onclick="mhOnCardClick('${mv.id}')">
+    <div class="mh-poster">
+      ${mv.poster
+        ?`<img src="${mv.poster}" alt="${esc(mv.title)}">`
+        :`<div class="mh-poster-ph"><span>🎬</span><small>${esc(ext)}</small></div>`}
+      ${fLabel?`<span class="mh-card-folder">${esc(fLabel)}</span>`:''}
+      ${MH.selectMode
+        ?`<div class="mh-card-chk">${isSel?'✓':''}</div>`
+        :`<button class="mh-card-del" onclick="event.stopPropagation();mhConfirmDeleteOne('${mv.id}')" title="Remove movie">🗑️</button>`}
+      ${(mv.duration>0||(mv.currentTime||0)>5)?`<span class="mh-card-rem">${esc(rem)}</span>`:''}
+      ${pct>0?`<div class="mh-prog-track"><div class="mh-prog-fill" style="width:${pct}%"></div></div>`:''}
+    </div>
+    <div class="mh-card-body">
+      <div class="mh-card-title">${esc(mv.title||'Untitled Movie')}</div>
+      <div class="mh-card-sub">${pct>0?pct+'% · ':''}${esc(rem)}</div>
+    </div>
+  </div>`;
+}
+
+function viewMovieHub(){
+  D.movies=D.movies||[];
+  D.movieFolders=D.movieFolders||[];
+  const total=D.movies.length;
+  const uncatCount=D.movies.filter(m=>!m.folderId).length;
+  const filtered=mhFilteredMovies();
+
+  const folderChips=[
+    `<button class="mh-folder-chip${MH.folder==='all'?' on':''}" onclick="mhSetFolder('all')">🎞️ All (${total})</button>`,
+    ...D.movieFolders.map(f=>{
+      const cnt=D.movies.filter(m=>m.folderId===f.id).length;
+      return `<button class="mh-folder-chip${MH.folder===f.id?' on':''}" style="${MH.folder===f.id?'':'border-color:'+(f.color||'var(--cal)')}" onclick="mhSetFolder('${f.id}')">${esc(f.icon||'📁')} ${esc(f.name)} (${cnt})</button>`;
+    }),
+    ...(D.movieFolders.length&&uncatCount?[`<button class="mh-folder-chip${MH.folder==='uncategorized'?' on':''}" onclick="mhSetFolder('uncategorized')">📂 Uncategorized (${uncatCount})</button>`]:[]),
+    `<button class="mh-folder-chip" onclick="openManageFoldersModal()" title="Rename or delete folders">⚙ Folders</button>`
+  ].join('');
+
+  const selectBar=MH.selectMode?`<div class="mh-select-bar">
+    <b>${MH.selected.size} selected</b>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+      <button onclick="mhSelectAllVisible()">Select All (${filtered.length})</button>
+      ${D.movieFolders.length&&MH.selected.size?`<select id="mh-bulk-folder" style="width:auto;margin:0;padding:5px 8px;border-radius:8px;font-size:.88em">
+        <option value="">Uncategorized</option>
+        ${D.movieFolders.map(f=>`<option value="${f.id}">${esc(f.icon||'📁')} ${esc(f.name)}</option>`).join('')}
+      </select><button onclick="mhBulkMove()">Move</button>`:''}
+      <button class="danger" style="background:#fff" onclick="mhConfirmDeleteSelected()" ${MH.selected.size?'':'disabled'}>🗑️ Delete (${MH.selected.size})</button>
+      <button onclick="mhToggleSelectMode()">Done</button>
+    </div>
+  </div>`:'';
+
+  return `
+    <div class="mh-topbar">
+      <h1 style="margin:0">🎬 MovieHub <small style="font-size:.5em;opacity:.65">(${total})</small></h1>
+      <div style="display:flex;gap:8px;align-items:center">
+        ${total?`<button class="${MH.selectMode?'primary':''}" onclick="mhToggleSelectMode()">${MH.selectMode?'✓ Done Selecting':'☑ Select'}</button>`:''}
+      </div>
+    </div>
+    <div class="mh-search-wrap">
+      <span class="mh-search-ico">🔍</span>
+      <input id="mh-search" placeholder="Search movies, descriptions, or folders..." value="${esc(MH.query)}" oninput="mhSetSearch(this.value)">
+      <button id="mh-search-clr" class="mh-search-clr" style="display:${MH.query?'flex':'none'}" onclick="mhClearSearch()" title="Clear search">✕</button>
+    </div>
+    <div class="mh-folders">${folderChips}</div>
+    <div id="mh-select-wrap">${selectBar}</div>
+    <div id="mh-grid" class="mh-grid">
+      ${filtered.length?filtered.map(mhCardHtml).join(''):`<div class="panel" style="grid-column:1/-1;text-align:center;padding:34px 16px">
+        <div style="font-size:46px;margin-bottom:8px">🍿</div>
+        <b>${total?'No movies match your search or folder':'Your MovieHub is empty'}</b>
+        <p class="empty">${total?'Try clearing the search box or switching folders.':'Tap the green + button below to import a movie or create a folder.'}</p>
+      </div>`}
+    </div>`;
+}
+
+function mhSetFolder(fid){MH.folder=fid;render();}
+function mhSetSearch(q){
+  MH.query=q;
+  const clr=$('#mh-search-clr');
+  if(clr)clr.style.display=q?'flex':'none';
+  mhRefreshGridOnly();
+}
+function mhClearSearch(){
+  MH.query='';
+  const inp=$('#mh-search');if(inp){inp.value='';inp.focus();}
+  const clr=$('#mh-search-clr');if(clr)clr.style.display='none';
+  mhRefreshGridOnly();
+}
+function mhRefreshGridOnly(){
+  const g=$('#mh-grid');if(!g)return;
+  const filtered=mhFilteredMovies(),total=(D.movies||[]).length;
+  g.innerHTML=filtered.length?filtered.map(mhCardHtml).join(''):`<div class="panel" style="grid-column:1/-1;text-align:center;padding:34px 16px">
+    <div style="font-size:46px;margin-bottom:8px">🍿</div>
+    <b>${total?'No movies match your search or folder':'Your MovieHub is empty'}</b>
+    <p class="empty">${total?'Try clearing the search box or switching folders.':'Tap the green + button below to import a movie or create a folder.'}</p>
+  </div>`;
+}
+
+function mhToggleSelectMode(){
+  MH.selectMode=!MH.selectMode;
+  if(!MH.selectMode)MH.selected.clear();
+  render();
+}
+function mhOnCardClick(id){
+  if(MH.selectMode){
+    if(MH.selected.has(id))MH.selected.delete(id);
+    else MH.selected.add(id);
+    render();
+    return;
+  }
+  openMovieDetail(id);
+}
+function mhSelectAllVisible(){
+  mhFilteredMovies().forEach(m=>MH.selected.add(m.id));
+  render();
+}
+function mhBulkMove(){
+  const target=$('#mh-bulk-folder')?.value||'';
+  let moved=0;
+  (D.movies||[]).forEach(m=>{if(MH.selected.has(m.id)){m.folderId=target;moved++;}});
+  MH.selected.clear();MH.selectMode=false;
+  save();render();
+  toast(`Moved ${moved} movie${moved===1?'':'s'}`);
+}
+
+function mhConfirmDeleteOne(id){
+  const mv=(D.movies||[]).find(m=>m.id===id);if(!mv)return;
+  confirmSheet(`Remove "${mv.title}" from MovieHub?`,async()=>{
+    await mhDeleteIds([id]);
+    toast(`Removed "${mv.title}"`);
+  });
+}
+function mhConfirmDeleteSelected(){
+  const ids=[...MH.selected];if(!ids.length)return;
+  confirmSheet(`Remove ${ids.length} selected movie${ids.length===1?'':'s'} from MovieHub?`,async()=>{
+    await mhDeleteIds(ids);
+    MH.selected.clear();MH.selectMode=false;
+    render();
+    toast(`Removed ${ids.length} movie${ids.length===1?'':'s'}`);
+  });
+}
+async function mhDeleteIds(ids){
+  const idSet=new Set(ids);
+  if(MH.player.movieId&&idSet.has(MH.player.movieId))mhClosePlayer(true);
+  ids.forEach(id=>{
+    if(MOVIE_SESSION_URLS[id]){URL.revokeObjectURL(MOVIE_SESSION_URLS[id]);delete MOVIE_SESSION_URLS[id];}
+  });
+  D.movies=(D.movies||[]).filter(m=>!idSet.has(m.id));
+  save();
+  await MovieDB.delMany(ids);
+  if(S.tab==='moviehub')render();
+}
+
+function mhCompressImage(file,maxDim=520){
+  return new Promise((resolve)=>{
+    if(!file)return resolve(null);
+    const fr=new FileReader();
+    fr.onerror=()=>resolve(null);
+    fr.onload=()=>{
+      const im=new Image();
+      im.onerror=()=>resolve(null);
+      im.onload=()=>{
+        const sc=Math.min(1,maxDim/Math.max(im.width,im.height));
+        const c=document.createElement('canvas');
+        c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);
+        c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+        resolve(c.toDataURL('image/jpeg',0.82));
+      };
+      im.src=fr.result;
+    };
+    fr.readAsDataURL(file);
+  });
+}
+
+function mhProbeVideo(file){
+  return new Promise((resolve)=>{
+    const url=URL.createObjectURL(file);
+    const v=document.createElement('video');
+    v.preload='metadata';
+    v.muted=true;
+    let done=false;
+    const finish=(dur,thumb)=>{
+      if(done)return;done=true;
+      URL.revokeObjectURL(url);
+      resolve({duration:dur||0,thumb:thumb||null});
+    };
+    const timer=setTimeout(()=>finish(v.duration||0,null),3200);
+    v.onerror=()=>{clearTimeout(timer);finish(0,null);};
+    v.onloadedmetadata=()=>{
+      const dur=isFinite(v.duration)?v.duration:0;
+      const target=dur>4?Math.min(6,dur*0.12):0.5;
+      try{v.currentTime=target;}catch(e){clearTimeout(timer);finish(dur,null);}
+    };
+    v.onseeked=()=>{
+      clearTimeout(timer);
+      let thumb=null;
+      try{
+        if(v.videoWidth>0&&v.videoHeight>0){
+          const sc=Math.min(1,480/Math.max(v.videoWidth,v.videoHeight));
+          const c=document.createElement('canvas');
+          c.width=Math.max(1,Math.round(v.videoWidth*sc));
+          c.height=Math.max(1,Math.round(v.videoHeight*sc));
+          c.getContext('2d').drawImage(v,0,0,c.width,c.height);
+          thumb=c.toDataURL('image/jpeg',0.8);
+        }
+      }catch(e){thumb=null;}
+      finish(isFinite(v.duration)?v.duration:0,thumb);
+    };
+    v.src=url;
+  });
+}
+
+let MH_ADD_FILE=null;
+function openAddMovieModal(){
+  MH_ADD_FILE=null;MH.draftPoster=null;MH.draftDuration=0;
+  const fOpts=[`<option value="">Uncategorized</option>`,...(D.movieFolders||[]).map(f=>`<option value="${f.id}" ${MH.folder===f.id?'selected':''}>${esc(f.icon||'📁')} ${esc(f.name)}</option>`)].join('');
+  sheet(`<h2>🎬 Add Movie to MovieHub</h2>
+    <label><b>1. Choose Movie / Video File</b>
+      <input id="mh-file-inp" type="file" accept="video/*,.mp4,.mkv,.webm,.mov,.m4v" onchange="mhOnPickAddVideo(this.files[0])">
+    </label>
+    <div id="mh-file-info" class="empty" style="font-size:12px;margin-bottom:6px">No video selected yet</div>
+    <label><b>2. Movie Title</b>
+      <input id="mh-title" placeholder="e.g. Avengers: Age of Ultron">
+    </label>
+    <label><b>3. Folder / Category</b>
+      <select id="mh-folder-sel">${fOpts}</select>
+    </label>
+    <label><b>4. Description / Notes</b>
+      <textarea id="mh-desc" style="min-height:90px" placeholder="Optional description, cast, or notes..."></textarea>
+    </label>
+    <label><b>5. Custom Poster / Icon Image (optional)</b>
+      <input type="file" accept="image/*" onchange="mhOnPickDraftPoster(this.files[0])">
+    </label>
+    <div class="row" style="margin-top:4px">
+      <div id="mh-draft-prev"></div>
+      <button onclick="MH.draftPoster=null;$('#mh-draft-prev').innerHTML=''">Remove Poster</button>
+    </div>
+    <div class="row" style="margin-top:14px">
+      <button class="primary" id="mh-save-btn" onclick="mhSaveNewMovie()">Save Movie</button>
+      <button onclick="closeSheet()">Cancel</button>
+    </div>`);
+}
+
+async function mhOnPickAddVideo(file){
+  MH_ADD_FILE=file||null;
+  if(!file)return;
+  const info=$('#mh-file-info');
+  const mb=(file.size/(1024*1024)).toFixed(1);
+  if(info)info.textContent=`Selected: ${file.name} (${mb} MB) · Inspecting video...`;
+  const titleInp=$('#mh-title');
+  if(titleInp&&!titleInp.value.trim()){
+    titleInp.value=file.name.replace(/\.[^.]+$/,'').replace(/[._]+/g,' ').trim();
+  }
+  const meta=await mhProbeVideo(file);
+  MH.draftDuration=meta.duration||0;
+  if(!MH.draftPoster&&meta.thumb){
+    MH.draftPoster=meta.thumb;
+    const pv=$('#mh-draft-prev');
+    if(pv)pv.innerHTML=`<img src="${meta.thumb}" style="width:54px;height:80px;object-fit:cover;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.2)">`;
+  }
+  if(info)info.textContent=`Selected: ${file.name} (${mb} MB)${meta.duration?' · Runtime: '+mhFmtSec(meta.duration):''}`;
+}
+
+async function mhOnPickDraftPoster(file){
+  if(!file)return;
+  const img=await mhCompressImage(file,520);
+  if(!img)return toast('Could not load that image. Try JPG or PNG.');
+  MH.draftPoster=img;
+  const pv=$('#mh-draft-prev');
+  if(pv)pv.innerHTML=`<img src="${img}" style="width:54px;height:80px;object-fit:cover;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.2)">`;
+}
+
+async function mhSaveNewMovie(){
+  if(!MH_ADD_FILE)return toast('Please choose a movie/video file first');
+  const title=($('#mh-title')?.value||'').trim()||MH_ADD_FILE.name.replace(/\.[^.]+$/,'')||'Untitled Movie';
+  const folderId=$('#mh-folder-sel')?.value||'';
+  const description=$('#mh-desc')?.value||'';
+  const btn=$('#mh-save-btn');
+  if(btn){btn.disabled=true;btn.textContent='Saving...';}
+
+  const id='mv_'+uid();
+  MOVIE_SESSION_URLS[id]=URL.createObjectURL(MH_ADD_FILE);
+  const stored=await MovieDB.put(id,MH_ADD_FILE);
+
+  const mv={
+    id,
+    title,
+    description,
+    folderId,
+    poster:MH.draftPoster||null,
+    duration:MH.draftDuration||0,
+    currentTime:0,
+    fileName:MH_ADD_FILE.name,
+    fileSize:MH_ADD_FILE.size,
+    fileType:MH_ADD_FILE.type||'video/mp4',
+    hasBlob:stored.ok,
+    addedAt:Date.now(),
+    lastWatched:null
+  };
+  D.movies=D.movies||[];
+  D.movies.unshift(mv);
+  save();
+  MH_ADD_FILE=null;MH.draftPoster=null;MH.draftDuration=0;
+  closeSheet();
+  render();
+  if(!stored.ok)toast('Added for this session (device storage limit reached for offline save)');
+  else toast('🎬 Added "'+title+'" to MovieHub!');
+}
+
+function openAddFolderModal(editId=null){
+  const ef=editId?(D.movieFolders||[]).find(f=>f.id===editId):null;
+  CCOL=ef?.color||PAL[0];
+  const emojis=['📁','🎬','🍿','🚀','🔥','😂','😱','🎭','🎓','⭐','💜'];
+  sheet(`<h2>${ef?'Edit':'Create'} Movie Folder</h2>
+    <label>Folder Name <input id="mf-name" placeholder="e.g. Marvel, Sci-Fi, Comfort Movies" value="${esc(ef?.name||'')}"></label>
+    <label>Icon (emoji) <input id="mf-icon" value="${esc(ef?.icon||'📁')}" maxlength="4"></label>
+    <div class="row">${emojis.map(e=>`<button class="chip" onclick="$('#mf-icon').value='${e}'">${e}</button>`).join('')}</div>
+    <div class="row">${PAL.map(c=>`<button class="sw${c===CCOL?' on':''}" data-c="${c}" style="background:${c}" onclick="pickCol(this)"></button>`).join('')}</div>
+    <div class="row" style="margin-top:14px">
+      <button class="primary" onclick="saveMovieFolder('${editId||''}')">Save Folder</button>
+      <button onclick="closeSheet()">Cancel</button>
+    </div>`);
+}
+
+function saveMovieFolder(editId){
+  const name=($('#mf-name')?.value||'').trim();
+  if(!name)return toast('Please enter a folder name');
+  const icon=($('#mf-icon')?.value||'').trim()||'📁';
+  D.movieFolders=D.movieFolders||[];
+  if(editId){
+    const f=D.movieFolders.find(x=>x.id===editId);
+    if(f){f.name=name;f.icon=icon;f.color=CCOL;}
+  }else{
+    D.movieFolders.push({id:'mf_'+uid(),name,icon,color:CCOL,created:Date.now()});
+  }
+  save();closeSheet();render();
+  toast(editId?'Folder updated':'Folder "'+name+'" created');
+}
+
+function openManageFoldersModal(){
+  D.movieFolders=D.movieFolders||[];
+  sheet(`<h2>📁 Movie Folders</h2>
+    <div class="stack">
+      ${D.movieFolders.length?D.movieFolders.map(f=>{
+        const cnt=(D.movies||[]).filter(m=>m.folderId===f.id).length;
+        return `<div class="cls-card">
+          <div style="width:28px;height:28px;border-radius:50%;background:${f.color||'var(--cal)'};display:flex;align-items:center;justify-content:center">${esc(f.icon||'📁')}</div>
+          <div class="grow"><b>${esc(f.name)}</b><small style="display:block;opacity:.65">${cnt} movie${cnt===1?'':'s'}</small></div>
+          <button onclick="openAddFolderModal('${f.id}')">Edit</button>
+          <button class="danger" onclick="deleteMovieFolder('${f.id}')">Delete</button>
+        </div>`;
+      }).join(''):'<p class="empty">No folders created yet.</p>'}
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button class="primary" onclick="openAddFolderModal()">+ New Folder</button>
+      <button onclick="closeSheet()">Close</button>
+    </div>`);
+}
+
+function deleteMovieFolder(id){
+  const f=(D.movieFolders||[]).find(x=>x.id===id);if(!f)return;
+  confirmSheet(`Delete folder "${f.name}"? Movies inside will stay in All / Uncategorized.`,()=>{
+    D.movieFolders=(D.movieFolders||[]).filter(x=>x.id!==id);
+    (D.movies||[]).forEach(m=>{if(m.folderId===id)m.folderId='';});
+    if(MH.folder===id)MH.folder='all';
+    save();render();openManageFoldersModal();
+  });
+}
+
+function openMovieDetail(id){
+  const mv=(D.movies||[]).find(m=>m.id===id);if(!mv)return;
+  const pct=mhPct(mv);
+  const rem=mhRemainingText(mv);
+  const hasStarted=(mv.currentTime||0)>=3;
+  const fOpts=[`<option value="">Uncategorized</option>`,...(D.movieFolders||[]).map(f=>`<option value="${f.id}" ${mv.folderId===f.id?'selected':''}>${esc(f.icon||'📁')} ${esc(f.name)}</option>`)].join('');
+
+  sheet(`
+    <div class="mh-detail-hero">
+      <div class="mh-detail-poster">
+        ${mv.poster?`<img src="${mv.poster}" alt="${esc(mv.title)}">`:`🎬`}
+      </div>
+      <div class="grow" style="min-width:190px">
+        <small style="opacity:.65">${esc(mhFolderName(mv.folderId)||'Uncategorized')}${mv.fileSize?' · '+(mv.fileSize/(1024*1024)).toFixed(0)+' MB':''}</small>
+        <h2 style="margin:4px 0 8px">${esc(mv.title)}</h2>
+        <div class="row" style="margin-top:6px">
+          <button class="primary" onclick="mhPlayMovie('${mv.id}','mini')">▶ ${hasStarted?'Resume':'Play'}</button>
+          <button onclick="mhPlayMovie('${mv.id}','fullscreen')">⛶ Fullscreen</button>
+          ${hasStarted?`<button onclick="mhPlayMovie('${mv.id}','mini',true)">⏮ Start Over</button>`:''}
+        </div>
+      </div>
+    </div>
+
+    <div class="mh-detail-prog">
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:.9em">
+        <b>Progress: ${pct}%</b>
+        <span>${esc(rem)}${mv.duration?' ('+mhFmtSec(mv.currentTime||0)+' / '+mhFmtSec(mv.duration)+')':''}</span>
+      </div>
+      <div class="mh-detail-bar"><div style="width:${pct}%"></div></div>
+      ${hasStarted?`<button style="padding:4px 10px;font-size:12px" onclick="mhResetProgress('${mv.id}')">Reset Watch Progress</button>`:''}
+    </div>
+
+    <div class="panel" style="margin-top:10px">
+      <h3 style="margin-bottom:6px">🎨 Movie Icon / Poster Design</h3>
+      <div class="row" style="margin-top:4px">
+        <label style="margin:0"><span class="chip" style="display:inline-block;border:2px solid var(--cal);border-radius:12px;padding:6px 12px;cursor:pointer">🖼️ Upload New Photo<input type="file" accept="image/*" style="display:none" onchange="mhChangeMoviePoster('${mv.id}',this.files[0])"></span></label>
+        ${mv.poster?`<button onclick="mhRemoveMoviePoster('${mv.id}')">Reset Icon</button>`:''}
+      </div>
+    </div>
+
+    <label><b>Title</b>
+      <input id="mhd-title" value="${esc(mv.title)}">
+    </label>
+    <label><b>Folder / Category</b>
+      <select id="mhd-folder">${fOpts}</select>
+    </label>
+    <label><b>Description / Notes</b>
+      <textarea id="mhd-desc" style="min-height:95px" placeholder="Add a description, notes, or timestamps...">${esc(mv.description||'')}</textarea>
+    </label>
+
+    <div class="row">
+      <button class="primary" onclick="mhSaveMovieEdits('${mv.id}')">Save Details</button>
+      <label style="margin:0"><span style="display:inline-block;border:2px solid var(--cal);border-radius:12px;padding:8px 12px;cursor:pointer;background:#fff;color:var(--text)">🔗 Re-link Video File<input type="file" accept="video/*,.mp4,.mkv,.webm,.mov,.m4v" style="display:none" onchange="mhRelinkVideo('${mv.id}',this.files[0])"></span></label>
+      <button class="danger" onclick="mhConfirmDeleteOne('${mv.id}')">🗑️ Remove Movie</button>
+      <button onclick="closeSheet()">Close</button>
+    </div>
+  `);
+}
+
+function mhSaveMovieEdits(id){
+  const mv=(D.movies||[]).find(m=>m.id===id);if(!mv)return;
+  mv.title=($('#mhd-title')?.value||'').trim()||mv.title;
+  mv.folderId=$('#mhd-folder')?.value||'';
+  mv.description=$('#mhd-desc')?.value||'';
+  save();
+  if(MH.player.movieId===id){
+    $('#mh-player-title').textContent='🎬 '+mv.title;
+    $('#mh-fs-title').textContent=mv.title;
+  }
+  render();
+  openMovieDetail(id);
+  toast('Movie details saved');
+}
+
+async function mhChangeMoviePoster(id,file){
+  if(!file)return;
+  const img=await mhCompressImage(file,520);
+  if(!img)return toast('That image could not be opened. Try a JPG or PNG.');
+  const mv=(D.movies||[]).find(m=>m.id===id);if(!mv)return;
+  mv.poster=img;
+  save();render();openMovieDetail(id);
+  toast('Movie icon updated!');
+}
+
+function mhRemoveMoviePoster(id){
+  const mv=(D.movies||[]).find(m=>m.id===id);if(!mv)return;
+  mv.poster=null;
+  save();render();openMovieDetail(id);
+  toast('Poster removed');
+}
+
+function mhResetProgress(id){
+  const mv=(D.movies||[]).find(m=>m.id===id);if(!mv)return;
+  mv.currentTime=0;
+  save();
+  if(MH.player.movieId===id){const v=$('#mh-video');if(v)v.currentTime=0;}
+  render();openMovieDetail(id);
+  toast('Progress reset to start');
+}
+
+async function mhRelinkVideo(id,file){
+  if(!file)return;
+  const mv=(D.movies||[]).find(m=>m.id===id);if(!mv)return;
+  if(MOVIE_SESSION_URLS[id])URL.revokeObjectURL(MOVIE_SESSION_URLS[id]);
+  MOVIE_SESSION_URLS[id]=URL.createObjectURL(file);
+  const res=await MovieDB.put(id,file);
+  mv.fileName=file.name;mv.fileSize=file.size;mv.fileType=file.type||'video/mp4';mv.hasBlob=res.ok;
+  save();render();openMovieDetail(id);
+  toast('Video file linked!');
+}
+
+async function mhPlayMovie(id,mode='mini',fromStart=false){
+  const mv=(D.movies||[]).find(m=>m.id===id);if(!mv)return;
+  let url=MOVIE_SESSION_URLS[id];
+  if(!url){
+    const blob=await MovieDB.get(id);
+    if(blob){
+      url=URL.createObjectURL(blob);
+      MOVIE_SESSION_URLS[id]=url;
+    }
+  }
+  if(!url){
+    toast('Video file not found offline. Tap "Re-link Video File" to open it.');
+    openMovieDetail(id);
+    return;
+  }
+
+  closeSheet();
+  const vid=$('#mh-video');
+  const shell=$('#movie-player-shell');
+  const isNewMovie=MH.player.movieId!==id||vid.src!==url;
+
+  MH.player.movieId=id;
+  mv.lastWatched=Date.now();
+  if(fromStart)mv.currentTime=0;
+  save();
+
+  $('#mh-player-title').textContent='🎬 '+mv.title;
+  $('#mh-fs-title').textContent=mv.title;
+  mhSetPlayerMode(mode);
+
+  if(isNewMovie){
+    vid.src=url;
+    const seekTarget=(!fromStart&&mv.currentTime>1&&(!mv.duration||mv.currentTime<mv.duration-5))?mv.currentTime:0;
+    const onMeta=()=>{
+      if(isFinite(vid.duration)&&vid.duration>0){
+        mv.duration=vid.duration;save();
+      }
+      if(seekTarget>0)vid.currentTime=seekTarget;
+      vid.play().catch(()=>{});
+    };
+    if(vid.readyState>=1)onMeta();
+    else vid.addEventListener('loadedmetadata',onMeta,{once:true});
+  }else{
+    if(fromStart)vid.currentTime=0;
+    vid.play().catch(()=>{});
+  }
+  mhUpdateControlsUI();
+}
+
+function mhSetPlayerMode(mode){
+  MH.player.mode=mode;
+  const shell=$('#movie-player-shell');
+  shell.classList.remove('closed','mini','large','fullscreen');
+  shell.classList.add(mode);
+  if(mode==='mini'||mode==='large'){
+    const btn=$('#mh-btn-size');
+    if(btn)btn.textContent=mode==='mini'?'⤢':'🗗';
+  }
+  if(mode!=='mini'){
+    shell.style.left='';shell.style.top='';shell.style.right='';shell.style.bottom='';
+  }
+}
+
+function mhCycleSize(){
+  if(MH.player.mode==='mini')mhSetPlayerMode('large');
+  else if(MH.player.mode==='large')mhSetPlayerMode('mini');
+  else mhSetPlayerMode('mini');
+}
+function mhToggleFullscreen(){
+  if(MH.player.mode==='fullscreen')mhShrinkToMini();
+  else mhSetPlayerMode('fullscreen');
+}
+function mhShrinkToMini(){
+  if(document.fullscreenElement){try{document.exitFullscreen();}catch(e){}}
+  mhSetPlayerMode('mini');
+}
+function mhClosePlayer(silent=false){
+  const vid=$('#mh-video');
+  if(!silent)mhPersistCurrentProgress(true);
+  if(vid){vid.pause();vid.removeAttribute('src');vid.load();}
+  MH.player.movieId=null;
+  mhSetPlayerMode('closed');
+  if(S.tab==='moviehub'&&!silent)mhRefreshGridOnly();
+}
+
+function mhTogglePlay(){
+  const vid=$('#mh-video');if(!vid)return;
+  if(vid.paused)vid.play().catch(()=>{});
+  else vid.pause();
+}
+function mhOnVideoTap(e){
+  if(e.target.closest('button'))return;
+  mhTogglePlay();
+}
+function mhSeekBy(delta){
+  const vid=$('#mh-video');if(!vid||!isFinite(vid.duration))return;
+  vid.currentTime=Math.max(0,Math.min(vid.duration,vid.currentTime+delta));
+  mhPersistCurrentProgress(true);
+  mhUpdateControlsUI();
+}
+function mhOnSeekInput(val){
+  MH.player.seeking=true;
+  const vid=$('#mh-video');if(!vid||!isFinite(vid.duration))return;
+  const t=(val/1000)*vid.duration;
+  const lbl=$('#mh-time-lbl');
+  if(lbl)lbl.textContent=mhFmtSec(t)+' / '+mhFmtSec(vid.duration);
+}
+function mhOnSeekCommit(val){
+  const vid=$('#mh-video');
+  MH.player.seeking=false;
+  if(!vid||!isFinite(vid.duration))return;
+  vid.currentTime=(val/1000)*vid.duration;
+  mhPersistCurrentProgress(true);
+}
+function mhToggleMute(){
+  const vid=$('#mh-video');if(!vid)return;
+  vid.muted=!vid.muted;
+  mhUpdateControlsUI();
+}
+function mhUpdateControlsUI(){
+  const vid=$('#mh-video');if(!vid)return;
+  const pBtn=$('#mh-play-btn'),mBtn=$('#mh-mute-btn'),seek=$('#mh-seek'),lbl=$('#mh-time-lbl');
+  if(pBtn)pBtn.textContent=vid.paused?'▶':'⏸';
+  if(mBtn)mBtn.textContent=vid.muted?'🔇':'🔊';
+  const dur=isFinite(vid.duration)?vid.duration:0;
+  const cur=vid.currentTime||0;
+  if(seek&&!MH.player.seeking)seek.value=dur>0?Math.round((cur/dur)*1000):0;
+  if(lbl)lbl.textContent=mhFmtSec(cur)+' / '+mhFmtSec(dur);
+}
+
+function mhPersistCurrentProgress(force=false){
+  const id=MH.player.movieId;if(!id)return;
+  const vid=$('#mh-video');if(!vid)return;
+  const now=Date.now();
+  if(!force&&now-MH.player.lastSaveTs<4000)return;
+  const mv=(D.movies||[]).find(m=>m.id===id);if(!mv)return;
+  if(isFinite(vid.duration)&&vid.duration>0)mv.duration=vid.duration;
+  mv.currentTime=vid.currentTime||0;
+  mv.lastWatched=now;
+  MH.player.lastSaveTs=now;
+  save();
+  if(S.tab==='moviehub'&&!MH.selectMode&&force)mhRefreshGridOnly();
+}
+
+(function initMoviePlayer(){
+  const vid=$('#mh-video'),bar=$('#mh-drag-bar'),shell=$('#movie-player-shell');
+  if(vid){
+    vid.addEventListener('timeupdate',()=>{mhUpdateControlsUI();mhPersistCurrentProgress(false);});
+    vid.addEventListener('play',mhUpdateControlsUI);
+    vid.addEventListener('pause',()=>{mhUpdateControlsUI();mhPersistCurrentProgress(true);});
+    vid.addEventListener('seeked',()=>{mhUpdateControlsUI();mhPersistCurrentProgress(true);});
+    vid.addEventListener('ended',()=>{mhPersistCurrentProgress(true);mhUpdateControlsUI();});
+  }
+  if(bar&&shell){
+    let dragging=false,sx=0,sy=0,sl=0,st=0;
+    bar.addEventListener('pointerdown',e=>{
+      if(e.target.closest('button')||MH.player.mode==='fullscreen')return;
+      dragging=true;
+      const r=shell.getBoundingClientRect();
+      sx=e.clientX;sy=e.clientY;sl=r.left;st=r.top;
+      shell.style.transform='none';
+      shell.style.right='auto';shell.style.bottom='auto';
+      shell.style.left=sl+'px';shell.style.top=st+'px';
+      bar.setPointerCapture(e.pointerId);
+    });
+    bar.addEventListener('pointermove',e=>{
+      if(!dragging)return;
+      const nx=Math.max(6,Math.min(innerWidth-shell.offsetWidth-6,sl+(e.clientX-sx)));
+      const ny=Math.max(6,Math.min(innerHeight-shell.offsetHeight-6,st+(e.clientY-sy)));
+      shell.style.left=nx+'px';shell.style.top=ny+'px';
+    });
+    bar.addEventListener('pointerup',()=>{dragging=false;});
+    bar.addEventListener('pointercancel',()=>{dragging=false;});
+  }
+})();
 
 window.addEventListener('resize',resize);
 resize();rail_init();clock();render();tick();flushGoogleSync();
